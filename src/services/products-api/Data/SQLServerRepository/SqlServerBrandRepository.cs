@@ -5,15 +5,15 @@ using products_api.Models;
 
 namespace products_api.Data.SQLServerRepository
 {
-    public class SqlServerCategoryRepository : SqlServerRepository<Category>, ICategoryRepository
+    public class SqlServerBrandRepository : SqlServerRepository<Brand>, IBrandRepository
     {
-        public SqlServerCategoryRepository(AppDbContext db, IConfiguration configuration)
+        public SqlServerBrandRepository(AppDbContext db, IConfiguration configuration)
             : base(db, configuration)
         {
             
         }
 
-        public async Task<CategorySearchResult> SearchCategories(
+        public async Task<BrandSearchResult> SearchBrands(
             string? q,
             int? page,
             int? pageSize,
@@ -31,7 +31,7 @@ namespace products_api.Data.SQLServerRepository
 
             // Tables and conditions
             string sqlTableAndConditions = @"
-FROM Category
+FROM Brand
 WHERE 1=1
 ";
 
@@ -41,8 +41,7 @@ WHERE 1=1
             if (string.IsNullOrEmpty(q) == false)
             {
                 sqlTableAndConditions += @" AND (
-Name LIKE '%' + @q + '%' OR
-Description LIKE '%' + @q + '%'
+Name LIKE '%' + @q + '%' 
 ) ";
                 parameters.AddDynamicParams(new { q = q });
             }
@@ -61,7 +60,7 @@ Description LIKE '%' + @q + '%'
 CASE WHEN @SortBy = 'Name' THEN Name  END {sortDirection},
 CASE WHEN @SortBy = 'Position' THEN Position  END {sortDirection}
 ";
-
+            
             // Add paging in sql results
             sqlResults += @" OFFSET @Offset ROWS
 FETCH NEXT @PageSize ROWS ONLY ;
@@ -76,8 +75,8 @@ FETCH NEXT @PageSize ROWS ONLY ;
                 sqlResults + sqlCount, parameters);
 
             // Prepare results
-            CategorySearchResult result = new();
-            result.Categories = multi.Read<CategoryDto>().ToList();
+            BrandSearchResult result = new();
+            result.Brands = multi.Read<BrandDto>().ToList();
             result.TotalResults = multi.ReadFirst<int>();
 
             return result;

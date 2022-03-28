@@ -10,7 +10,20 @@ namespace products_api.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+
+            // Brand 
+            modelBuilder.Entity<Brand>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+        }
+
+
+
         // Tables
         public DbSet<Category>? Categories { get; set; }
+        public DbSet<Brand>? Brands { get; set; }
     }
 }

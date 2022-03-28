@@ -13,10 +13,12 @@ namespace products_api.Extensions
             // Add Repositories
             services.AddScoped<ICategoryRepository, SqlServerCategoryRepository>();
             services.AddScoped<IResetRepository, SqlServerResetRepository>();
+            services.AddScoped<IBrandRepository, SqlServerBrandRepository>();
 
             // Add Services
             services.AddScoped<CategoryService>();
             services.AddScoped<ResetService>();
+            services.AddScoped<BrandService>();
         }
     }
 }

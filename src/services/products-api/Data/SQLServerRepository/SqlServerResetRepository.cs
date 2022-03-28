@@ -10,17 +10,21 @@ namespace products_api.Data.SQLServerRepository
     {
         private readonly string _dataFolderName = "SeedData";
         private readonly string categoriesFile = "default-categories.json";
-        
+        private readonly string brandsFile = "default-brands.json";
+
 
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IBrandRepository _brandRepository;
         // For Dapper
         private readonly IConfiguration _configuration;
 
         public SqlServerResetRepository(ICategoryRepository categoryRepository,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IBrandRepository brandRepository)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
+            _brandRepository = brandRepository;
         }
 
         public SqlConnection SqlConnection
@@ -49,8 +53,26 @@ namespace products_api.Data.SQLServerRepository
             string result = string.Empty;
 
             result += SeedCategories();
+            result += SeedBrands();
 
             return result;
+        }
+
+        private string SeedBrands()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, brandsFile));
+            IEnumerable<Brand>? DefaultBrands = JsonSerializer
+                .Deserialize<IEnumerable<Brand>>(jsonData);
+
+            if (DefaultBrands == null) return "0 Brands Added. ";
+
+            foreach (var brand in DefaultBrands)
+            {
+                _brandRepository.Add(brand);
+            }
+            _brandRepository.Save();
+
+            return DefaultBrands.Count() + " Brands Added. ";
         }
 
         private string SeedCategories()
@@ -85,6 +107,7 @@ namespace products_api.Data.SQLServerRepository
             // DELETE from tables
             string sql = @"
 DELETE FROM Category;
+DELETE FROM Brand;
 ";
             int deletedRows = connection.Execute(sql);
 
