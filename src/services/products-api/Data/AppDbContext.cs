@@ -18,6 +18,16 @@ namespace products_api.Data
             modelBuilder.Entity<Brand>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // Availability 
+            modelBuilder.Entity<Availability>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Network 
+            modelBuilder.Entity<Network>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -25,5 +35,7 @@ namespace products_api.Data
         // Tables
         public DbSet<Category>? Categories { get; set; }
         public DbSet<Brand>? Brands { get; set; }
+        public DbSet<Availability>? Availabilities { get; set; }
+        public DbSet<Network>? Networks { get; set; }
     }
 }

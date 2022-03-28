@@ -14,11 +14,15 @@ namespace products_api.Extensions
             services.AddScoped<ICategoryRepository, SqlServerCategoryRepository>();
             services.AddScoped<IResetRepository, SqlServerResetRepository>();
             services.AddScoped<IBrandRepository, SqlServerBrandRepository>();
+            services.AddScoped<IAvailabilityRepository, SqlServerAvailabilityRepository>();
+            services.AddScoped<INetworkRepository, SqlServerNetworkRepository>();
 
             // Add Services
             services.AddScoped<CategoryService>();
             services.AddScoped<ResetService>();
             services.AddScoped<BrandService>();
+            services.AddScoped<AvailabilityService>();
+            services.AddScoped<NetworkService>();
         }
     }
 }

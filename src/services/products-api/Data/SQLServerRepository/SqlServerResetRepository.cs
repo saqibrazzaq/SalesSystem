@@ -11,20 +11,28 @@ namespace products_api.Data.SQLServerRepository
         private readonly string _dataFolderName = "SeedData";
         private readonly string categoriesFile = "default-categories.json";
         private readonly string brandsFile = "default-brands.json";
+        private readonly string availabilityFile = "default-availability.json";
+        private readonly string networkFile = "default-networks.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
         private readonly IBrandRepository _brandRepository;
+        private readonly IAvailabilityRepository _availabilityRepository;
+        private readonly INetworkRepository _networkRepository;
         // For Dapper
         private readonly IConfiguration _configuration;
 
         public SqlServerResetRepository(ICategoryRepository categoryRepository,
             IConfiguration configuration,
-            IBrandRepository brandRepository)
+            IBrandRepository brandRepository,
+            IAvailabilityRepository availabilityRepository,
+            INetworkRepository networkRepository)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
             _brandRepository = brandRepository;
+            _availabilityRepository = availabilityRepository;
+            _networkRepository = networkRepository;
         }
 
         public SqlConnection SqlConnection
@@ -54,6 +62,8 @@ namespace products_api.Data.SQLServerRepository
 
             result += SeedCategories();
             result += SeedBrands();
+            result += SeedAvailability();
+            result += SeedNetwork();
 
             return result;
         }
@@ -91,6 +101,40 @@ namespace products_api.Data.SQLServerRepository
             return DefaultCategories.Count() + " Categories Added. ";
         }
 
+        private string SeedNetwork()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, networkFile));
+            IEnumerable<Network>? DefaultNetworks = 
+                JsonSerializer.Deserialize<IEnumerable<Network>>(jsonData);
+
+            if (DefaultNetworks == null) return "0 Networks Added. ";
+
+            foreach (var network in DefaultNetworks)
+            {
+                _networkRepository.Add(network);
+            }
+            _networkRepository.Save();
+
+            return DefaultNetworks.Count() + " Networks Added. ";
+        }
+
+        private string SeedAvailability()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, availabilityFile));
+            IEnumerable<Availability>? DefaultAvailability = JsonSerializer
+                .Deserialize<IEnumerable<Availability>>(jsonData);
+
+            if (DefaultAvailability == null) return "0 Availabilities Added. ";
+
+            foreach (var availability in DefaultAvailability)
+            {
+                _availabilityRepository.Add(availability);
+            }
+            _availabilityRepository.Save();
+
+            return DefaultAvailability.Count() + " Availabilities Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -108,6 +152,8 @@ namespace products_api.Data.SQLServerRepository
             string sql = @"
 DELETE FROM Category;
 DELETE FROM Brand;
+DELETE FROM Availability;
+DELETE FROM Network;
 ";
             int deletedRows = connection.Execute(sql);
 
