@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using products_api.Data.Repository;
 using products_api.Dtos;
 using products_api.Models;
@@ -11,6 +12,17 @@ namespace products_api.Data.SQLServerRepository
             : base(db, configuration)
         {
             
+        }
+
+        public async Task<Network?> GetNetworkWithAllDetails(string name)
+        {
+            var query = GetAll(
+                filter: x => x.Name == name,
+                include: i => i.Include(x => x.NetworkDetails)
+                ).FirstOrDefault();
+            if (query == null) return null;
+
+            return await Task.FromResult(query);
         }
 
         public async Task<NetworkSearchResult> SearchNetworks(

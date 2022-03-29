@@ -1,0 +1,86 @@
+[
+  {
+    "Name": "GSM 850",
+    "NetworkName": "2G"
+  },
+  {
+    "Name": "GSM 900",
+    "NetworkName": "2G"
+  },
+  {
+    "Name": "GSM 1800",
+    "NetworkName": "2G"
+  },
+  {
+    "Name": "GSM 1900",
+    "NetworkName": "2G"
+  },
+  {
+    "Name": "HSPA 850",
+    "NetworkName": "3G"
+  },
+  {
+    "Name": "HSPA 900",
+    "NetworkName": "3G"
+  },
+  {
+    "Name": "HSPA 1700",
+    "NetworkName": "3G"
+  },
+  {
+    "Name": "HSPA 1900",
+    "NetworkName": "3G"
+  },
+  {
+    "Name": "HSPA 2100",
+    "NetworkName": "3G"
+  },
+  {
+    "Name": "LTE band 1(2100)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "LTE band 2(1900)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "LTE band 3(1800)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "LTE band 4(1700/2100)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "LTE band 5(850)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "LTE band 6(900)",
+    "NetworkName": "4G"
+  },
+  {
+    "Name": "5G band 1(2100)",
+    "NetworkName": "5G"
+  },
+  {
+    "Name": "5G band 2(1900)",
+    "NetworkName": "5G"
+  },
+  {
+    "Name": "5G band 3(1800)",
+    "NetworkName": "5G"
+  },
+  {
+    "Name": "5G band 5(850)",
+    "NetworkName": "5G"
+  },
+  {
+    "Name": "5G band 7(2600)",
+    "NetworkName": "5G"
+  },
+  {
+    "Name": "5G band 8(900)",
+    "NetworkName": "5G"
+  }
+]

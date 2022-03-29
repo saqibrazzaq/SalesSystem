@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using products_api.Data.Repository;
 using products_api.Models;
+using products_api.SeedData.SeedModels;
 using System.Data.SqlClient;
 using System.Text.Json;
 
@@ -13,12 +14,18 @@ namespace products_api.Data.SQLServerRepository
         private readonly string brandsFile = "default-brands.json";
         private readonly string availabilityFile = "default-availability.json";
         private readonly string networkFile = "default-networks.json";
+        private readonly string networkDetailsFile = "default-network-bands.json";
+        private readonly string simSizeFile = "default-sim-size.json";
+        private readonly string simMultipleFile = "default-sim-multiple.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
         private readonly IBrandRepository _brandRepository;
         private readonly IAvailabilityRepository _availabilityRepository;
         private readonly INetworkRepository _networkRepository;
+        private readonly INetworkBandRepository _networkBandRepository;
+        private readonly ISimSizeRepository _simSizeRepo;
+        private readonly ISimMultipleRepository _simMultipleRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -26,13 +33,19 @@ namespace products_api.Data.SQLServerRepository
             IConfiguration configuration,
             IBrandRepository brandRepository,
             IAvailabilityRepository availabilityRepository,
-            INetworkRepository networkRepository)
+            INetworkRepository networkRepository,
+            INetworkBandRepository networkBandRepository,
+            ISimSizeRepository simSizeRepo, 
+            ISimMultipleRepository simMultipleRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
             _brandRepository = brandRepository;
             _availabilityRepository = availabilityRepository;
             _networkRepository = networkRepository;
+            _networkBandRepository = networkBandRepository;
+            _simSizeRepo = simSizeRepo;
+            _simMultipleRepo = simMultipleRepo;
         }
 
         public SqlConnection SqlConnection
@@ -64,6 +77,9 @@ namespace products_api.Data.SQLServerRepository
             result += SeedBrands();
             result += SeedAvailability();
             result += SeedNetwork();
+            result += SeedNetworkBands();
+            result += SeedSimSize();
+            result += SeedSimMultiple();
 
             return result;
         }
@@ -118,6 +134,36 @@ namespace products_api.Data.SQLServerRepository
             return DefaultNetworks.Count() + " Networks Added. ";
         }
 
+        private string SeedNetworkBands()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, networkDetailsFile));
+            IEnumerable<NetworkDetailSeedModel>? DefaultNetworkDetailSeeds =
+                JsonSerializer.Deserialize<IEnumerable<NetworkDetailSeedModel>>(jsonData);
+
+            if (DefaultNetworkDetailSeeds == null) return "0 Network details Added. ";
+
+            // Get all networks (parents of network detail)
+            var networks = _networkRepository.GetAll();
+
+            // Loop through each network detail seed model
+            foreach (var networkDetailSeed in DefaultNetworkDetailSeeds)
+            {
+                // Create network detail Model (table)
+                var networkDetail = new NetworkBand()
+                {
+                    Name = networkDetailSeed.Name,
+                    NetworkId = networks
+                        .Where(x => x.Name.Equals(networkDetailSeed.NetworkName))
+                        .Select(x => x.Id)
+                        .FirstOrDefault()
+                };
+                _networkBandRepository.Add(networkDetail);
+            }
+            _networkBandRepository.Save();
+
+            return DefaultNetworkDetailSeeds.Count() + " Network bands Added. ";
+        }
+
         private string SeedAvailability()
         {
             string jsonData = File.ReadAllText(Path.Combine(DataFolder, availabilityFile));
@@ -133,6 +179,40 @@ namespace products_api.Data.SQLServerRepository
             _availabilityRepository.Save();
 
             return DefaultAvailability.Count() + " Availabilities Added. ";
+        }
+
+        private string SeedSimSize()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, simSizeFile));
+            IEnumerable<SimSize>? DefaultSimSizes = JsonSerializer
+                .Deserialize<IEnumerable<SimSize>>(jsonData);
+
+            if (DefaultSimSizes == null) return "0 Sim Size Added. ";
+
+            foreach (var simSize in DefaultSimSizes)
+            {
+                _simSizeRepo.Add(simSize);
+            }
+            _simSizeRepo.Save();
+
+            return DefaultSimSizes.Count() + " Sim Sizes Added. ";
+        }
+
+        private string SeedSimMultiple()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, simMultipleFile));
+            IEnumerable<SimMultiple>? DefaultSimMultiples = JsonSerializer
+                .Deserialize<IEnumerable<SimMultiple>>(jsonData);
+
+            if (DefaultSimMultiples == null) return "0 Sim Multiple Added. ";
+
+            foreach (var simMultiple in DefaultSimMultiples)
+            {
+                _simMultipleRepo.Add(simMultiple);
+            }
+            _simMultipleRepo.Save();
+
+            return DefaultSimMultiples.Count() + " Sim Multiples Added. ";
         }
 
         public string DataFolder
@@ -153,7 +233,10 @@ namespace products_api.Data.SQLServerRepository
 DELETE FROM Category;
 DELETE FROM Brand;
 DELETE FROM Availability;
+DELETE FROM NetworkBand;
 DELETE FROM Network;
+DELETE FROM SimSize;
+DELETE FROM SimMultiple;
 ";
             int deletedRows = connection.Execute(sql);
 

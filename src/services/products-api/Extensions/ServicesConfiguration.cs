@@ -16,13 +16,14 @@ namespace products_api.Extensions
             services.AddScoped<IBrandRepository, SqlServerBrandRepository>();
             services.AddScoped<IAvailabilityRepository, SqlServerAvailabilityRepository>();
             services.AddScoped<INetworkRepository, SqlServerNetworkRepository>();
+            services.AddScoped<INetworkBandRepository, SqlServerNetworkBandRepository>();
+            services.AddScoped<ISimSizeRepository, SqlServerSimSizeRepository>();
+            services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
 
             // Add Services
             services.AddScoped<CategoryService>();
             services.AddScoped<ResetService>();
-            services.AddScoped<BrandService>();
-            services.AddScoped<AvailabilityService>();
-            services.AddScoped<NetworkService>();
+            services.AddScoped<ListingService>();
         }
     }
 }

@@ -28,6 +28,21 @@ namespace products_api.Data
             modelBuilder.Entity<Network>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // Network  Detail
+            modelBuilder.Entity<NetworkBand>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Sim Size
+            modelBuilder.Entity<SimSize>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Sim Multiple
+            modelBuilder.Entity<SimMultiple>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -37,5 +52,8 @@ namespace products_api.Data
         public DbSet<Brand>? Brands { get; set; }
         public DbSet<Availability>? Availabilities { get; set; }
         public DbSet<Network>? Networks { get; set; }
+        public DbSet<NetworkBand>? NetworkBands { get; set; }
+        public DbSet<SimSize>? SimSizes { get; set; }
+        public DbSet<SimMultiple>? SimMultiples { get; set; }
     }
 }

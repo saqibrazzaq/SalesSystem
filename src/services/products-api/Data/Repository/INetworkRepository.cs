@@ -11,5 +11,7 @@ namespace products_api.Data.Repository
             int? pageSize,
             string? sortBy,
             string? sortDirection);
+
+        Task<Network?> GetNetworkWithAllDetails(string name);
     }
 }
