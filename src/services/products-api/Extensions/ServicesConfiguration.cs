@@ -19,6 +19,7 @@ namespace products_api.Extensions
             services.AddScoped<INetworkBandRepository, SqlServerNetworkBandRepository>();
             services.AddScoped<ISimSizeRepository, SqlServerSimSizeRepository>();
             services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
+            services.AddScoped<IBodyFormFactorRepository, SqlServerBodyFormFactorRepository>();
 
             // Add Services
             services.AddScoped<CategoryService>();

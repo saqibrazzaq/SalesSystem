@@ -43,6 +43,11 @@ namespace products_api.Data
             modelBuilder.Entity<SimMultiple>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // BodyFormFactor
+            modelBuilder.Entity<BodyFormFactor>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -55,5 +60,6 @@ namespace products_api.Data
         public DbSet<NetworkBand>? NetworkBands { get; set; }
         public DbSet<SimSize>? SimSizes { get; set; }
         public DbSet<SimMultiple>? SimMultiples { get; set; }
+        public DbSet<BodyFormFactor>? BodyFormFactors { get; set; }
     }
 }

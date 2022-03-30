@@ -11,13 +11,17 @@ namespace products_api.Services
         private readonly INetworkBandRepository _networkBandRepo;
         private readonly ISimSizeRepository _simSizeRepo;
         private readonly ISimMultipleRepository _simMultipleRepo;
+        private readonly IBodyFormFactorRepository _bodyFormFactorRepo;
+        private readonly ILogger<ListingService> _logger;
 
         public ListingService(IBrandRepository brandRepo,
             IAvailabilityRepository availabilityRepo,
             INetworkRepository networkRepo,
             INetworkBandRepository networkBandRepo,
-            ISimSizeRepository simSizeRepo, 
-            ISimMultipleRepository simMultipleRepo)
+            ISimSizeRepository simSizeRepo,
+            ISimMultipleRepository simMultipleRepo,
+            IBodyFormFactorRepository bodyFormFactorRepo, 
+            ILogger<ListingService> logger)
         {
             _brandRepo = brandRepo;
             _availabilityRepo = availabilityRepo;
@@ -25,92 +29,206 @@ namespace products_api.Services
             _networkBandRepo = networkBandRepo;
             _simSizeRepo = simSizeRepo;
             _simMultipleRepo = simMultipleRepo;
+            _bodyFormFactorRepo = bodyFormFactorRepo;
+            _logger = logger;
         }
 
-        public Task<List<BrandDto>> GetBrands()
+        public async Task<ServiceResponse<List<BrandDto>>> GetBrands()
         {
-            // Get all brands
-            var brands = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var brandDtos = new List<BrandDto>();
-            foreach (var brand in brands)
+            // Create new response
+            var response = new ServiceResponse<List<BrandDto>>();
+
+            try
             {
-                brandDtos.Add(brand.AsDto());
+                // Get all brands
+                var brands = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var brandDtos = new List<BrandDto>();
+                foreach (var brand in brands)
+                {
+                    brandDtos.Add(brand.AsDto());
+                }
+                // Set response
+                response.Data = brandDtos;
             }
-            return Task.FromResult(brandDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Availability service failed.");
+            }
+            
+            return await Task.FromResult(response);
         }
 
-        public Task<List<AvailabilityDto>> GetAvailabilities()
+        public async Task<ServiceResponse<List<AvailabilityDto>>> GetAvailabilities()
         {
-            // Get all availabilities
-            var availabilities = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var availabilityDtos = new List<AvailabilityDto>();
-            foreach (var availability in availabilities)
+            // Create new response
+            var response = new ServiceResponse<List<AvailabilityDto>>();
+
+            try
             {
-                availabilityDtos.Add(availability.AsDto());
+                // Get all availabilities
+                var availabilities = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var availabilityDtos = new List<AvailabilityDto>();
+                foreach (var availability in availabilities)
+                {
+                    availabilityDtos.Add(availability.AsDto());
+                }
+                // Set response
+                response.Data = availabilityDtos;
             }
-            return Task.FromResult(availabilityDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Availability service failed.");
+            }
+            
+            return await Task.FromResult(response);
         }
 
-        public Task<List<NetworkDto>> GetNetworks()
+        public async Task<ServiceResponse<List<NetworkDto>>> GetNetworks()
         {
-            // Get all Networks
-            var networks = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var networkDtos = new List<NetworkDto>();
-            foreach (var network in networks)
+            // Create new response
+            var response = new ServiceResponse<List<NetworkDto>>();
+
+            try
             {
-                networkDtos.Add(network.AsDto());
+                // Get all Networks
+                var networks = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var networkDtos = new List<NetworkDto>();
+                foreach (var network in networks)
+                {
+                    networkDtos.Add(network.AsDto());
+                }
+                // Set response
+                response.Data = networkDtos;
             }
-            return Task.FromResult(networkDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Network service failed.");
+            }
+            
+            return await Task.FromResult(response);
         }
 
-        public Task<List<NetworkBandDto>> GetNetworkBands(string networkName)
+        public async Task<ServiceResponse<List<NetworkBandDto>>> GetNetworkBands(string networkName)
         {
-            // Get network id from name
-            var networkId = _networkRepo.GetAll(
-                filter: x => x.Name == networkName
-                ).Select(x => x.Id)
-                .FirstOrDefault();
+            // Create new response
+            var response = new ServiceResponse<List<NetworkBandDto>>();
 
-            // Get all Networks bands
-            var networkBands = _networkBandRepo.GetAll(
-                filter: x => x.NetworkId == networkId,
-                orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var networkBandDtos = new List<NetworkBandDto>();
-            foreach (var networkBand in networkBands)
+            try
             {
-                networkBandDtos.Add(networkBand.AsDto());
+                // Get network id from name
+                var networkId = _networkRepo.GetAll(
+                    filter: x => x.Name == networkName
+                    ).Select(x => x.Id)
+                    .FirstOrDefault();
+
+                // Get all Networks bands
+                var networkBands = _networkBandRepo.GetAll(
+                    filter: x => x.NetworkId == networkId,
+                    orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var networkBandDtos = new List<NetworkBandDto>();
+                foreach (var networkBand in networkBands)
+                {
+                    networkBandDtos.Add(networkBand.AsDto());
+                }
+                // Set response
+                response.Data = networkBandDtos;
             }
-            return Task.FromResult(networkBandDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Networks bands service failed.");
+            }
+            
+            return await Task.FromResult(response);
         }
 
-        public Task<List<SimSizeDto>> GetSimSizes()
+        public async Task<ServiceResponse<List<SimSizeDto>>> GetSimSizes()
         {
-            // Get all SimSize
-            var simSizes = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var simSizeDtos = new List<SimSizeDto>();
-            foreach (var simSize in simSizes)
+            // Create new response
+            var response = new ServiceResponse<List<SimSizeDto>>();
+
+            try
             {
-                simSizeDtos.Add(simSize.AsDto());
+                // Get all SimSize
+                var simSizes = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var simSizeDtos = new List<SimSizeDto>();
+                foreach (var simSize in simSizes)
+                {
+                    simSizeDtos.Add(simSize.AsDto());
+                }
+                // Set response
+                response.Data = simSizeDtos;
             }
-            return Task.FromResult(simSizeDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Sim size service failed.");
+            }
+            
+            return await Task.FromResult(response);
         }
 
-        public Task<List<SimMultipleDto>> GetSimMultiples()
+        public async Task<ServiceResponse<List<SimMultipleDto>>> GetSimMultiples()
         {
-            // Get all SimMultiple
-            var simMultiples = _simMultipleRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-            // Create Dtos
-            var simMultipleDtos = new List<SimMultipleDto>();
-            foreach (var simMultiple in simMultiples)
+            // Create new response
+            var response = new ServiceResponse<List<SimMultipleDto>>();
+
+            try
             {
-                simMultipleDtos.Add(simMultiple.AsDto());
+                // Get all SimMultiple
+                var simMultiples = _simMultipleRepo.GetAll(
+                    orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var simMultipleDtos = new List<SimMultipleDto>();
+                foreach (var simMultiple in simMultiples)
+                {
+                    simMultipleDtos.Add(simMultiple.AsDto());
+                }
+                // Set response
+                response.Data = simMultipleDtos;
             }
-            return Task.FromResult(simMultipleDtos);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("SimMultiple service failed.");
+            }
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<BodyFormFactorDto>>> GetBodyFormFactors()
+        {
+            // Create new response
+            var response = new ServiceResponse<List<BodyFormFactorDto>>();
+
+            try
+            {
+                // Get all BodyFormFactor
+                var bodyFormFactors = _bodyFormFactorRepo.GetAll(
+                    orderBy: o => o.OrderBy(x => x.Name));
+                // Create Dtos
+                var bodyFormFactorDtos = new List<BodyFormFactorDto>();
+                foreach (var bodyFormFactor in bodyFormFactors)
+                {
+                    bodyFormFactorDtos.Add(bodyFormFactor.AsDto());
+                }
+                // Set response
+                response.Data = bodyFormFactorDtos;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Body Form factor service failed.");
+            }
+
+            return await Task.FromResult(response);
         }
     }
 }

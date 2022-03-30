@@ -10,36 +10,20 @@ namespace products_api.Controllers
     public class ListingController : ControllerBase
     {
         private readonly ListingService _listingService;
-        private readonly ILogger<ListingController> _logger;
 
-        public ListingController(ListingService listingService, 
-            ILogger<ListingController> logger)
+        public ListingController(ListingService listingService)
         {
             _listingService = listingService;
-            _logger = logger;
         }
 
         [HttpGet("brands")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<BrandDto>>>> 
             GetBrands()
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<BrandDto>>();
-            try
-            {
-                // Get brands from service
-                var result = await _listingService.GetBrands();
-                if (result == null)
-                    response = response.GetFailureResponse("Brand Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Brand Service failed.");
-            }
-            
+            // Get response from service
+            var response = await _listingService.GetNetworks();
+
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -47,23 +31,10 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<IEnumerable<AvailabilityDto>>>> 
             GetAvailabilities()
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<AvailabilityDto>>();
-            try
-            {
-                // Get availabilities from service
-                var result = await _listingService.GetAvailabilities();
-                if (result == null)
-                    response = response.GetFailureResponse("Availability Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Availability Service failed.");
-            }
+            // Get response from service
+            var response = await _listingService.GetAvailabilities();
 
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -71,23 +42,10 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<IEnumerable<NetworkDto>>>>
             GetNetworks()
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<NetworkDto>>();
-            try
-            {
-                // Get Networks from service
-                var result = await _listingService.GetNetworks();
-                if (result == null)
-                    response = response.GetFailureResponse("Network Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Network Service failed.");
-            }
+            // Get response from service
+            var response = await _listingService.GetNetworks();
 
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -95,23 +53,10 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<IEnumerable<NetworkBandDto>>>>
             GetNetworkBands(string networkName)
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<NetworkBandDto>>();
-            try
-            {
-                // Get Network Bands from service
-                var result = await _listingService.GetNetworkBands(networkName);
-                if (result == null)
-                    response = response.GetFailureResponse("Network Band Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Network Band Service failed.");
-            }
-
+            // Get response from service
+            var response = await _listingService.GetNetworkBands(networkName);
+            
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -119,23 +64,10 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<IEnumerable<SimSizeDto>>>>
             GetSimSizes()
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<SimSizeDto>>();
-            try
-            {
-                // Get SimSize from service
-                var result = await _listingService.GetSimSizes();
-                if (result == null)
-                    response = response.GetFailureResponse("SimSize Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("SimSize Service failed.");
-            }
+            // Get response from service
+            var response = await _listingService.GetSimSizes();
 
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -143,23 +75,21 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<IEnumerable<SimMultipleDto>>>>
             GetSimMultiples()
         {
-            // Create response
-            var response = new ServiceResponse<IEnumerable<SimMultipleDto>>();
-            try
-            {
-                // Get SimMultiple from service
-                var result = await _listingService.GetSimMultiples();
-                if (result == null)
-                    response = response.GetFailureResponse("SimMultiple Service failed.");
-                else
-                    response.Data = result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("SimMultiple Service failed.");
-            }
+            // Get response from service
+            var response = await _listingService.GetSimMultiples();
 
+            // Send response
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+        [HttpGet("bodyFormFactors")]
+        public async Task<ActionResult<ServiceResponse<IEnumerable<BodyFormFactorDto>>>>
+            GetBodyFormFactors()
+        {
+            // Get response from service
+            var response = await _listingService.GetBodyFormFactors();
+
+            // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }

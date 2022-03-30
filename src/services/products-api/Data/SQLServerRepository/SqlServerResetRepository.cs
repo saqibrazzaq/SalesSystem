@@ -17,6 +17,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string networkDetailsFile = "default-network-bands.json";
         private readonly string simSizeFile = "default-sim-size.json";
         private readonly string simMultipleFile = "default-sim-multiple.json";
+        private readonly string bodyFormFactorFile = "default-body-formfactor.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -26,6 +27,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly INetworkBandRepository _networkBandRepository;
         private readonly ISimSizeRepository _simSizeRepo;
         private readonly ISimMultipleRepository _simMultipleRepo;
+        private readonly IBodyFormFactorRepository _bodyFormFactorRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -35,8 +37,9 @@ namespace products_api.Data.SQLServerRepository
             IAvailabilityRepository availabilityRepository,
             INetworkRepository networkRepository,
             INetworkBandRepository networkBandRepository,
-            ISimSizeRepository simSizeRepo, 
-            ISimMultipleRepository simMultipleRepo)
+            ISimSizeRepository simSizeRepo,
+            ISimMultipleRepository simMultipleRepo, 
+            IBodyFormFactorRepository bodyFormFactorRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -46,6 +49,7 @@ namespace products_api.Data.SQLServerRepository
             _networkBandRepository = networkBandRepository;
             _simSizeRepo = simSizeRepo;
             _simMultipleRepo = simMultipleRepo;
+            _bodyFormFactorRepo = bodyFormFactorRepo;
         }
 
         public SqlConnection SqlConnection
@@ -80,6 +84,7 @@ namespace products_api.Data.SQLServerRepository
             result += SeedNetworkBands();
             result += SeedSimSize();
             result += SeedSimMultiple();
+            result += SeedBodyFormFactor();
 
             return result;
         }
@@ -215,6 +220,23 @@ namespace products_api.Data.SQLServerRepository
             return DefaultSimMultiples.Count() + " Sim Multiples Added. ";
         }
 
+        private string SeedBodyFormFactor()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, bodyFormFactorFile));
+            IEnumerable<BodyFormFactor>? DefaultBodyFormFactors = JsonSerializer
+                .Deserialize<IEnumerable<BodyFormFactor>>(jsonData);
+
+            if (DefaultBodyFormFactors == null) return "0 Body FormFactor Added. ";
+
+            foreach (var bodyFormFactor in DefaultBodyFormFactors)
+            {
+                _bodyFormFactorRepo.Add(bodyFormFactor);
+            }
+            _bodyFormFactorRepo.Save();
+
+            return DefaultBodyFormFactors.Count() + " Body FormFactor Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -237,6 +259,7 @@ DELETE FROM NetworkBand;
 DELETE FROM Network;
 DELETE FROM SimSize;
 DELETE FROM SimMultiple;
+DELETE FROM BodyFormFactor;
 ";
             int deletedRows = connection.Execute(sql);
 
