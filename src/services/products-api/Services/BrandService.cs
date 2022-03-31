@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BrandDto>> CreateBrand(BrandCreateDto dto)
+        public async Task<ServiceResponse<BrandDto>> Add(BrandCreateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<BrandDto>();
@@ -63,7 +63,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteBrand(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -98,7 +98,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<BrandDto>>> GetBrands(string? name = null)
+        public async Task<ServiceResponse<BrandDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<BrandDto>();
+
+            try
+            {
+                // Get all brands
+                var brand = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check not found
+                if (brand == null) response = response.GetFailureResponse("Brand not found");
+                else response.Data = brand.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Brand service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<BrandDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<BrandDto>>();
@@ -107,11 +131,6 @@ namespace products_api.Services
             {
                 // Get all brands
                 var brands = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    brands = brands.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var brandDtos = new List<BrandDto>();
                 foreach (var brand in brands)
@@ -124,13 +143,13 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Availability service failed.");
+                response = response.GetFailureResponse("Brand service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BrandDto>> UpdateBrand(Guid id, BrandUpdateDto dto)
+        public async Task<ServiceResponse<BrandDto>> Update(Guid id, BrandUpdateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<BrandDto>();

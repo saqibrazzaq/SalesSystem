@@ -4,10 +4,11 @@ namespace products_api.Services
 {
     public interface IAvailabilityService
     {
-        Task<ServiceResponse<List<AvailabilityDto>>> GetAvailabilities(string? name);
-        Task<ServiceResponse<AvailabilityDto>> CreateAvailability(AvailabilityCreateDto dto);
-        Task<ServiceResponse<AvailabilityDto>> UpdateAvailability(Guid id, AvailabilityUpdateDto dto);
-        Task<ServiceResponse<bool>> DeleteAvailability(Guid id);
+        Task<ServiceResponse<List<AvailabilityDto>>> GetAll();
+        Task<ServiceResponse<AvailabilityDto>> Get(Guid id);
+        Task<ServiceResponse<AvailabilityDto>> Add(AvailabilityCreateDto dto);
+        Task<ServiceResponse<AvailabilityDto>> Update(Guid id, AvailabilityUpdateDto dto);
+        Task<ServiceResponse<bool>> Remove(Guid id);
         Task<ServiceResponse<int>> Count();
     }
 }

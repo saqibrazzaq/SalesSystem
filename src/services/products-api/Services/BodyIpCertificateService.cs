@@ -107,15 +107,17 @@ namespace products_api.Services
 
             try
             {
-                // Get all BodyIpCertificate
+                // Get BodyIpCertificate
                 var bodyIpCertificate = _bodyIpCertificateRepo.
                     GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
-                // Create Dtos
-                if (bodyIpCertificate == null) throw new Exception("Body IP Certificate not found");
-                // Set data
-                response.Data = bodyIpCertificate.AsDto();
+                // Check not found
+                if (bodyIpCertificate == null)
+                    response = response.GetFailureResponse("Body IP Certificate not found");
+                else
+                    response.Data = bodyIpCertificate.AsDto();
+
             }
             catch (Exception ex)
             {

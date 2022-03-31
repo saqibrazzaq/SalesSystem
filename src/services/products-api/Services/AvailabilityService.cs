@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<AvailabilityDto>> CreateAvailability(
+        public async Task<ServiceResponse<AvailabilityDto>> Add(
             AvailabilityCreateDto dto)
         {
             // Create new response
@@ -64,7 +64,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteAvailability(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -99,7 +99,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<AvailabilityDto>>> GetAvailabilities(string? name = null)
+        public async Task<ServiceResponse<AvailabilityDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<AvailabilityDto>();
+
+            try
+            {
+                // Get Availability
+                var availability = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (availability == null) response = response.GetFailureResponse("Availability not found");
+                else response.Data = availability.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Availability service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<AvailabilityDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<AvailabilityDto>>();
@@ -108,12 +132,6 @@ namespace products_api.Services
             {
                 // Get all Availability
                 var availabilities = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    availabilities = availabilities
-                        .Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var availabilityDtos = new List<AvailabilityDto>();
                 foreach (var availability in availabilities)
@@ -132,7 +150,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<AvailabilityDto>> UpdateAvailability(
+        public async Task<ServiceResponse<AvailabilityDto>> Update(
             Guid id, AvailabilityUpdateDto dto)
         {
             // Create new response

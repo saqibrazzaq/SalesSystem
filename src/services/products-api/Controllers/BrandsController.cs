@@ -2,38 +2,37 @@
 using Microsoft.AspNetCore.Mvc;
 using products_api.Dtos;
 using products_api.Services;
-using System.Net;
 
 namespace products_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class BodyIpCertificatesController : ControllerBase
+    public class BrandsController : ControllerBase
     {
-        private readonly IBodyIpCertificateService _bodyIpCertificateService;
+        private readonly IBrandService _brandService;
 
-        public BodyIpCertificatesController(IBodyIpCertificateService bodyIpCertificateService)
+        public BrandsController(IBrandService brandService)
         {
-            _bodyIpCertificateService = bodyIpCertificateService;
+            _brandService = brandService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<BodyIpCertificateDto>>>>
+        public async Task<ActionResult<ServiceResponse<List<BrandDto>>>>
             GetAll()
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.GetAll();
+            var response = await _brandService.GetAll();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>>
+        public async Task<ActionResult<ServiceResponse<BrandDto>>>
             Get(Guid id)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Get(id);
+            var response = await _brandService.Get(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -44,29 +43,29 @@ namespace products_api.Controllers
             Count()
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Count();
+            var response = await _brandService.Count();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>> Add(
-            [FromBody]BodyIpCertificateCreateDto dto)
+        public async Task<ActionResult<ServiceResponse<BrandDto>>> Add(
+            [FromBody] BrandCreateDto dto)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Add(dto);
+            var response = await _brandService.Add(dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>> Update(
-            Guid id, [FromBody]BodyIpCertificateUpdateDto dto)
+        public async Task<ActionResult<ServiceResponse<BrandDto>>> Update(
+            Guid id, [FromBody] BrandUpdateDto dto)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Update(id, dto);
+            var response = await _brandService.Update(id, dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -76,7 +75,7 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> Remove(Guid id)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Remove(id);
+            var response = await _brandService.Remove(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace products_api_tests
 {
-    public class BodyIpCertificateTests
+    public class BrandTests
     {
         
         [Fact]
@@ -16,7 +16,7 @@ namespace products_api_tests
         {
             // Initialize http client
             var client = new HttpClient();
-            var controllerName = "BodyIpCertificates";
+            var controllerName = "Brands";
             var url = Common.BaseUrl + $"{controllerName}/count";
 
             // Send count request

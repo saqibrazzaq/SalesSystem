@@ -9,8 +9,6 @@ namespace products_api.Controllers
     [ApiController]
     public class ListingController : ControllerBase
     {
-        private readonly IBrandService _brandService;
-        private readonly IAvailabilityService _availabilityService;
         private readonly INetworkService _networkService;
         private readonly INetworkBandService _networkBandService;
         private readonly ISimSizeService _simSizeService;
@@ -18,43 +16,17 @@ namespace products_api.Controllers
         private readonly IBodyFormFactorService _bodyFormFactorService;
 
         public ListingController(
-            IBrandService brandService,
-            IAvailabilityService availabilityService,
             INetworkService networkService,
             INetworkBandService networkBandService,
             ISimSizeService simSizeService,
             ISimMultipleService simMultipleService, 
             IBodyFormFactorService bodyFormFactorService)
         {
-            _brandService = brandService;
-            _availabilityService = availabilityService;
             _networkService = networkService;
             _networkBandService = networkBandService;
             _simSizeService = simSizeService;
             _simMultipleService = simMultipleService;
             _bodyFormFactorService = bodyFormFactorService;
-        }
-
-        [HttpGet("brands")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<BrandDto>>>> 
-            GetBrands(string? name = null)
-        {
-            // Get response from service
-            var response = await _brandService.GetBrands(name);
-
-            // Send response
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
-
-        [HttpGet("availabilities")]
-        public async Task<ActionResult<ServiceResponse<IEnumerable<AvailabilityDto>>>> 
-            GetAvailabilities(string? name = null)
-        {
-            // Get response from service
-            var response = await _availabilityService.GetAvailabilities(name);
-
-            // Send response
-            return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("networks")]
