@@ -10,18 +10,39 @@ namespace products_api.Controllers
     public class ListingController : ControllerBase
     {
         private readonly ListingService _listingService;
+        private readonly IBrandService _brandService;
+        private readonly IAvailabilityService _availabilityService;
+        private readonly INetworkService _networkService;
+        private readonly INetworkBandService _networkBandService;
+        private readonly ISimSizeService _simSizeService;
+        private readonly ISimMultipleService _simMultipleService;
+        private readonly IBodyFormFactorService _bodyFormFactorService;
 
-        public ListingController(ListingService listingService)
+        public ListingController(ListingService listingService,
+            IBrandService brandService,
+            IAvailabilityService availabilityService,
+            INetworkService networkService,
+            INetworkBandService networkBandService,
+            ISimSizeService simSizeService,
+            ISimMultipleService simMultipleService, 
+            IBodyFormFactorService bodyFormFactorService)
         {
             _listingService = listingService;
+            _brandService = brandService;
+            _availabilityService = availabilityService;
+            _networkService = networkService;
+            _networkBandService = networkBandService;
+            _simSizeService = simSizeService;
+            _simMultipleService = simMultipleService;
+            _bodyFormFactorService = bodyFormFactorService;
         }
 
         [HttpGet("brands")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<BrandDto>>>> 
-            GetBrands()
+            GetBrands(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetNetworks();
+            var response = await _brandService.GetBrands(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -29,10 +50,10 @@ namespace products_api.Controllers
 
         [HttpGet("availabilities")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<AvailabilityDto>>>> 
-            GetAvailabilities()
+            GetAvailabilities(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetAvailabilities();
+            var response = await _availabilityService.GetAvailabilities(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -40,10 +61,10 @@ namespace products_api.Controllers
 
         [HttpGet("networks")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<NetworkDto>>>>
-            GetNetworks()
+            GetNetworks(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetNetworks();
+            var response = await _networkService.GetNetworks(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -54,7 +75,7 @@ namespace products_api.Controllers
             GetNetworkBands(string networkName)
         {
             // Get response from service
-            var response = await _listingService.GetNetworkBands(networkName);
+            var response = await _networkBandService.GetNetworkBands(networkName);
             
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -62,10 +83,10 @@ namespace products_api.Controllers
 
         [HttpGet("simSizes")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<SimSizeDto>>>>
-            GetSimSizes()
+            GetSimSizes(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetSimSizes();
+            var response = await _simSizeService.GetSimSizes(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -73,10 +94,10 @@ namespace products_api.Controllers
 
         [HttpGet("simMultiples")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<SimMultipleDto>>>>
-            GetSimMultiples()
+            GetSimMultiples(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetSimMultiples();
+            var response = await _simMultipleService.GetSimMultiples(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -84,10 +105,10 @@ namespace products_api.Controllers
 
         [HttpGet("bodyFormFactors")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<BodyFormFactorDto>>>>
-            GetBodyFormFactors()
+            GetBodyFormFactors(string? name = null)
         {
             // Get response from service
-            var response = await _listingService.GetBodyFormFactors();
+            var response = await _bodyFormFactorService.GetBodyFormFactors(name);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);

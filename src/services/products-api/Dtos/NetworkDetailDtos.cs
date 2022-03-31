@@ -31,6 +31,7 @@ namespace products_api.Dtos
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
+        public string NetworkName { get; set; } = string.Empty;
     }
 
     public class NetworkBandUpdateDto

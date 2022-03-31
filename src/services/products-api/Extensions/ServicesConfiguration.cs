@@ -20,10 +20,17 @@ namespace products_api.Extensions
             services.AddScoped<ISimSizeRepository, SqlServerSimSizeRepository>();
             services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
             services.AddScoped<IBodyFormFactorRepository, SqlServerBodyFormFactorRepository>();
-
+            
             // Add Services
             services.AddScoped<CategoryService>();
             services.AddScoped<ResetService>();
+            services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IAvailabilityService, AvailabilityService>();
+            services.AddScoped<INetworkService, NetworkService>();
+            services.AddScoped<INetworkBandService, NetworkBandService>();
+            services.AddScoped<ISimSizeService, SimSizeService>();
+            services.AddScoped<ISimMultipleService, SimMultipleService>();
+            services.AddScoped<IBodyFormFactorService, BodyFormFactorService>();
             services.AddScoped<ListingService>();
         }
     }
