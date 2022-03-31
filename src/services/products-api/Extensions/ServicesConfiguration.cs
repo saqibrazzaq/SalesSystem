@@ -20,6 +20,7 @@ namespace products_api.Extensions
             services.AddScoped<ISimSizeRepository, SqlServerSimSizeRepository>();
             services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
             services.AddScoped<IBodyFormFactorRepository, SqlServerBodyFormFactorRepository>();
+            services.AddScoped<IBodyIpCertificateRepository, SqlServerBodyIpCertificateRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -31,7 +32,7 @@ namespace products_api.Extensions
             services.AddScoped<ISimSizeService, SimSizeService>();
             services.AddScoped<ISimMultipleService, SimMultipleService>();
             services.AddScoped<IBodyFormFactorService, BodyFormFactorService>();
-            services.AddScoped<ListingService>();
+            services.AddScoped<IBodyIpCertificateService, BodyIpCertificateService>();
         }
     }
 }

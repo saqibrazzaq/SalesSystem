@@ -18,6 +18,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string simSizeFile = "default-sim-size.json";
         private readonly string simMultipleFile = "default-sim-multiple.json";
         private readonly string bodyFormFactorFile = "default-body-formfactor.json";
+        private readonly string bodyIpCertificateFile = "default-body-ipcertificate.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -28,6 +29,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly ISimSizeRepository _simSizeRepo;
         private readonly ISimMultipleRepository _simMultipleRepo;
         private readonly IBodyFormFactorRepository _bodyFormFactorRepo;
+        private readonly IBodyIpCertificateRepository _bodyIpCertificateRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -38,8 +40,9 @@ namespace products_api.Data.SQLServerRepository
             INetworkRepository networkRepository,
             INetworkBandRepository networkBandRepository,
             ISimSizeRepository simSizeRepo,
-            ISimMultipleRepository simMultipleRepo, 
-            IBodyFormFactorRepository bodyFormFactorRepo)
+            ISimMultipleRepository simMultipleRepo,
+            IBodyFormFactorRepository bodyFormFactorRepo, 
+            IBodyIpCertificateRepository bodyIpCertificateRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -50,6 +53,7 @@ namespace products_api.Data.SQLServerRepository
             _simSizeRepo = simSizeRepo;
             _simMultipleRepo = simMultipleRepo;
             _bodyFormFactorRepo = bodyFormFactorRepo;
+            _bodyIpCertificateRepo = bodyIpCertificateRepo;
         }
 
         public SqlConnection SqlConnection
@@ -85,6 +89,7 @@ namespace products_api.Data.SQLServerRepository
             result += SeedSimSize();
             result += SeedSimMultiple();
             result += SeedBodyFormFactor();
+            result += SeedBodyIpCertificate();
 
             return result;
         }
@@ -237,6 +242,23 @@ namespace products_api.Data.SQLServerRepository
             return DefaultBodyFormFactors.Count() + " Body FormFactor Added. ";
         }
 
+        private string SeedBodyIpCertificate()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, bodyIpCertificateFile));
+            IEnumerable<BodyIpCertificate>? DefaultBodyIpCertificates = JsonSerializer
+                .Deserialize<IEnumerable<BodyIpCertificate>>(jsonData);
+
+            if (DefaultBodyIpCertificates == null) return "0 Body IpCertificate Added. ";
+
+            foreach (var bodyIpCertificate in DefaultBodyIpCertificates)
+            {
+                _bodyIpCertificateRepo.Add(bodyIpCertificate);
+            }
+            _bodyIpCertificateRepo.Save();
+
+            return DefaultBodyIpCertificates.Count() + " Body IpCertificate Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -260,6 +282,7 @@ DELETE FROM Network;
 DELETE FROM SimSize;
 DELETE FROM SimMultiple;
 DELETE FROM BodyFormFactor;
+DELETE FROM BodyIpCertificate;
 ";
             int deletedRows = connection.Execute(sql);
 

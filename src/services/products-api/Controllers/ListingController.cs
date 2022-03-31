@@ -9,7 +9,6 @@ namespace products_api.Controllers
     [ApiController]
     public class ListingController : ControllerBase
     {
-        private readonly ListingService _listingService;
         private readonly IBrandService _brandService;
         private readonly IAvailabilityService _availabilityService;
         private readonly INetworkService _networkService;
@@ -18,7 +17,7 @@ namespace products_api.Controllers
         private readonly ISimMultipleService _simMultipleService;
         private readonly IBodyFormFactorService _bodyFormFactorService;
 
-        public ListingController(ListingService listingService,
+        public ListingController(
             IBrandService brandService,
             IAvailabilityService availabilityService,
             INetworkService networkService,
@@ -27,7 +26,6 @@ namespace products_api.Controllers
             ISimMultipleService simMultipleService, 
             IBodyFormFactorService bodyFormFactorService)
         {
-            _listingService = listingService;
             _brandService = brandService;
             _availabilityService = availabilityService;
             _networkService = networkService;
