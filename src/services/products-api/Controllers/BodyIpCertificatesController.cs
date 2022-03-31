@@ -39,6 +39,17 @@ namespace products_api.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
+        [HttpGet("count")]
+        public async Task<ActionResult<ServiceResponse<List<BodyIpCertificateDto>>>>
+            Count()
+        {
+            // Get response from service
+            var response = await _bodyIpCertificateService.Count();
+
+            // Send response
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>> Add(
             [FromBody]BodyIpCertificateCreateDto dto)
@@ -48,7 +59,7 @@ namespace products_api.Controllers
 
             // Send response
             return response.Success 
-                ? CreatedAtRoute(nameof(Get), new { response.Data.Id }, response.Data) 
+                ? Ok(response)
                 : BadRequest(response);
         }
 
