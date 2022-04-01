@@ -19,15 +19,15 @@ namespace products_api.Services
             _networkService = networkService;
         }
 
-        public async Task<ServiceResponse<int>> Count()
+        public async Task<ServiceResponse<int>> Count(Guid networkId)
         {
             // Create response
             var response = new ServiceResponse<int>();
 
             try
             {
-                // Get count
-                var count = _networkBandRepo.Count();
+                // Get count for network id
+                var count = _networkBandRepo.Count(filter: x => x.NetworkId == networkId);
                 // Set data
                 response.Data = count;
             }
@@ -40,7 +40,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<NetworkBandDto>> CreateNetworkBand(NetworkBandCreateDto dto)
+        public async Task<ServiceResponse<NetworkBandDto>> Add(NetworkBandCreateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<NetworkBandDto>();
@@ -48,29 +48,29 @@ namespace products_api.Services
             try
             {
                 // Get parent network's id for which this band is created
-                var networkServiceRes = await _networkService.GetNetworks(dto.NetworkName);
+                var networkServiceRes = await _networkService.Get(dto.NetworkId);
                 // If network not found, throw exception
-                if (networkServiceRes.Success == false || networkServiceRes.Data == null || 
-                    networkServiceRes.Data.Count() == 0)
+                if (networkServiceRes.Success == false)
                 {
-                    throw new Exception("Network not found");
+                    response = response.GetFailureResponse("Network not found.");
                 }
+                else
+                {
+                    // Create model from dto
+                    var networkBand = new NetworkBand
+                    {
+                        Name = dto.Name,
+                        Position = dto.Position,
+                        NetworkId = dto.NetworkId
+                    };
 
-                // Get network's id
-                var networkId = networkServiceRes.Data.FirstOrDefault().Id;
+                    // Add in repository
+                    _networkBandRepo.Add(networkBand);
+                    _networkBandRepo.Save();
 
-                // Create model from dto
-                var networkBand = new NetworkBand 
-                { 
-                    Name = dto.Name, Position = dto.Position, NetworkId = networkId 
-                };
-
-                // Add in repository
-                _networkBandRepo.Add(networkBand);
-                _networkBandRepo.Save();
-
-                // Set data
-                response.Data = networkBand.AsDto();
+                    // Set data
+                    response.Data = networkBand.AsDto();
+                }
             }
             catch (Exception ex)
             {
@@ -81,7 +81,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteNetworkBand(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -116,39 +116,20 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<NetworkBandDto>>> GetNetworkBands(string? name = null)
+        public async Task<ServiceResponse<NetworkBandDto>> Get(Guid id)
         {
             // Create new response
-            var response = new ServiceResponse<List<NetworkBandDto>>();
+            var response = new ServiceResponse<NetworkBandDto>();
 
             try
             {
-                // Get network id (parent)
-                var networkRes = await _networkService.GetNetworks(name);
-                if (networkRes.Success == false || networkRes.Data == null ||
-                    networkRes.Data.Count() == 0)
-                {
-                    throw new Exception("Network not found.");
-                }
-
-                // Network found, get its id
-                var networkId = networkRes.Data.FirstOrDefault().Id;
-
-                // Get all Network Band
-                var networkBands = _networkBandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    networkBands = networkBands.Where(x => x.NetworkId == networkId);
-                }
-                // Create Dtos
-                var networkBandDtos = new List<NetworkBandDto>();
-                foreach (var networkBand in networkBands)
-                {
-                    networkBandDtos.Add(networkBand.AsDto());
-                }
-                // Set data
-                response.Data = networkBandDtos;
+                // Get all Network Bands
+                var networkBand = _networkBandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (networkBand == null) response = response.GetFailureResponse("Network band not found");
+                else response.Data = networkBand.AsDto();
             }
             catch (Exception ex)
             {
@@ -159,7 +140,36 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<NetworkBandDto>> UpdateNetworkBand(
+        public async Task<ServiceResponse<List<NetworkBandDto>>> GetAll(Guid networkId)
+        {
+            // Create new response
+            var response = new ServiceResponse<List<NetworkBandDto>>();
+
+            try
+            {
+                // Get all Network Band
+                var networkBands = _networkBandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.NetworkId == networkId);
+                // Create Dtos
+                var networkBandDtos = new List<NetworkBandDto>();
+                foreach (var networkBand in networkBands)
+                {
+                    networkBandDtos.Add(networkBand.AsDto());
+                }
+                // Check for not found
+                if (networkBandDtos.Count == 0) response = response.GetFailureResponse("Network not found.");
+                else response.Data = networkBandDtos;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Network Band service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<NetworkBandDto>> Update(
             Guid id, NetworkBandUpdateDto dto)
         {
             // Create new response

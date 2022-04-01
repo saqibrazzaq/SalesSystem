@@ -7,30 +7,30 @@ namespace products_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AvailabilitiesController : ControllerBase
+    public class BodyFormFactorsController : ControllerBase
     {
-        private readonly IAvailabilityService _availabilityService;
+        private readonly IBodyFormFactorService _bodyFormFactorService;
 
-        public AvailabilitiesController(IAvailabilityService availabilityService)
+        public BodyFormFactorsController(IBodyFormFactorService bodyFormFactorService)
         {
-            _availabilityService = availabilityService;
+            _bodyFormFactorService = bodyFormFactorService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<AvailabilityDto>>>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<BodyFormFactorDto>>>> GetAll()
         {
             // Get response from service
-            var response = await _availabilityService.GetAll();
+            var response = await _bodyFormFactorService.GetAll();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<AvailabilityDto>>> Get(Guid id)
+        public async Task<ActionResult<ServiceResponse<BodyFormFactorDto>>> Get(Guid id)
         {
             // Get response from service
-            var response = await _availabilityService.Get(id);
+            var response = await _bodyFormFactorService.Get(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -40,29 +40,29 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<int>>> Count()
         {
             // Get response from service
-            var response = await _availabilityService.Count();
+            var response = await _bodyFormFactorService.Count();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<AvailabilityDto>>> Add(
-            [FromBody] AvailabilityCreateDto dto)
+        public async Task<ActionResult<ServiceResponse<BodyFormFactorDto>>> Add(
+            [FromBody] BodyFormFactorCreateDto dto)
         {
             // Get response from service
-            var response = await _availabilityService.Add(dto);
+            var response = await _bodyFormFactorService.Add(dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<AvailabilityDto>>> Update(
-            Guid id, [FromBody] AvailabilityUpdateDto dto)
+        public async Task<ActionResult<ServiceResponse<BodyFormFactorDto>>> Update(
+            Guid id, [FromBody] BodyFormFactorUpdateDto dto)
         {
             // Get response from service
-            var response = await _availabilityService.Update(id, dto);
+            var response = await _bodyFormFactorService.Update(id, dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -72,7 +72,7 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> Remove(Guid id)
         {
             // Get response from service
-            var response = await _availabilityService.Remove(id);
+            var response = await _bodyFormFactorService.Remove(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);

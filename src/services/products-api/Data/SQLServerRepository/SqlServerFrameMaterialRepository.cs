@@ -5,12 +5,15 @@ using products_api.Models;
 
 namespace products_api.Data.SQLServerRepository
 {
-    public class SqlServerNetworkBandRepository : SqlServerRepository<NetworkBand>, INetworkBandRepository
+    public class SqlServerFrameMaterialRepository : 
+        SqlServerRepository<FrameMaterial>, IFrameMaterialRepository
     {
-        public SqlServerNetworkBandRepository(AppDbContext db, IConfiguration configuration)
+        public SqlServerFrameMaterialRepository(AppDbContext db, IConfiguration configuration)
             : base(db, configuration)
         {
             
         }
+
+        
     }
 }

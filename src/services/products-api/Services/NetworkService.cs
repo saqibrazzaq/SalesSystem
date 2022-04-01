@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<NetworkDto>> CreateNetwork(NetworkCreateDto dto)
+        public async Task<ServiceResponse<NetworkDto>> Add(NetworkCreateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<NetworkDto>();
@@ -63,7 +63,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteNetwork(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -98,7 +98,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<NetworkDto>>> GetNetworks(string? name = null)
+        public async Task<ServiceResponse<NetworkDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<NetworkDto>();
+
+            try
+            {
+                // Get Network
+                var network = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (network == null) response = response.GetFailureResponse("Network not found");
+                else response.Data = network.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Network service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<NetworkDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<NetworkDto>>();
@@ -107,11 +131,6 @@ namespace products_api.Services
             {
                 // Get all Network
                 var networks = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    networks = networks.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var networkDtos = new List<NetworkDto>();
                 foreach (var network in networks)
@@ -130,7 +149,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<NetworkDto>> UpdateNetwork(Guid id, NetworkUpdateDto dto)
+        public async Task<ServiceResponse<NetworkDto>> Update(Guid id, NetworkUpdateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<NetworkDto>();

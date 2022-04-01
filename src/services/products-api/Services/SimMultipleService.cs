@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<SimMultipleDto>> CreateSimMultiple(SimMultipleCreateDto dto)
+        public async Task<ServiceResponse<SimMultipleDto>> Add(SimMultipleCreateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<SimMultipleDto>();
@@ -63,7 +63,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteSimMultiple(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -98,7 +98,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<SimMultipleDto>>> GetSimMultiples(string? name = null)
+        public async Task<ServiceResponse<SimMultipleDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<SimMultipleDto>();
+
+            try
+            {
+                // Get all SimMultiple
+                var simMultiple = _simMultipleRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (simMultiple == null) response = response.GetFailureResponse("Sim size not found.");
+                else response.Data = simMultiple.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("SimMultiple service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<SimMultipleDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<SimMultipleDto>>();
@@ -107,11 +131,6 @@ namespace products_api.Services
             {
                 // Get all SimMultiple
                 var simMultiples = _simMultipleRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    simMultiples = simMultiples.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var simMultipleDtos = new List<SimMultipleDto>();
                 foreach (var simMultiple in simMultiples)
@@ -130,7 +149,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<SimMultipleDto>> UpdateSimMultiple(
+        public async Task<ServiceResponse<SimMultipleDto>> Update(
             Guid id, SimMultipleUpdateDto dto)
         {
             // Create new response

@@ -17,8 +17,7 @@ namespace products_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<BrandDto>>>>
-            GetAll()
+        public async Task<ActionResult<ServiceResponse<List<BrandDto>>>> GetAll()
         {
             // Get response from service
             var response = await _brandService.GetAll();
@@ -28,8 +27,7 @@ namespace products_api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<BrandDto>>>
-            Get(Guid id)
+        public async Task<ActionResult<ServiceResponse<BrandDto>>> Get(Guid id)
         {
             // Get response from service
             var response = await _brandService.Get(id);
@@ -39,8 +37,7 @@ namespace products_api.Controllers
         }
 
         [HttpGet("count")]
-        public async Task<ActionResult<ServiceResponse<int>>>
-            Count()
+        public async Task<ActionResult<ServiceResponse<int>>> Count()
         {
             // Get response from service
             var response = await _brandService.Count();

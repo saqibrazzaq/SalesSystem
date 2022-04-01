@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BodyFormFactorDto>> CreateBodyFormFactor(
+        public async Task<ServiceResponse<BodyFormFactorDto>> Add(
             BodyFormFactorCreateDto dto)
         {
             // Create new response
@@ -64,7 +64,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteBodyFormFactor(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -99,8 +99,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<BodyFormFactorDto>>> GetBodyFormFactors(
-            string? name = null)
+        public async Task<ServiceResponse<BodyFormFactorDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<BodyFormFactorDto>();
+
+            try
+            {
+                // Get all BodyFormFactor
+                var bodyFormFactor = _bodyFormFactorRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (bodyFormFactor == null) response = response.GetFailureResponse("Body form factor not found.");
+                else response.Data = bodyFormFactor.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("BodyFormFactor service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<BodyFormFactorDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<BodyFormFactorDto>>();
@@ -109,11 +132,6 @@ namespace products_api.Services
             {
                 // Get all BodyFormFactor
                 var bodyFormFactors = _bodyFormFactorRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    bodyFormFactors = bodyFormFactors.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var bodyFormFactorDtos = new List<BodyFormFactorDto>();
                 foreach (var bodyFormFactor in bodyFormFactors)
@@ -132,7 +150,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BodyFormFactorDto>> UpdateBodyFormFactor(
+        public async Task<ServiceResponse<BodyFormFactorDto>> Update(
             Guid id, BodyFormFactorUpdateDto dto)
         {
             // Create new response

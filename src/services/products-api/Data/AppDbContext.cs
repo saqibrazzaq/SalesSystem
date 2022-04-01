@@ -53,6 +53,16 @@ namespace products_api.Data
             modelBuilder.Entity<BodyIpCertificate>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // BackMaterial
+            modelBuilder.Entity<BackMaterial>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // FrameMaterial
+            modelBuilder.Entity<FrameMaterial>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -67,5 +77,7 @@ namespace products_api.Data
         public DbSet<SimMultiple>? SimMultiples { get; set; }
         public DbSet<BodyFormFactor>? BodyFormFactors { get; set; }
         public DbSet<BodyIpCertificate> BodyIpCertificates { get; set; }
+        public DbSet<BackMaterial> BackMaterials { get; set; }
+        public DbSet<FrameMaterial> FrameMaterials { get; set; }
     }
 }

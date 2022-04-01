@@ -4,10 +4,11 @@ namespace products_api.Services
 {
     public interface INetworkBandService
     {
-        Task<ServiceResponse<List<NetworkBandDto>>> GetNetworkBands(string? networkName);
-        Task<ServiceResponse<NetworkBandDto>> CreateNetworkBand(NetworkBandCreateDto dto);
-        Task<ServiceResponse<NetworkBandDto>> UpdateNetworkBand(Guid id, NetworkBandUpdateDto dto);
-        Task<ServiceResponse<bool>> DeleteNetworkBand(Guid id);
-        Task<ServiceResponse<int>> Count();
+        Task<ServiceResponse<NetworkBandDto>> Get(Guid id);
+        Task<ServiceResponse<List<NetworkBandDto>>> GetAll(Guid networkId);
+        Task<ServiceResponse<NetworkBandDto>> Add(NetworkBandCreateDto dto);
+        Task<ServiceResponse<NetworkBandDto>> Update(Guid id, NetworkBandUpdateDto dto);
+        Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<int>> Count(Guid networkId);
     }
 }

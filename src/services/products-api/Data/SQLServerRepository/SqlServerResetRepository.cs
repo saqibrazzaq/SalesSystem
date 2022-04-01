@@ -19,6 +19,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly string simMultipleFile = "default-sim-multiple.json";
         private readonly string bodyFormFactorFile = "default-body-formfactor.json";
         private readonly string bodyIpCertificateFile = "default-body-ipcertificate.json";
+        private readonly string backMaterialFile = "default-backmaterial.json";
+        private readonly string frameMaterialFile = "default-framematerial.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -30,6 +32,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly ISimMultipleRepository _simMultipleRepo;
         private readonly IBodyFormFactorRepository _bodyFormFactorRepo;
         private readonly IBodyIpCertificateRepository _bodyIpCertificateRepo;
+        private readonly IBackMaterialRepository _backMaterialRepository;
+        private readonly IFrameMaterialRepository _frameMaterialRepository;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -41,8 +45,10 @@ namespace products_api.Data.SQLServerRepository
             INetworkBandRepository networkBandRepository,
             ISimSizeRepository simSizeRepo,
             ISimMultipleRepository simMultipleRepo,
-            IBodyFormFactorRepository bodyFormFactorRepo, 
-            IBodyIpCertificateRepository bodyIpCertificateRepo)
+            IBodyFormFactorRepository bodyFormFactorRepo,
+            IBodyIpCertificateRepository bodyIpCertificateRepo,
+            IBackMaterialRepository backMaterialRepository, 
+            IFrameMaterialRepository frameMaterialRepository)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -54,6 +60,8 @@ namespace products_api.Data.SQLServerRepository
             _simMultipleRepo = simMultipleRepo;
             _bodyFormFactorRepo = bodyFormFactorRepo;
             _bodyIpCertificateRepo = bodyIpCertificateRepo;
+            _backMaterialRepository = backMaterialRepository;
+            _frameMaterialRepository = frameMaterialRepository;
         }
 
         public SqlConnection SqlConnection
@@ -90,6 +98,8 @@ namespace products_api.Data.SQLServerRepository
             result += SeedSimMultiple();
             result += SeedBodyFormFactor();
             result += SeedBodyIpCertificate();
+            result += SeedBackMaterial();
+            result += SeedFrameMaterial();
 
             return result;
         }
@@ -259,6 +269,40 @@ namespace products_api.Data.SQLServerRepository
             return DefaultBodyIpCertificates.Count() + " Body IpCertificate Added. ";
         }
 
+        private string SeedBackMaterial()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, backMaterialFile));
+            IEnumerable<BackMaterial>? defaultBackMaterials = JsonSerializer
+                .Deserialize<IEnumerable<BackMaterial>>(jsonData);
+
+            if (defaultBackMaterials == null) return "0 BackMaterial Added. ";
+
+            foreach (var backMaterial in defaultBackMaterials)
+            {
+                _backMaterialRepository.Add(backMaterial);
+            }
+            _backMaterialRepository.Save();
+
+            return defaultBackMaterials.Count() + " BackMaterial Added. ";
+        }
+
+        private string SeedFrameMaterial()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, frameMaterialFile));
+            IEnumerable<FrameMaterial>? defaultFrameMaterials = JsonSerializer
+                .Deserialize<IEnumerable<FrameMaterial>>(jsonData);
+
+            if (defaultFrameMaterials == null) return "0 FrameMaterial Added. ";
+
+            foreach (var frameMaterial in defaultFrameMaterials)
+            {
+                _frameMaterialRepository.Add(frameMaterial);
+            }
+            _frameMaterialRepository.Save();
+
+            return defaultFrameMaterials.Count() + " FrameMaterial Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -283,6 +327,8 @@ DELETE FROM SimSize;
 DELETE FROM SimMultiple;
 DELETE FROM BodyFormFactor;
 DELETE FROM BodyIpCertificate;
+DELETE FROM BackMaterial;
+DELETE FROM FrameMaterial;
 ";
             int deletedRows = connection.Execute(sql);
 

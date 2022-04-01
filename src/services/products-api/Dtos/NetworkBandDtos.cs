@@ -11,7 +11,8 @@ namespace products_api.Dtos
             { 
                 Id = c.Id, 
                 Name = c.Name,
-                Position = c.Position
+                Position = c.Position,
+                NetworkId = c.NetworkId
             };
         }
     }
@@ -20,7 +21,7 @@ namespace products_api.Dtos
     public class NetworkBandDto
     {
         public Guid Id { get; set; }
-        public Guid NetworkId { get; set; }
+        public Guid? NetworkId { get; set; }
         public string NetworkName { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
@@ -31,7 +32,7 @@ namespace products_api.Dtos
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
-        public string NetworkName { get; set; } = string.Empty;
+        public Guid NetworkId { get; set; }
     }
 
     public class NetworkBandUpdateDto

@@ -4,10 +4,11 @@ namespace products_api.Services
 {
     public interface ISimMultipleService
     {
-        Task<ServiceResponse<List<SimMultipleDto>>> GetSimMultiples(string? name);
-        Task<ServiceResponse<SimMultipleDto>> CreateSimMultiple(SimMultipleCreateDto dto);
-        Task<ServiceResponse<SimMultipleDto>> UpdateSimMultiple(Guid id, SimMultipleUpdateDto dto);
-        Task<ServiceResponse<bool>> DeleteSimMultiple(Guid id);
+        Task<ServiceResponse<SimMultipleDto>> Get(Guid id);
+        Task<ServiceResponse<List<SimMultipleDto>>> GetAll();
+        Task<ServiceResponse<SimMultipleDto>> Add(SimMultipleCreateDto dto);
+        Task<ServiceResponse<SimMultipleDto>> Update(Guid id, SimMultipleUpdateDto dto);
+        Task<ServiceResponse<bool>> Remove(Guid id);
         Task<ServiceResponse<int>> Count();
     }
 }

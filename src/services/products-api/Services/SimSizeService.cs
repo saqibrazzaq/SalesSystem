@@ -37,7 +37,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<SimSizeDto>> CreateSimSize(SimSizeCreateDto dto)
+        public async Task<ServiceResponse<SimSizeDto>> Add(SimSizeCreateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<SimSizeDto>();
@@ -63,7 +63,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<bool>> DeleteSimSize(Guid id)
+        public async Task<ServiceResponse<bool>> Remove(Guid id)
         {
             // Create new response
             var response = new ServiceResponse<bool>();
@@ -98,7 +98,31 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<SimSizeDto>>> GetSimSizes(string? name = null)
+        public async Task<ServiceResponse<SimSizeDto>> Get(Guid id)
+        {
+            // Create new response
+            var response = new ServiceResponse<SimSizeDto>();
+
+            try
+            {
+                // Get all SimSize
+                var simSize = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (simSize == null) response = response.GetFailureResponse("Sim size not found.");
+                else response.Data = simSize.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("SimSize service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<List<SimSizeDto>>> GetAll()
         {
             // Create new response
             var response = new ServiceResponse<List<SimSizeDto>>();
@@ -107,11 +131,6 @@ namespace products_api.Services
             {
                 // Get all SimSize
                 var simSizes = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
-                // Match name
-                if (string.IsNullOrEmpty(name) == false)
-                {
-                    simSizes = simSizes.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-                }
                 // Create Dtos
                 var simSizeDtos = new List<SimSizeDto>();
                 foreach (var simSize in simSizes)
@@ -130,7 +149,7 @@ namespace products_api.Services
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<SimSizeDto>> UpdateSimSize(Guid id, SimSizeUpdateDto dto)
+        public async Task<ServiceResponse<SimSizeDto>> Update(Guid id, SimSizeUpdateDto dto)
         {
             // Create new response
             var response = new ServiceResponse<SimSizeDto>();

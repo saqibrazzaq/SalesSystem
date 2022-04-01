@@ -21,6 +21,8 @@ namespace products_api.Extensions
             services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
             services.AddScoped<IBodyFormFactorRepository, SqlServerBodyFormFactorRepository>();
             services.AddScoped<IBodyIpCertificateRepository, SqlServerBodyIpCertificateRepository>();
+            services.AddScoped<IBackMaterialRepository, SqlServerBackMaterialRepository>();
+            services.AddScoped<IFrameMaterialRepository, SqlServerFrameMaterialRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -33,6 +35,8 @@ namespace products_api.Extensions
             services.AddScoped<ISimMultipleService, SimMultipleService>();
             services.AddScoped<IBodyFormFactorService, BodyFormFactorService>();
             services.AddScoped<IBodyIpCertificateService, BodyIpCertificateService>();
+            services.AddScoped<IBackMaterialService, BackMaterialService>();
+            services.AddScoped<IFrameMaterialService, FrameMaterialService>();
         }
     }
 }
