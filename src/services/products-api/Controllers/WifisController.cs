@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using products_api.Dtos;
 using products_api.Services;
+using products_api.Services.Interfaces;
 
 namespace products_api.Controllers
 {

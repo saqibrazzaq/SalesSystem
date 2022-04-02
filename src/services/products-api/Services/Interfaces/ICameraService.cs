@@ -1,6 +1,6 @@
 ﻿using products_api.Dtos;
 
-namespace products_api.Services
+namespace products_api.Services.Interfaces
 {
     public interface ICameraService
     {

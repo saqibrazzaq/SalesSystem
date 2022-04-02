@@ -1,6 +1,7 @@
 ﻿using products_api.Data.Repository;
 using products_api.Dtos;
 using products_api.Models;
+using products_api.Services.Interfaces;
 
 namespace products_api.Services
 {
