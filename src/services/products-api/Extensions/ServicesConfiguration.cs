@@ -27,6 +27,7 @@ namespace products_api.Extensions
             services.AddScoped<IOSVersionRepository, SqlServerOSVersionRepository>();
             services.AddScoped<IChipsetRepository, SqlServerChipsetRepository>();
             services.AddScoped<ICardSlotRepository, SqlServerCardSlotRepository>();
+            services.AddScoped<IDisplayTechnologyRepository, SqlServerDisplayTechnologyRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -45,6 +46,7 @@ namespace products_api.Extensions
             services.AddScoped<IOSVersionService, OSVersionService>();
             services.AddScoped<IChipsetService, ChipsetService>();
             services.AddScoped<ICardSlotService, CardSlotService>();
+            services.AddScoped<IDisplayTechnologyService, DisplayTechnologyService>();
         }
     }
 }

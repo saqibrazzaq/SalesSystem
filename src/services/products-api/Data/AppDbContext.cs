@@ -83,6 +83,11 @@ namespace products_api.Data
             modelBuilder.Entity<CardSlot>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // DisplayTechnology
+            modelBuilder.Entity<DisplayTechnology>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -103,5 +108,6 @@ namespace products_api.Data
         public DbSet<OSVersion> OSVersions { get; set; }
         public DbSet<Chipset> Chipsets { get; set; }
         public DbSet<CardSlot> CardSlots { get; set; }
+        public DbSet<DisplayTechnology> DisplayTechnologies { get; set; }
     }
 }

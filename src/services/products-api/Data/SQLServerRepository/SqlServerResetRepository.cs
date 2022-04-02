@@ -26,6 +26,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string osVersionFile = "default-osversion.json";
         private readonly string chipsetFile = "default-chipset.json";
         private readonly string cardSlotFile = "default-cardslot.json";
+        private readonly string displayTechnologyFile = "default-display-technology.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -43,6 +44,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly IOSVersionRepository _osVersionRepo;
         private readonly IChipsetRepository _chipsetRepo;
         private readonly ICardSlotRepository _cardSlotRepo;
+        private readonly IDisplayTechnologyRepository _displayTechnologyRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -60,8 +62,9 @@ namespace products_api.Data.SQLServerRepository
             IFrameMaterialRepository frameMaterialRepository,
             IOSRepository osRepository,
             IOSVersionRepository osVersionRepo,
-            IChipsetRepository chipsetRepo, 
-            ICardSlotRepository cardSlotRepo)
+            IChipsetRepository chipsetRepo,
+            ICardSlotRepository cardSlotRepo, 
+            IDisplayTechnologyRepository displayTechnologyRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -79,6 +82,7 @@ namespace products_api.Data.SQLServerRepository
             _osVersionRepo = osVersionRepo;
             _chipsetRepo = chipsetRepo;
             _cardSlotRepo = cardSlotRepo;
+            _displayTechnologyRepo = displayTechnologyRepo;
         }
 
         public SqlConnection SqlConnection
@@ -121,6 +125,7 @@ namespace products_api.Data.SQLServerRepository
             result += SeedOSVersion();
             result += SeedChipset();
             result += SeedCardSlot();
+            result += SeedDisplayTechnology();
 
             return result;
         }
@@ -409,6 +414,23 @@ namespace products_api.Data.SQLServerRepository
             return defaultCardSlots.Count() + " CardSlot Added. ";
         }
 
+        private string SeedDisplayTechnology()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, cardSlotFile));
+            IEnumerable<DisplayTechnology>? defaultDisplayTechnologies = JsonSerializer
+                .Deserialize<IEnumerable<DisplayTechnology>>(jsonData);
+
+            if (defaultDisplayTechnologies == null) return "0 DisplayTechnology Added. ";
+
+            foreach (var displayTechnology in defaultDisplayTechnologies)
+            {
+                _displayTechnologyRepo.Add(displayTechnology);
+            }
+            _displayTechnologyRepo.Save();
+
+            return defaultDisplayTechnologies.Count() + " DisplayTechnology Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -439,6 +461,7 @@ DELETE FROM OSVersion;
 DELETE FROM OS;
 DELETE FROM Chipset;
 DELETE FROM CardSlot;
+DELETE FROM DisplayTechnology;
 ";
             int deletedRows = connection.Execute(sql);
 
