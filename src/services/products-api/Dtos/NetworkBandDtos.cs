@@ -40,4 +40,10 @@ namespace products_api.Dtos
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
+
+    public class NetworkBandSeedModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string NetworkName { get; set; } = string.Empty;
+    }
 }

@@ -2,7 +2,6 @@
 using products_api.Data.Repository;
 using products_api.Dtos;
 using products_api.Models;
-using products_api.SeedData.SeedModels;
 using System.Data.SqlClient;
 using System.Text.Json;
 
@@ -29,6 +28,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly string displayTechnologyFile = "default-display-technology.json";
         private readonly string cameraFile = "default-camera.json";
         private readonly string fingerprintFile = "default-fingerprint.json";
+        private readonly string wifiFile = "default-wifi.json";
+        private readonly string bluetoothFile = "default-bluetooth.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -49,6 +50,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly IDisplayTechnologyRepository _displayTechnologyRepo;
         private readonly ICameraRepository _cameraRepo;
         private readonly IFingerprintRepository _fingerprintRepo;
+        private readonly IWifiRepository _wifiRepo;
+        private readonly IBluetoothRepository _bluetoothRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -69,8 +72,10 @@ namespace products_api.Data.SQLServerRepository
             IChipsetRepository chipsetRepo,
             ICardSlotRepository cardSlotRepo,
             IDisplayTechnologyRepository displayTechnologyRepo,
-            ICameraRepository cameraRepo, 
-            IFingerprintRepository fingerprintRepo)
+            ICameraRepository cameraRepo,
+            IFingerprintRepository fingerprintRepo,
+            IWifiRepository wifiRepo, 
+            IBluetoothRepository bluetoothRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -91,6 +96,8 @@ namespace products_api.Data.SQLServerRepository
             _displayTechnologyRepo = displayTechnologyRepo;
             _cameraRepo = cameraRepo;
             _fingerprintRepo = fingerprintRepo;
+            _wifiRepo = wifiRepo;
+            _bluetoothRepo = bluetoothRepo;
         }
 
         public SqlConnection SqlConnection
@@ -136,6 +143,8 @@ namespace products_api.Data.SQLServerRepository
             result += SeedDisplayTechnology();
             result += SeedCamera();
             result += SeedFingerprint();
+            result += SeedWifi();
+            result += SeedBluetooth();
 
             return result;
         }
@@ -193,8 +202,8 @@ namespace products_api.Data.SQLServerRepository
         private string SeedNetworkBands()
         {
             string jsonData = File.ReadAllText(Path.Combine(DataFolder, networkDetailsFile));
-            IEnumerable<NetworkDetailSeedModel>? DefaultNetworkDetailSeeds =
-                JsonSerializer.Deserialize<IEnumerable<NetworkDetailSeedModel>>(jsonData);
+            IEnumerable<NetworkBandSeedModel>? DefaultNetworkDetailSeeds =
+                JsonSerializer.Deserialize<IEnumerable<NetworkBandSeedModel>>(jsonData);
 
             if (DefaultNetworkDetailSeeds == null) return "0 Network details Added. ";
 
@@ -475,6 +484,40 @@ namespace products_api.Data.SQLServerRepository
             return defaultFingerprints.Count() + " Fingerprint Added. ";
         }
 
+        private string SeedWifi()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, wifiFile));
+            IEnumerable<Wifi>? defaultWifis = JsonSerializer
+                .Deserialize<IEnumerable<Wifi>>(jsonData);
+
+            if (defaultWifis == null) return "0 Wifi Added. ";
+
+            foreach (var wifi in defaultWifis)
+            {
+                _wifiRepo.Add(wifi);
+            }
+            _wifiRepo.Save();
+
+            return defaultWifis.Count() + " Wifi Added. ";
+        }
+
+        private string SeedBluetooth()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, bluetoothFile));
+            IEnumerable<Bluetooth>? defaultBluetooths = JsonSerializer
+                .Deserialize<IEnumerable<Bluetooth>>(jsonData);
+
+            if (defaultBluetooths == null) return "0 Bluetooth Added. ";
+
+            foreach (var bluetooth in defaultBluetooths)
+            {
+                _bluetoothRepo.Add(bluetooth);
+            }
+            _bluetoothRepo.Save();
+
+            return defaultBluetooths.Count() + " Bluetooth Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -508,6 +551,8 @@ DELETE FROM CardSlot;
 DELETE FROM DisplayTechnology;
 DELETE FROM Camera;
 DELETE FROM Fingerprint;
+DELETE FROM Wifi;
+DELETE FROM Bluetooth;
 ";
             int deletedRows = connection.Execute(sql);
 

@@ -98,6 +98,16 @@ namespace products_api.Data
             modelBuilder.Entity<Fingerprint>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // Wifi
+            modelBuilder.Entity<Wifi>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Bluetooth
+            modelBuilder.Entity <Bluetooth>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -121,5 +131,7 @@ namespace products_api.Data
         public DbSet<DisplayTechnology> DisplayTechnologies { get; set; }
         public DbSet<Camera> Cameras { get; set; }
         public DbSet<Fingerprint> Fingerprints { get; set; }
+        public DbSet<Wifi> Wifis { get; set; }
+        public DbSet<Bluetooth> Bluetooths { get; set; }
     }
 }
