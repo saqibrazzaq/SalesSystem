@@ -8,6 +8,6 @@ namespace products_api_tests
 {
     internal class Common
     {
-        public const string BaseUrl = "https://localhost:44397/api/v1/";
+        public const string BaseUrl = "https://localhost:7294/api/v1/";
     }
 }

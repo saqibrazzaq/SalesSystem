@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using products_api.Data;
 
@@ -11,9 +12,10 @@ using products_api.Data;
 namespace products_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220401111030_os")]
+    partial class os
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,33 +159,6 @@ namespace products_api.Migrations
                     b.ToTable("Brand");
                 });
 
-            modelBuilder.Entity("products_api.Models.CardSlot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("CardSlot");
-                });
-
             modelBuilder.Entity("products_api.Models.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -210,33 +185,6 @@ namespace products_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("products_api.Models.Chipset", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Chipset");
                 });
 
             modelBuilder.Entity("products_api.Models.FrameMaterial", b =>
@@ -352,38 +300,6 @@ namespace products_api.Migrations
                     b.ToTable("OS");
                 });
 
-            modelBuilder.Entity("products_api.Models.OSVersion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("OSId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("OSId");
-
-                    b.ToTable("OSVersion");
-                });
-
             modelBuilder.Entity("products_api.Models.SimMultiple", b =>
                 {
                     b.Property<Guid>("Id")
@@ -447,25 +363,9 @@ namespace products_api.Migrations
                     b.Navigation("Network");
                 });
 
-            modelBuilder.Entity("products_api.Models.OSVersion", b =>
-                {
-                    b.HasOne("products_api.Models.OS", "OS")
-                        .WithMany("OSVersions")
-                        .HasForeignKey("OSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OS");
-                });
-
             modelBuilder.Entity("products_api.Models.Network", b =>
                 {
                     b.Navigation("NetworkDetails");
-                });
-
-            modelBuilder.Entity("products_api.Models.OS", b =>
-                {
-                    b.Navigation("OSVersions");
                 });
 #pragma warning restore 612, 618
         }

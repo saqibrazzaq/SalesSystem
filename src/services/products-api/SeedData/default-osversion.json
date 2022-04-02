@@ -1,0 +1,130 @@
+[
+  {
+    "Name": "Android 12",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 11",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 10",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 9.0 Pie",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 8.1 Oreo",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 8.0 Oreo",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 7.1 Nougat",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 7.0 Nougat",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 6.0 Marshmallow",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 5.1 Lollipop",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 5.0 Lollipop",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 4.4 KitKat",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 4.1-4.3 Jelly Bean",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 4.0 Ice Cream Sandwitch",
+    "OSName": "Android"
+  },
+  {
+    "Name": "Android 3.x Honeycomb",
+    "OSName": "Android"
+  },
+  {
+    "Name": "iOS 15",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 14",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 13",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 12",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 11",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 10",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 9",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 8",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 7",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 6",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "iOS 5",
+    "OSName": "iOS"
+  },
+  {
+    "Name": "Windows 10",
+    "OSName": "Windows Phone"
+  },
+  {
+    "Name": "Windows Phone 8.1",
+    "OSName": "Windows Phone"
+  },
+  {
+    "Name": "Windows Phone 8.0",
+    "OSName": "Windows Phone"
+  },
+  {
+    "Name": "Windows Phone 7.8",
+    "OSName": "Windows Phone"
+  },
+  {
+    "Name": "Windows Phone 7.5 Refresh/Tango",
+    "OSName": "Windows Phone"
+  },
+  {
+    "Name": "Windows Phone 7.5 Mango",
+    "OSName": "Windows Phone"
+  }
+]

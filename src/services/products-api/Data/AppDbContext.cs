@@ -63,6 +63,26 @@ namespace products_api.Data
             modelBuilder.Entity<FrameMaterial>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // OS
+            modelBuilder.Entity<OS>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // OSVersion
+            modelBuilder.Entity<OSVersion>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Chipset
+            modelBuilder.Entity<Chipset>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // CardSlot
+            modelBuilder.Entity<CardSlot>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -79,5 +99,9 @@ namespace products_api.Data
         public DbSet<BodyIpCertificate> BodyIpCertificates { get; set; }
         public DbSet<BackMaterial> BackMaterials { get; set; }
         public DbSet<FrameMaterial> FrameMaterials { get; set; }
+        public DbSet<OS> Oses { get; set; }
+        public DbSet<OSVersion> OSVersions { get; set; }
+        public DbSet<Chipset> Chipsets { get; set; }
+        public DbSet<CardSlot> CardSlots { get; set; }
     }
 }

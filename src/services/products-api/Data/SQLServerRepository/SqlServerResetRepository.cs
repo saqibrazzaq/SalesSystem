@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using products_api.Data.Repository;
+using products_api.Dtos;
 using products_api.Models;
 using products_api.SeedData.SeedModels;
 using System.Data.SqlClient;
@@ -21,6 +22,10 @@ namespace products_api.Data.SQLServerRepository
         private readonly string bodyIpCertificateFile = "default-body-ipcertificate.json";
         private readonly string backMaterialFile = "default-backmaterial.json";
         private readonly string frameMaterialFile = "default-framematerial.json";
+        private readonly string osFile = "default-os.json";
+        private readonly string osVersionFile = "default-osversion.json";
+        private readonly string chipsetFile = "default-chipset.json";
+        private readonly string cardSlotFile = "default-cardslot.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -34,6 +39,10 @@ namespace products_api.Data.SQLServerRepository
         private readonly IBodyIpCertificateRepository _bodyIpCertificateRepo;
         private readonly IBackMaterialRepository _backMaterialRepository;
         private readonly IFrameMaterialRepository _frameMaterialRepository;
+        private readonly IOSRepository _osRepository;
+        private readonly IOSVersionRepository _osVersionRepo;
+        private readonly IChipsetRepository _chipsetRepo;
+        private readonly ICardSlotRepository _cardSlotRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -47,8 +56,12 @@ namespace products_api.Data.SQLServerRepository
             ISimMultipleRepository simMultipleRepo,
             IBodyFormFactorRepository bodyFormFactorRepo,
             IBodyIpCertificateRepository bodyIpCertificateRepo,
-            IBackMaterialRepository backMaterialRepository, 
-            IFrameMaterialRepository frameMaterialRepository)
+            IBackMaterialRepository backMaterialRepository,
+            IFrameMaterialRepository frameMaterialRepository,
+            IOSRepository osRepository,
+            IOSVersionRepository osVersionRepo,
+            IChipsetRepository chipsetRepo, 
+            ICardSlotRepository cardSlotRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -62,6 +75,10 @@ namespace products_api.Data.SQLServerRepository
             _bodyIpCertificateRepo = bodyIpCertificateRepo;
             _backMaterialRepository = backMaterialRepository;
             _frameMaterialRepository = frameMaterialRepository;
+            _osRepository = osRepository;
+            _osVersionRepo = osVersionRepo;
+            _chipsetRepo = chipsetRepo;
+            _cardSlotRepo = cardSlotRepo;
         }
 
         public SqlConnection SqlConnection
@@ -100,6 +117,10 @@ namespace products_api.Data.SQLServerRepository
             result += SeedBodyIpCertificate();
             result += SeedBackMaterial();
             result += SeedFrameMaterial();
+            result += SeedOS();
+            result += SeedOSVersion();
+            result += SeedChipset();
+            result += SeedCardSlot();
 
             return result;
         }
@@ -303,6 +324,91 @@ namespace products_api.Data.SQLServerRepository
             return defaultFrameMaterials.Count() + " FrameMaterial Added. ";
         }
 
+        private string SeedOS()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, osFile));
+            IEnumerable<OS>? defaultOSes = JsonSerializer
+                .Deserialize<IEnumerable<OS>>(jsonData);
+
+            if (defaultOSes == null) return "0 OS Added. ";
+
+            foreach (var os in defaultOSes)
+            {
+                _osRepository.Add(os);
+            }
+            _osRepository.Save();
+
+            return defaultOSes.Count() + " OS Added. ";
+        }
+
+        private string SeedChipset()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, chipsetFile));
+            IEnumerable<Chipset>? defaultChipsets = JsonSerializer
+                .Deserialize<IEnumerable<Chipset>>(jsonData);
+
+            if (defaultChipsets == null) return "0 Chipset Added. ";
+
+            foreach (var chipset in defaultChipsets)
+            {
+                _chipsetRepo.Add(chipset);
+            }
+            _chipsetRepo.Save();
+
+            return defaultChipsets.Count() + " Chipset Added. ";
+        }
+
+        private string SeedOSVersion()
+        {
+            // Get all OSes
+            var oses = _osRepository.GetAll();
+
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, osVersionFile));
+            IEnumerable<OSVersionSeedModel>? defaultOSSeedList = JsonSerializer
+                .Deserialize<IEnumerable<OSVersionSeedModel>>(jsonData);
+
+            if (defaultOSSeedList == null) return "0 OS Added. ";
+
+            int osAddedCount = 0;
+            foreach (var osVersionSeed in defaultOSSeedList)
+            {
+                // Find id from repository, using name from seed json
+                var os = oses.Where(x => x.Name == osVersionSeed.OSName).FirstOrDefault();
+                if (os != null)
+                {
+                    // Create model from seed model
+                    var osVersion = new OSVersion
+                    {
+                        Name = osVersionSeed.Name,
+                        OSId = os.Id
+                    };
+                    _osVersionRepo.Add(osVersion);
+                    osAddedCount++;
+                }
+                
+            }
+            _osVersionRepo.Save();
+
+            return osAddedCount + " OS Versions Added. ";
+        }
+
+        private string SeedCardSlot()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, cardSlotFile));
+            IEnumerable<CardSlot>? defaultCardSlots = JsonSerializer
+                .Deserialize<IEnumerable<CardSlot>>(jsonData);
+
+            if (defaultCardSlots == null) return "0 CardSlot Added. ";
+
+            foreach (var cardSlot in defaultCardSlots)
+            {
+                _cardSlotRepo.Add(cardSlot);
+            }
+            _cardSlotRepo.Save();
+
+            return defaultCardSlots.Count() + " CardSlot Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -329,6 +435,10 @@ DELETE FROM BodyFormFactor;
 DELETE FROM BodyIpCertificate;
 DELETE FROM BackMaterial;
 DELETE FROM FrameMaterial;
+DELETE FROM OSVersion;
+DELETE FROM OS;
+DELETE FROM Chipset;
+DELETE FROM CardSlot;
 ";
             int deletedRows = connection.Execute(sql);
 

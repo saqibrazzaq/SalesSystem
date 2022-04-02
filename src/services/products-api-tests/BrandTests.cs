@@ -30,10 +30,10 @@ namespace products_api_tests
             var newName = Guid.NewGuid().ToString();
             var newPosition = 1;
             var addUrl = Common.BaseUrl + $"{controllerName}";
-            var createDto = new BodyIpCertificateCreateDto { Name = newName, Position = newPosition };
+            var createDto = new BrandCreateDto { Name = newName, Position = newPosition };
             // Send add request
             var responseAdd = await client.PostAsJsonAsync(addUrl, createDto);
-            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<BodyIpCertificateDto>>();
+            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<BrandDto>>();
             Assert.NotNull(responseAdd);
             Assert.NotNull(createdDto);
             Assert.NotNull(createdDto.Data);
@@ -45,9 +45,9 @@ namespace products_api_tests
             var updateUrl = Common.BaseUrl + $"{controllerName}?id=" + newId;
             var updatedName = createdDto.Data.Name + "-updated";
             var updatedPosition = createdDto.Data.Position + 3;
-            var updateDto = new BodyIpCertificateUpdateDto { Name = updatedName, Position = updatedPosition };
+            var updateDto = new BrandUpdateDto { Name = updatedName, Position = updatedPosition };
             var responseUpdate = await client.PutAsJsonAsync(updateUrl, updateDto);
-            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<BodyIpCertificateDto>>();
+            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<BrandDto>>();
             Assert.NotNull(updatedDto);
             Assert.NotNull(updatedDto.Data);
             Assert.Equal(updatedName, updatedDto.Data.Name);

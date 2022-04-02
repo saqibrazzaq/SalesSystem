@@ -23,6 +23,10 @@ namespace products_api.Extensions
             services.AddScoped<IBodyIpCertificateRepository, SqlServerBodyIpCertificateRepository>();
             services.AddScoped<IBackMaterialRepository, SqlServerBackMaterialRepository>();
             services.AddScoped<IFrameMaterialRepository, SqlServerFrameMaterialRepository>();
+            services.AddScoped<IOSRepository, SqlServerOSRepository>();
+            services.AddScoped<IOSVersionRepository, SqlServerOSVersionRepository>();
+            services.AddScoped<IChipsetRepository, SqlServerChipsetRepository>();
+            services.AddScoped<ICardSlotRepository, SqlServerCardSlotRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -37,6 +41,10 @@ namespace products_api.Extensions
             services.AddScoped<IBodyIpCertificateService, BodyIpCertificateService>();
             services.AddScoped<IBackMaterialService, BackMaterialService>();
             services.AddScoped<IFrameMaterialService, FrameMaterialService>();
+            services.AddScoped<IOSService, OSService>();
+            services.AddScoped<IOSVersionService, OSVersionService>();
+            services.AddScoped<IChipsetService, ChipsetService>();
+            services.AddScoped<ICardSlotService, CardSlotService>();
         }
     }
 }
