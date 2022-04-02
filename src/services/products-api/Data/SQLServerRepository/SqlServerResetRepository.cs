@@ -27,6 +27,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly string chipsetFile = "default-chipset.json";
         private readonly string cardSlotFile = "default-cardslot.json";
         private readonly string displayTechnologyFile = "default-display-technology.json";
+        private readonly string cameraFile = "default-camera.json";
+        private readonly string fingerprintFile = "default-fingerprint.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -45,6 +47,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly IChipsetRepository _chipsetRepo;
         private readonly ICardSlotRepository _cardSlotRepo;
         private readonly IDisplayTechnologyRepository _displayTechnologyRepo;
+        private readonly ICameraRepository _cameraRepo;
+        private readonly IFingerprintRepository _fingerprintRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -63,8 +67,10 @@ namespace products_api.Data.SQLServerRepository
             IOSRepository osRepository,
             IOSVersionRepository osVersionRepo,
             IChipsetRepository chipsetRepo,
-            ICardSlotRepository cardSlotRepo, 
-            IDisplayTechnologyRepository displayTechnologyRepo)
+            ICardSlotRepository cardSlotRepo,
+            IDisplayTechnologyRepository displayTechnologyRepo,
+            ICameraRepository cameraRepo, 
+            IFingerprintRepository fingerprintRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -83,6 +89,8 @@ namespace products_api.Data.SQLServerRepository
             _chipsetRepo = chipsetRepo;
             _cardSlotRepo = cardSlotRepo;
             _displayTechnologyRepo = displayTechnologyRepo;
+            _cameraRepo = cameraRepo;
+            _fingerprintRepo = fingerprintRepo;
         }
 
         public SqlConnection SqlConnection
@@ -126,6 +134,8 @@ namespace products_api.Data.SQLServerRepository
             result += SeedChipset();
             result += SeedCardSlot();
             result += SeedDisplayTechnology();
+            result += SeedCamera();
+            result += SeedFingerprint();
 
             return result;
         }
@@ -416,7 +426,7 @@ namespace products_api.Data.SQLServerRepository
 
         private string SeedDisplayTechnology()
         {
-            string jsonData = File.ReadAllText(Path.Combine(DataFolder, cardSlotFile));
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, displayTechnologyFile));
             IEnumerable<DisplayTechnology>? defaultDisplayTechnologies = JsonSerializer
                 .Deserialize<IEnumerable<DisplayTechnology>>(jsonData);
 
@@ -429,6 +439,40 @@ namespace products_api.Data.SQLServerRepository
             _displayTechnologyRepo.Save();
 
             return defaultDisplayTechnologies.Count() + " DisplayTechnology Added. ";
+        }
+
+        private string SeedCamera()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, cameraFile));
+            IEnumerable<Camera>? defaultCameras = JsonSerializer
+                .Deserialize<IEnumerable<Camera>>(jsonData);
+
+            if (defaultCameras == null) return "0 Camera Added. ";
+
+            foreach (var camera in defaultCameras)
+            {
+                _cameraRepo.Add(camera);
+            }
+            _cameraRepo.Save();
+
+            return defaultCameras.Count() + " Camera Added. ";
+        }
+
+        private string SeedFingerprint()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, fingerprintFile));
+            IEnumerable<Fingerprint>? defaultFingerprints = JsonSerializer
+                .Deserialize<IEnumerable<Fingerprint>>(jsonData);
+
+            if (defaultFingerprints == null) return "0 Fingerprint Added. ";
+
+            foreach (var fingerprint in defaultFingerprints)
+            {
+                _fingerprintRepo.Add(fingerprint);
+            }
+            _fingerprintRepo.Save();
+
+            return defaultFingerprints.Count() + " Fingerprint Added. ";
         }
 
         public string DataFolder
@@ -462,6 +506,8 @@ DELETE FROM OS;
 DELETE FROM Chipset;
 DELETE FROM CardSlot;
 DELETE FROM DisplayTechnology;
+DELETE FROM Camera;
+DELETE FROM Fingerprint;
 ";
             int deletedRows = connection.Execute(sql);
 

@@ -88,6 +88,16 @@ namespace products_api.Data
             modelBuilder.Entity<DisplayTechnology>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // Camera
+            modelBuilder.Entity<Camera>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Fingerprint
+            modelBuilder.Entity<Fingerprint>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -109,5 +119,7 @@ namespace products_api.Data
         public DbSet<Chipset> Chipsets { get; set; }
         public DbSet<CardSlot> CardSlots { get; set; }
         public DbSet<DisplayTechnology> DisplayTechnologies { get; set; }
+        public DbSet<Camera> Cameras { get; set; }
+        public DbSet<Fingerprint> Fingerprints { get; set; }
     }
 }
