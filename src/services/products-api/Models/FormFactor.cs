@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace products_api.Models
 {
-    [Table("BodyFormFactor")]
-    public class BodyFormFactor : BaseModel
+    [Table("FormFactor")]
+    public class FormFactor : BaseModel
     {
         [Required]
         public string Name { get; set; } = string.Empty;

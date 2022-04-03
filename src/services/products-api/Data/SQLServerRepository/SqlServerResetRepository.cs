@@ -17,8 +17,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly string networkDetailsFile = "default-network-bands.json";
         private readonly string simSizeFile = "default-sim-size.json";
         private readonly string simMultipleFile = "default-sim-multiple.json";
-        private readonly string bodyFormFactorFile = "default-body-formfactor.json";
-        private readonly string bodyIpCertificateFile = "default-body-ipcertificate.json";
+        private readonly string formFactorFile = "default-formfactor.json";
+        private readonly string ipCertificateFile = "default-ipcertificate.json";
         private readonly string backMaterialFile = "default-backmaterial.json";
         private readonly string frameMaterialFile = "default-framematerial.json";
         private readonly string osFile = "default-os.json";
@@ -30,6 +30,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly string fingerprintFile = "default-fingerprint.json";
         private readonly string wifiFile = "default-wifi.json";
         private readonly string bluetoothFile = "default-bluetooth.json";
+        private readonly string removableBatteryFile = "default-removable-battery.json";
+        private readonly string resolutionFile = "default-resolution.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -39,8 +41,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly INetworkBandRepository _networkBandRepository;
         private readonly ISimSizeRepository _simSizeRepo;
         private readonly ISimMultipleRepository _simMultipleRepo;
-        private readonly IBodyFormFactorRepository _bodyFormFactorRepo;
-        private readonly IBodyIpCertificateRepository _bodyIpCertificateRepo;
+        private readonly IFormFactorRepository _formFactorRepo;
+        private readonly IIpCertificateRepository _ipCertificateRepo;
         private readonly IBackMaterialRepository _backMaterialRepository;
         private readonly IFrameMaterialRepository _frameMaterialRepository;
         private readonly IOSRepository _osRepository;
@@ -52,6 +54,8 @@ namespace products_api.Data.SQLServerRepository
         private readonly IFingerprintRepository _fingerprintRepo;
         private readonly IWifiRepository _wifiRepo;
         private readonly IBluetoothRepository _bluetoothRepo;
+        private readonly IRemovableBatteryRepository _removableBatteryRepo;
+        private readonly IResolutionRepository _resolutionRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -63,8 +67,8 @@ namespace products_api.Data.SQLServerRepository
             INetworkBandRepository networkBandRepository,
             ISimSizeRepository simSizeRepo,
             ISimMultipleRepository simMultipleRepo,
-            IBodyFormFactorRepository bodyFormFactorRepo,
-            IBodyIpCertificateRepository bodyIpCertificateRepo,
+            IFormFactorRepository bodyFormFactorRepo,
+            IIpCertificateRepository bodyIpCertificateRepo,
             IBackMaterialRepository backMaterialRepository,
             IFrameMaterialRepository frameMaterialRepository,
             IOSRepository osRepository,
@@ -74,8 +78,10 @@ namespace products_api.Data.SQLServerRepository
             IDisplayTechnologyRepository displayTechnologyRepo,
             ICameraRepository cameraRepo,
             IFingerprintRepository fingerprintRepo,
-            IWifiRepository wifiRepo, 
-            IBluetoothRepository bluetoothRepo)
+            IWifiRepository wifiRepo,
+            IBluetoothRepository bluetoothRepo,
+            IRemovableBatteryRepository removableBatteryRepo, 
+            IResolutionRepository resolutionRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -85,8 +91,8 @@ namespace products_api.Data.SQLServerRepository
             _networkBandRepository = networkBandRepository;
             _simSizeRepo = simSizeRepo;
             _simMultipleRepo = simMultipleRepo;
-            _bodyFormFactorRepo = bodyFormFactorRepo;
-            _bodyIpCertificateRepo = bodyIpCertificateRepo;
+            _formFactorRepo = bodyFormFactorRepo;
+            _ipCertificateRepo = bodyIpCertificateRepo;
             _backMaterialRepository = backMaterialRepository;
             _frameMaterialRepository = frameMaterialRepository;
             _osRepository = osRepository;
@@ -98,6 +104,8 @@ namespace products_api.Data.SQLServerRepository
             _fingerprintRepo = fingerprintRepo;
             _wifiRepo = wifiRepo;
             _bluetoothRepo = bluetoothRepo;
+            _removableBatteryRepo = removableBatteryRepo;
+            _resolutionRepo = resolutionRepo;
         }
 
         public SqlConnection SqlConnection
@@ -145,6 +153,8 @@ namespace products_api.Data.SQLServerRepository
             result += SeedFingerprint();
             result += SeedWifi();
             result += SeedBluetooth();
+            result += SeedRemovableBattery();
+            result += SeedResolution();
 
             return result;
         }
@@ -282,34 +292,34 @@ namespace products_api.Data.SQLServerRepository
 
         private string SeedBodyFormFactor()
         {
-            string jsonData = File.ReadAllText(Path.Combine(DataFolder, bodyFormFactorFile));
-            IEnumerable<BodyFormFactor>? DefaultBodyFormFactors = JsonSerializer
-                .Deserialize<IEnumerable<BodyFormFactor>>(jsonData);
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, formFactorFile));
+            IEnumerable<FormFactor>? DefaultBodyFormFactors = JsonSerializer
+                .Deserialize<IEnumerable<FormFactor>>(jsonData);
 
             if (DefaultBodyFormFactors == null) return "0 Body FormFactor Added. ";
 
             foreach (var bodyFormFactor in DefaultBodyFormFactors)
             {
-                _bodyFormFactorRepo.Add(bodyFormFactor);
+                _formFactorRepo.Add(bodyFormFactor);
             }
-            _bodyFormFactorRepo.Save();
+            _formFactorRepo.Save();
 
             return DefaultBodyFormFactors.Count() + " Body FormFactor Added. ";
         }
 
         private string SeedBodyIpCertificate()
         {
-            string jsonData = File.ReadAllText(Path.Combine(DataFolder, bodyIpCertificateFile));
-            IEnumerable<BodyIpCertificate>? DefaultBodyIpCertificates = JsonSerializer
-                .Deserialize<IEnumerable<BodyIpCertificate>>(jsonData);
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, ipCertificateFile));
+            IEnumerable<IpCertificate>? DefaultBodyIpCertificates = JsonSerializer
+                .Deserialize<IEnumerable<IpCertificate>>(jsonData);
 
             if (DefaultBodyIpCertificates == null) return "0 Body IpCertificate Added. ";
 
             foreach (var bodyIpCertificate in DefaultBodyIpCertificates)
             {
-                _bodyIpCertificateRepo.Add(bodyIpCertificate);
+                _ipCertificateRepo.Add(bodyIpCertificate);
             }
-            _bodyIpCertificateRepo.Save();
+            _ipCertificateRepo.Save();
 
             return DefaultBodyIpCertificates.Count() + " Body IpCertificate Added. ";
         }
@@ -518,6 +528,40 @@ namespace products_api.Data.SQLServerRepository
             return defaultBluetooths.Count() + " Bluetooth Added. ";
         }
 
+        private string SeedRemovableBattery()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, removableBatteryFile));
+            IEnumerable<RemovableBattery>? defaultRemovableBatteries = JsonSerializer
+                .Deserialize<IEnumerable<RemovableBattery>>(jsonData);
+
+            if (defaultRemovableBatteries == null) return "0 RemovableBattery Added. ";
+
+            foreach (var removableBattery in defaultRemovableBatteries)
+            {
+                _removableBatteryRepo.Add(removableBattery);
+            }
+            _removableBatteryRepo.Save();
+
+            return defaultRemovableBatteries.Count() + " RemovableBattery Added. ";
+        }
+
+        private string SeedResolution()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, resolutionFile));
+            IEnumerable<Resolution>? defaultResolutions = JsonSerializer
+                .Deserialize<IEnumerable<Resolution>>(jsonData);
+
+            if (defaultResolutions == null) return "0 Resolution Added. ";
+
+            foreach (var resolution in defaultResolutions)
+            {
+                _resolutionRepo.Add(resolution);
+            }
+            _resolutionRepo.Save();
+
+            return defaultResolutions.Count() + " Resolution Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -540,8 +584,8 @@ DELETE FROM NetworkBand;
 DELETE FROM Network;
 DELETE FROM SimSize;
 DELETE FROM SimMultiple;
-DELETE FROM BodyFormFactor;
-DELETE FROM BodyIpCertificate;
+DELETE FROM FormFactor;
+DELETE FROM IpCertificate;
 DELETE FROM BackMaterial;
 DELETE FROM FrameMaterial;
 DELETE FROM OSVersion;
@@ -553,6 +597,8 @@ DELETE FROM Camera;
 DELETE FROM Fingerprint;
 DELETE FROM Wifi;
 DELETE FROM Bluetooth;
+DELETE FROM RemovableBattery;
+DELETE FROM Resolution;
 ";
             int deletedRows = connection.Execute(sql);
 

@@ -2,12 +2,12 @@
 
 namespace products_api.Dtos
 {
-    public static class BodyIpCertificateExtensions
+    public static class BodyFormFactorExtensions
     {
-        // Convert BodyIpCertificate Model to Dto
-        public static BodyIpCertificateDto AsDto(this BodyIpCertificate c)
+        // Convert FormFactor Model to Dto
+        public static FormFactorDto AsDto(this FormFactor c)
         {
-            return new BodyIpCertificateDto
+            return new FormFactorDto
             { 
                 Id = c.Id, 
                 Name = c.Name,
@@ -16,22 +16,22 @@ namespace products_api.Dtos
         }
     }
 
-    // BodyIpCertificate Dto
-    public class BodyIpCertificateDto
+    // FormFactor Dto
+    public class FormFactorDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    // BodyIpCertificate Dto
-    public class BodyIpCertificateCreateDto
+    // FormFactor Dto
+    public class FormFactorCreateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    public class BodyIpCertificateUpdateDto
+    public class FormFactorUpdateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }

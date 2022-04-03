@@ -5,15 +5,15 @@ using products_api.Services.Interfaces;
 
 namespace products_api.Services
 {
-    public class BodyIpCertificateService : IBodyIpCertificateService
+    public class IpCertificateService : IIpCertificateService
     {
-        private readonly IBodyIpCertificateRepository _bodyIpCertificateRepo;
-        private readonly ILogger<BodyIpCertificateService> _logger;
+        private readonly IIpCertificateRepository _ipCertificateRepo;
+        private readonly ILogger<IpCertificateService> _logger;
 
-        public BodyIpCertificateService(IBodyIpCertificateRepository bodyIpCertificateRepo, 
-            ILogger<BodyIpCertificateService> logger)
+        public IpCertificateService(IIpCertificateRepository ipCertificateRepo, 
+            ILogger<IpCertificateService> logger)
         {
-            _bodyIpCertificateRepo = bodyIpCertificateRepo;
+            _ipCertificateRepo = ipCertificateRepo;
             _logger = logger;
         }
 
@@ -25,41 +25,41 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _bodyIpCertificateRepo.Count();
+                var count = _ipCertificateRepo.Count();
                 // Set data
                 response.Data = count;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate count service failed.");
+                response = response.GetFailureResponse("IpCertificate count service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BodyIpCertificateDto>> Add(
-            BodyIpCertificateCreateDto dto)
+        public async Task<ServiceResponse<IpCertificateDto>> Add(
+            IpCertificateCreateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<BodyIpCertificateDto>();
+            var response = new ServiceResponse<IpCertificateDto>();
 
             try
             {
                 // Create model from dto
-                var bodyIpCertificate = new BodyIpCertificate { Name = dto.Name, Position = dto.Position };
+                var ipCertificate = new IpCertificate { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _bodyIpCertificateRepo.Add(bodyIpCertificate);
-                _bodyIpCertificateRepo.Save();
+                _ipCertificateRepo.Add(ipCertificate);
+                _ipCertificateRepo.Save();
 
                 // Set data
-                response.Data = bodyIpCertificate.AsDto();
+                response.Data = ipCertificate.AsDto();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate create service failed.");
+                response = response.GetFailureResponse("IpCertificate create service failed.");
             }
             
             return await Task.FromResult(response);
@@ -75,18 +75,18 @@ namespace products_api.Services
             try
             {
                 // Get IpCertificate
-                var bodyIpCertificate = _bodyIpCertificateRepo.GetAll(
+                var bodyIpCertificate = _ipCertificateRepo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bodyIpCertificate == null) 
                 {
-                    response = response.GetFailureResponse("BodyIpCertificate not found.");
+                    response = response.GetFailureResponse("IpCertificate not found.");
                 }
                 else
                 {
                     // IpCertificate found, delete it
-                    _bodyIpCertificateRepo.Remove(bodyIpCertificate);
-                    _bodyIpCertificateRepo.Save();
+                    _ipCertificateRepo.Remove(bodyIpCertificate);
+                    _ipCertificateRepo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -94,83 +94,83 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate delete service failed.");
+                response = response.GetFailureResponse("IpCertificate delete service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BodyIpCertificateDto>> Get(
+        public async Task<ServiceResponse<IpCertificateDto>> Get(
             Guid id)
         {
             // Create new response
-            var response = new ServiceResponse<BodyIpCertificateDto>();
+            var response = new ServiceResponse<IpCertificateDto>();
 
             try
             {
-                // Get BodyIpCertificate
-                var bodyIpCertificate = _bodyIpCertificateRepo.
+                // Get IpCertificate
+                var ipCertificate = _ipCertificateRepo.
                     GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
-                if (bodyIpCertificate == null)
-                    response = response.GetFailureResponse("Body IP Certificate not found");
+                if (ipCertificate == null)
+                    response = response.GetFailureResponse("IP Certificate not found");
                 else
-                    response.Data = bodyIpCertificate.AsDto();
+                    response.Data = ipCertificate.AsDto();
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate service failed.");
+                response = response.GetFailureResponse("IpCertificate service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<BodyIpCertificateDto>>> GetAll()
+        public async Task<ServiceResponse<List<IpCertificateDto>>> GetAll()
         {
             // Create new response
-            var response = new ServiceResponse<List<BodyIpCertificateDto>>();
+            var response = new ServiceResponse<List<IpCertificateDto>>();
 
             try
             {
-                // Get all BodyIpCertificate
-                var bodyIpCertificates = _bodyIpCertificateRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Get all IpCertificate
+                var ipCertificates = _ipCertificateRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
-                var bodyIpCertificateDtos = new List<BodyIpCertificateDto>();
-                foreach (var bodyIpCertificate in bodyIpCertificates)
+                var ipCertificateDtos = new List<IpCertificateDto>();
+                foreach (var ipCertificate in ipCertificates)
                 {
-                    bodyIpCertificateDtos.Add(bodyIpCertificate.AsDto());
+                    ipCertificateDtos.Add(ipCertificate.AsDto());
                 }
                 // Set data
-                response.Data = bodyIpCertificateDtos;
+                response.Data = ipCertificateDtos;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate service failed.");
+                response = response.GetFailureResponse("IpCertificate service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<BodyIpCertificateDto>> Update(
-            Guid id, BodyIpCertificateUpdateDto dto)
+        public async Task<ServiceResponse<IpCertificateDto>> Update(
+            Guid id, IpCertificateUpdateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<BodyIpCertificateDto>();
+            var response = new ServiceResponse<IpCertificateDto>();
 
             try
             {
-                // Get BodyIpCertificate
-                var bodyIpCertificate = _bodyIpCertificateRepo.GetAll(
+                // Get IpCertificate
+                var bodyIpCertificate = _ipCertificateRepo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bodyIpCertificate == null)
                 {
-                    response = response.GetFailureResponse("BodyIpCertificate not found.");
+                    response = response.GetFailureResponse("IpCertificate not found.");
                 }
                 else
                 {
@@ -179,8 +179,8 @@ namespace products_api.Services
                     bodyIpCertificate.Position = dto.Position;
                     
                     // Save in repository
-                    _bodyIpCertificateRepo.Update(bodyIpCertificate);
-                    _bodyIpCertificateRepo.Save();
+                    _ipCertificateRepo.Update(bodyIpCertificate);
+                    _ipCertificateRepo.Save();
                     // Set data
                     response.Data = bodyIpCertificate.AsDto();
                 }
@@ -188,7 +188,7 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("BodyIpCertificate update service failed.");
+                response = response.GetFailureResponse("IpCertificate update service failed.");
             }
 
             return await Task.FromResult(response);

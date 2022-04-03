@@ -1,0 +1,47 @@
+[
+  {
+    "Name": "QVGA",
+    "PixelsRow": 240,
+    "PixelsCol": 320
+  },
+  {
+    "Name": "WQVGA",
+    "PixelsRow": 240,
+    "PixelsCol": 400
+  },
+  {
+    "Name": "HVGA",
+    "PixelsRow": 320,
+    "PixelsCol": 480
+  },
+  {
+    "Name": "WVGA",
+    "PixelsRow": 480,
+    "PixelsCol": 800
+  },
+  {
+    "Name": "qHD",
+    "PixelsRow": 540,
+    "PixelsCol": 960
+  },
+  {
+    "Name": "HD",
+    "PixelsRow": 720,
+    "PixelsCol": 128000
+  },
+  {
+    "Name": "FHD",
+    "PixelsRow": 1080,
+    "PixelsCol": 1920
+  },
+  {
+    "Name": "2K",
+    "PixelsRow": 1440,
+    "PixelsCol": 2560
+  },
+  {
+    "Name": "4K",
+    "PixelsRow": 1644,
+    "PixelsCol": 3840
+  }
+]

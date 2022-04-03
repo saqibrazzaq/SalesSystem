@@ -2,12 +2,12 @@
 
 namespace products_api.Dtos
 {
-    public static class BodyFormFactorExtensions
+    public static class RemovableBatteryExtensions
     {
-        // Convert BodyFormFactor Model to Dto
-        public static BodyFormFactorDto AsDto(this BodyFormFactor c)
+        // Convert RemovableBattery Model to Dto
+        public static RemovableBatteryDto AsDto(this RemovableBattery c)
         {
-            return new BodyFormFactorDto
+            return new RemovableBatteryDto
             { 
                 Id = c.Id, 
                 Name = c.Name,
@@ -16,22 +16,22 @@ namespace products_api.Dtos
         }
     }
 
-    // BodyFormFactor Dto
-    public class BodyFormFactorDto
+    // RemovableBattery Dto
+    public class RemovableBatteryDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    // BodyFormFactor Dto
-    public class BodyFormFactorCreateDto
+    // RemovableBattery Dto
+    public class RemovableBatteryCreateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    public class BodyFormFactorUpdateDto
+    public class RemovableBatteryUpdateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }

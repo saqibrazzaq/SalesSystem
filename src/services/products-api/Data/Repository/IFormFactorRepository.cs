@@ -3,7 +3,7 @@ using products_api.Models;
 
 namespace products_api.Data.Repository
 {
-    public interface IBodyFormFactorRepository : IRepository<BodyFormFactor>
+    public interface IFormFactorRepository : IRepository<FormFactor>
     {
     }
 }

@@ -3,71 +3,67 @@ using Microsoft.AspNetCore.Mvc;
 using products_api.Dtos;
 using products_api.Services;
 using products_api.Services.Interfaces;
-using System.Net;
 
 namespace products_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class BodyIpCertificatesController : ControllerBase
+    public class ResolutionsController : ControllerBase
     {
-        private readonly IBodyIpCertificateService _bodyIpCertificateService;
+        private readonly IResolutionService _resolutionService;
 
-        public BodyIpCertificatesController(IBodyIpCertificateService bodyIpCertificateService)
+        public ResolutionsController(IResolutionService resolutionService)
         {
-            _bodyIpCertificateService = bodyIpCertificateService;
+            _resolutionService = resolutionService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<BodyIpCertificateDto>>>>
-            GetAll()
+        public async Task<ActionResult<ServiceResponse<List<ResolutionDto>>>> GetAll()
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.GetAll();
+            var response = await _resolutionService.GetAll();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>>
-            Get(Guid id)
+        public async Task<ActionResult<ServiceResponse<ResolutionDto>>> Get(Guid id)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Get(id);
+            var response = await _resolutionService.Get(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("count")]
-        public async Task<ActionResult<ServiceResponse<int>>>
-            Count()
+        public async Task<ActionResult<ServiceResponse<int>>> Count()
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Count();
+            var response = await _resolutionService.Count();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>> Add(
-            [FromBody]BodyIpCertificateCreateDto dto)
+        public async Task<ActionResult<ServiceResponse<ResolutionDto>>> Add(
+            [FromBody] ResolutionCreateDto dto)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Add(dto);
+            var response = await _resolutionService.Add(dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<BodyIpCertificateDto>>> Update(
-            Guid id, [FromBody]BodyIpCertificateUpdateDto dto)
+        public async Task<ActionResult<ServiceResponse<ResolutionDto>>> Update(
+            Guid id, [FromBody] ResolutionUpdateDto dto)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Update(id, dto);
+            var response = await _resolutionService.Update(id, dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -77,7 +73,7 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> Remove(Guid id)
         {
             // Get response from service
-            var response = await _bodyIpCertificateService.Remove(id);
+            var response = await _resolutionService.Remove(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);

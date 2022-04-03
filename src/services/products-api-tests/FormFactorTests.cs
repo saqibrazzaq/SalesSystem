@@ -8,7 +8,7 @@ using Xunit;
 
 namespace products_api_tests
 {
-    public class BodyFormFactorTests
+    public class FormFactorTests
     {
         
         [Fact]
@@ -16,7 +16,7 @@ namespace products_api_tests
         {
             // Initialize http client
             var client = new HttpClient();
-            var controllerName = "BodyFormFactors";
+            var controllerName = "FormFactors";
             var url = Common.BaseUrl + $"{controllerName}/count";
 
             // Send count request
@@ -30,10 +30,10 @@ namespace products_api_tests
             var newName = Guid.NewGuid().ToString();
             var newPosition = 1;
             var addUrl = Common.BaseUrl + $"{controllerName}";
-            var createDto = new BodyFormFactorCreateDto { Name = newName, Position = newPosition };
+            var createDto = new FormFactorCreateDto { Name = newName, Position = newPosition };
             // Send add request
             var responseAdd = await client.PostAsJsonAsync(addUrl, createDto);
-            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<BodyFormFactorDto>>();
+            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<FormFactorDto>>();
             Assert.NotNull(responseAdd);
             Assert.NotNull(createdDto);
             Assert.NotNull(createdDto.Data);
@@ -45,9 +45,9 @@ namespace products_api_tests
             var updateUrl = Common.BaseUrl + $"{controllerName}?id=" + newId;
             var updatedName = createdDto.Data.Name + "-updated";
             var updatedPosition = createdDto.Data.Position + 3;
-            var updateDto = new BodyFormFactorUpdateDto { Name = updatedName, Position = updatedPosition };
+            var updateDto = new FormFactorUpdateDto { Name = updatedName, Position = updatedPosition };
             var responseUpdate = await client.PutAsJsonAsync(updateUrl, updateDto);
-            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<BodyFormFactorDto>>();
+            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<FormFactorDto>>();
             Assert.NotNull(updatedDto);
             Assert.NotNull(updatedDto.Data);
             Assert.Equal(updatedName, updatedDto.Data.Name);

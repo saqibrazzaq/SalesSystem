@@ -1,11 +1,14 @@
 [
   {
-    "Name": "Yes (any type)"
+    "Name": "microSD"
   },
   {
-    "Name": "Yes (dedicated)"
+    "Name": "microSDHC"
   },
   {
-    "Name": "No"
+    "Name": "microSDXC"
+  },
+  {
+    "Name": "microSDUC"
   }
 ]

@@ -20,8 +20,8 @@ namespace products_api.Extensions
             services.AddScoped<INetworkBandRepository, SqlServerNetworkBandRepository>();
             services.AddScoped<ISimSizeRepository, SqlServerSimSizeRepository>();
             services.AddScoped<ISimMultipleRepository, SqlServerSimMultipleRepository>();
-            services.AddScoped<IBodyFormFactorRepository, SqlServerBodyFormFactorRepository>();
-            services.AddScoped<IBodyIpCertificateRepository, SqlServerBodyIpCertificateRepository>();
+            services.AddScoped<IFormFactorRepository, SqlServerFormFactorRepository>();
+            services.AddScoped<IIpCertificateRepository, SqlServerIpCertificateRepository>();
             services.AddScoped<IBackMaterialRepository, SqlServerBackMaterialRepository>();
             services.AddScoped<IFrameMaterialRepository, SqlServerFrameMaterialRepository>();
             services.AddScoped<IOSRepository, SqlServerOSRepository>();
@@ -33,6 +33,8 @@ namespace products_api.Extensions
             services.AddScoped<IFingerprintRepository, SqlServerFingerprintRepository>();
             services.AddScoped<IWifiRepository, SqlServerWifiRepository>();
             services.AddScoped<IBluetoothRepository, SqlServerBluetoothRepository>();
+            services.AddScoped<IRemovableBatteryRepository, SqlServerRemovableBatteryRepository>();
+            services.AddScoped<IResolutionRepository, SqlServerResolutionRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -43,8 +45,8 @@ namespace products_api.Extensions
             services.AddScoped<INetworkBandService, NetworkBandService>();
             services.AddScoped<ISimSizeService, SimSizeService>();
             services.AddScoped<ISimMultipleService, SimMultipleService>();
-            services.AddScoped<IBodyFormFactorService, BodyFormFactorService>();
-            services.AddScoped<IBodyIpCertificateService, BodyIpCertificateService>();
+            services.AddScoped<IFormFactorService, FormFactorService>();
+            services.AddScoped<IIpCertificateService, IpCertificateService>();
             services.AddScoped<IBackMaterialService, BackMaterialService>();
             services.AddScoped<IFrameMaterialService, FrameMaterialService>();
             services.AddScoped<IOSService, OSService>();
@@ -56,6 +58,8 @@ namespace products_api.Extensions
             services.AddScoped<IFingerprintService, FingerprintService>();
             services.AddScoped<IWifiService, WifiService>();
             services.AddScoped<IBluetoothService, BluetoothService>();
+            services.AddScoped<IRemovableBatteryService, RemovableBatteryService>();
+            services.AddScoped<IResolutionService, ResolutionService>();
         }
     }
 }

@@ -45,12 +45,12 @@ namespace products_api.Data
                 .IsUnique();
 
             // BodyFormFactor
-            modelBuilder.Entity<BodyFormFactor>()
+            modelBuilder.Entity<FormFactor>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
             // BodyIpCertificate
-            modelBuilder.Entity<BodyIpCertificate>()
+            modelBuilder.Entity<IpCertificate>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
@@ -108,6 +108,16 @@ namespace products_api.Data
             modelBuilder.Entity <Bluetooth>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // RemovableBattery
+            modelBuilder.Entity<RemovableBattery>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
+            // Resolution
+            modelBuilder.Entity<Resolution>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -120,8 +130,8 @@ namespace products_api.Data
         public DbSet<NetworkBand>? NetworkBands { get; set; }
         public DbSet<SimSize>? SimSizes { get; set; }
         public DbSet<SimMultiple>? SimMultiples { get; set; }
-        public DbSet<BodyFormFactor>? BodyFormFactors { get; set; }
-        public DbSet<BodyIpCertificate> BodyIpCertificates { get; set; }
+        public DbSet<FormFactor>? FormFactors { get; set; }
+        public DbSet<IpCertificate> IpCertificates { get; set; }
         public DbSet<BackMaterial> BackMaterials { get; set; }
         public DbSet<FrameMaterial> FrameMaterials { get; set; }
         public DbSet<OS> Oses { get; set; }
@@ -133,5 +143,7 @@ namespace products_api.Data
         public DbSet<Fingerprint> Fingerprints { get; set; }
         public DbSet<Wifi> Wifis { get; set; }
         public DbSet<Bluetooth> Bluetooths { get; set; }
+        public DbSet<RemovableBattery> RemovableBatteries { get; set; }
+        public DbSet<Resolution> Resolutions { get; set; }
     }
 }
