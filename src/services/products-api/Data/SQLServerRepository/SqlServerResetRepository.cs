@@ -32,6 +32,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string bluetoothFile = "default-bluetooth.json";
         private readonly string removableBatteryFile = "default-removable-battery.json";
         private readonly string resolutionFile = "default-resolution.json";
+        private readonly string gpuFile = "default-gpu.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -56,6 +57,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly IBluetoothRepository _bluetoothRepo;
         private readonly IRemovableBatteryRepository _removableBatteryRepo;
         private readonly IResolutionRepository _resolutionRepo;
+        private readonly IGPURepository _gpuRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -80,8 +82,9 @@ namespace products_api.Data.SQLServerRepository
             IFingerprintRepository fingerprintRepo,
             IWifiRepository wifiRepo,
             IBluetoothRepository bluetoothRepo,
-            IRemovableBatteryRepository removableBatteryRepo, 
-            IResolutionRepository resolutionRepo)
+            IRemovableBatteryRepository removableBatteryRepo,
+            IResolutionRepository resolutionRepo, 
+            IGPURepository gpuRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -106,6 +109,7 @@ namespace products_api.Data.SQLServerRepository
             _bluetoothRepo = bluetoothRepo;
             _removableBatteryRepo = removableBatteryRepo;
             _resolutionRepo = resolutionRepo;
+            _gpuRepo = gpuRepo;
         }
 
         public SqlConnection SqlConnection
@@ -155,6 +159,7 @@ namespace products_api.Data.SQLServerRepository
             result += SeedBluetooth();
             result += SeedRemovableBattery();
             result += SeedResolution();
+            result += SeedGPU();
 
             return result;
         }
@@ -562,6 +567,23 @@ namespace products_api.Data.SQLServerRepository
             return defaultResolutions.Count() + " Resolution Added. ";
         }
 
+        private string SeedGPU()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, gpuFile));
+            IEnumerable<GPU>? defaultGPUs = JsonSerializer
+                .Deserialize<IEnumerable<GPU>>(jsonData);
+
+            if (defaultGPUs == null) return "0 GPU Added. ";
+
+            foreach (var gpu in defaultGPUs)
+            {
+                _gpuRepo.Add(gpu);
+            }
+            _gpuRepo.Save();
+
+            return defaultGPUs.Count() + " GPU Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -599,6 +621,7 @@ DELETE FROM Wifi;
 DELETE FROM Bluetooth;
 DELETE FROM RemovableBattery;
 DELETE FROM Resolution;
+DELETE FROM GPU;
 ";
             int deletedRows = connection.Execute(sql);
 

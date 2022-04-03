@@ -35,6 +35,7 @@ namespace products_api.Extensions
             services.AddScoped<IBluetoothRepository, SqlServerBluetoothRepository>();
             services.AddScoped<IRemovableBatteryRepository, SqlServerRemovableBatteryRepository>();
             services.AddScoped<IResolutionRepository, SqlServerResolutionRepository>();
+            services.AddScoped<IGPURepository, SqlServerGPURepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -60,6 +61,7 @@ namespace products_api.Extensions
             services.AddScoped<IBluetoothService, BluetoothService>();
             services.AddScoped<IRemovableBatteryService, RemovableBatteryService>();
             services.AddScoped<IResolutionService, ResolutionService>();
+            services.AddScoped<IGPUService, GPUService>();
         }
     }
 }

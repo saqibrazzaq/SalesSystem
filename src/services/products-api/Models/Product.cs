@@ -7,7 +7,7 @@ namespace products_api.Models
     public class Product : BaseModel
     {
         [Required]
-        public string Title { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public DateTime ReleaseDate { get; set; }
         public DateTime AnnouncedDate { get; set; }
         public int Weight_grams { get; set; }
@@ -31,5 +31,10 @@ namespace products_api.Models
         [ForeignKey("SDCardSlotId")]
         public virtual CardSlot? CardSlot { get; set; }
         public int BatteryCapacity_mAh { get; set; }
+        public Guid? ChipsetId { get; set; }
+        [ForeignKey("ChipsetId")]
+        public virtual Chipset? Chipset { get; set; }
+        public int CpuCores { get; set; }
+        public string CpuDetails { get; set; } = string.Empty;
     }
 }

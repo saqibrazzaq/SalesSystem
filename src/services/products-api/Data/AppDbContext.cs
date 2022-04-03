@@ -118,6 +118,11 @@ namespace products_api.Data
             modelBuilder.Entity<Resolution>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // GPU
+            modelBuilder.Entity<GPU>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -145,5 +150,6 @@ namespace products_api.Data
         public DbSet<Bluetooth> Bluetooths { get; set; }
         public DbSet<RemovableBattery> RemovableBatteries { get; set; }
         public DbSet<Resolution> Resolutions { get; set; }
+        public DbSet<GPU> GPUs { get; set; }
     }
 }
