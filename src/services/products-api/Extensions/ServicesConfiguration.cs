@@ -36,6 +36,7 @@ namespace products_api.Extensions
             services.AddScoped<IRemovableBatteryRepository, SqlServerRemovableBatteryRepository>();
             services.AddScoped<IResolutionRepository, SqlServerResolutionRepository>();
             services.AddScoped<IGPURepository, SqlServerGPURepository>();
+            services.AddScoped<ILensTypeRepository, SqlServerLensTypeRepository>();
             
             // Add Services
             services.AddScoped<CategoryService>();
@@ -62,6 +63,7 @@ namespace products_api.Extensions
             services.AddScoped<IRemovableBatteryService, RemovableBatteryService>();
             services.AddScoped<IResolutionService, ResolutionService>();
             services.AddScoped<IGPUService, GPUService>();
+            services.AddScoped<ILensTypeService, LensTypeService>();
         }
     }
 }

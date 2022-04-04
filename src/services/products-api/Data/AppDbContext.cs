@@ -123,6 +123,11 @@ namespace products_api.Data
             modelBuilder.Entity<GPU>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            // LensType
+            modelBuilder.Entity<LensType>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
 
 
@@ -151,5 +156,6 @@ namespace products_api.Data
         public DbSet<RemovableBattery> RemovableBatteries { get; set; }
         public DbSet<Resolution> Resolutions { get; set; }
         public DbSet<GPU> GPUs { get; set; }
+        public DbSet<LensType> LensTypes { get; set; }
     }
 }

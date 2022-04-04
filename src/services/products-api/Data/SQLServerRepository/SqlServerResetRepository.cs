@@ -33,6 +33,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string removableBatteryFile = "default-removable-battery.json";
         private readonly string resolutionFile = "default-resolution.json";
         private readonly string gpuFile = "default-gpu.json";
+        private readonly string lensTypeFile = "default-lens-types.json";
 
 
         private readonly ICategoryRepository _categoryRepository;
@@ -58,6 +59,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly IRemovableBatteryRepository _removableBatteryRepo;
         private readonly IResolutionRepository _resolutionRepo;
         private readonly IGPURepository _gpuRepo;
+        private readonly ILensTypeRepository _lensTypeRepo;
         // For Dapper
         private readonly IConfiguration _configuration;
 
@@ -83,8 +85,9 @@ namespace products_api.Data.SQLServerRepository
             IWifiRepository wifiRepo,
             IBluetoothRepository bluetoothRepo,
             IRemovableBatteryRepository removableBatteryRepo,
-            IResolutionRepository resolutionRepo, 
-            IGPURepository gpuRepo)
+            IResolutionRepository resolutionRepo,
+            IGPURepository gpuRepo, 
+            ILensTypeRepository lensTypeRepo)
         {
             _configuration = configuration;
             _categoryRepository = categoryRepository;
@@ -110,6 +113,7 @@ namespace products_api.Data.SQLServerRepository
             _removableBatteryRepo = removableBatteryRepo;
             _resolutionRepo = resolutionRepo;
             _gpuRepo = gpuRepo;
+            _lensTypeRepo = lensTypeRepo;
         }
 
         public SqlConnection SqlConnection
@@ -160,6 +164,7 @@ namespace products_api.Data.SQLServerRepository
             result += SeedRemovableBattery();
             result += SeedResolution();
             result += SeedGPU();
+            result += SeedLensType();
 
             return result;
         }
@@ -584,6 +589,23 @@ namespace products_api.Data.SQLServerRepository
             return defaultGPUs.Count() + " GPU Added. ";
         }
 
+        private string SeedLensType()
+        {
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, lensTypeFile));
+            IEnumerable<LensType>? defaultLensTypes = JsonSerializer
+                .Deserialize<IEnumerable<LensType>>(jsonData);
+
+            if (defaultLensTypes == null) return "0 LensType Added. ";
+
+            foreach (var lensType in defaultLensTypes)
+            {
+                _lensTypeRepo.Add(lensType);
+            }
+            _lensTypeRepo.Save();
+
+            return defaultLensTypes.Count() + " LensType Added. ";
+        }
+
         public string DataFolder
         {
             get
@@ -622,6 +644,7 @@ DELETE FROM Bluetooth;
 DELETE FROM RemovableBattery;
 DELETE FROM Resolution;
 DELETE FROM GPU;
+DELETE FROM LensType;
 ";
             int deletedRows = connection.Execute(sql);
 
