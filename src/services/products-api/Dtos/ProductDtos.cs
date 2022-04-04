@@ -36,6 +36,7 @@ namespace products_api.Dtos
         public string ChipsetName { get; set; } = string.Empty;
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
+        public string GpuName { get; set; } = string.Empty;
 
     }
 

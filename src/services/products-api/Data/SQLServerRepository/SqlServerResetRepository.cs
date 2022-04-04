@@ -26,7 +26,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly string chipsetFile = "default-chipset.json";
         private readonly string cardSlotFile = "default-cardslot.json";
         private readonly string displayTechnologyFile = "default-display-technology.json";
-        private readonly string cameraFile = "default-camera.json";
+        private readonly string cameraFile = "default-camera-types.json";
         private readonly string fingerprintFile = "default-fingerprint.json";
         private readonly string wifiFile = "default-wifi.json";
         private readonly string bluetoothFile = "default-bluetooth.json";
@@ -51,7 +51,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly IChipsetRepository _chipsetRepo;
         private readonly ICardSlotRepository _cardSlotRepo;
         private readonly IDisplayTechnologyRepository _displayTechnologyRepo;
-        private readonly ICameraRepository _cameraRepo;
+        private readonly ICameraTypeRepository _cameraRepo;
         private readonly IFingerprintRepository _fingerprintRepo;
         private readonly IWifiRepository _wifiRepo;
         private readonly IBluetoothRepository _bluetoothRepo;
@@ -78,7 +78,7 @@ namespace products_api.Data.SQLServerRepository
             IChipsetRepository chipsetRepo,
             ICardSlotRepository cardSlotRepo,
             IDisplayTechnologyRepository displayTechnologyRepo,
-            ICameraRepository cameraRepo,
+            ICameraTypeRepository cameraRepo,
             IFingerprintRepository fingerprintRepo,
             IWifiRepository wifiRepo,
             IBluetoothRepository bluetoothRepo,
@@ -468,8 +468,8 @@ namespace products_api.Data.SQLServerRepository
         private string SeedCamera()
         {
             string jsonData = File.ReadAllText(Path.Combine(DataFolder, cameraFile));
-            IEnumerable<Camera>? defaultCameras = JsonSerializer
-                .Deserialize<IEnumerable<Camera>>(jsonData);
+            IEnumerable<CameraType>? defaultCameras = JsonSerializer
+                .Deserialize<IEnumerable<CameraType>>(jsonData);
 
             if (defaultCameras == null) return "0 Camera Added. ";
 
@@ -615,7 +615,7 @@ DELETE FROM OS;
 DELETE FROM Chipset;
 DELETE FROM CardSlot;
 DELETE FROM DisplayTechnology;
-DELETE FROM Camera;
+DELETE FROM CameraType;
 DELETE FROM Fingerprint;
 DELETE FROM Wifi;
 DELETE FROM Bluetooth;

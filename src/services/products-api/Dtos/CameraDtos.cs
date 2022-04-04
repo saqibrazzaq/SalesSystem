@@ -2,12 +2,12 @@
 
 namespace products_api.Dtos
 {
-    public static class CameraExtensions
+    public static class CameraTypeExtensions
     {
-        // Convert Camera Model to Dto
-        public static CameraDto AsDto(this Camera c)
+        // Convert CameraType Model to Dto
+        public static CameraTypeDto AsDto(this CameraType c)
         {
-            return new CameraDto
+            return new CameraTypeDto
             { 
                 Id = c.Id, 
                 Name = c.Name,
@@ -16,22 +16,22 @@ namespace products_api.Dtos
         }
     }
 
-    // Camera Dto
-    public class CameraDto
+    // CameraType Dto
+    public class CameraTypeDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    // Camera Dto
-    public class CameraCreateDto
+    // CameraType Dto
+    public class CameraTypeCreateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    public class CameraUpdateDto
+    public class CameraTypeUpdateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }

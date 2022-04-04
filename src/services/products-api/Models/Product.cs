@@ -34,6 +34,9 @@ namespace products_api.Models
         public Guid? ChipsetId { get; set; }
         [ForeignKey("ChipsetId")]
         public virtual Chipset? Chipset { get; set; }
+        public Guid? GPUId { get; set; }
+        [ForeignKey("GPUId")]
+        public virtual GPU? GPU { get; set; }
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
     }

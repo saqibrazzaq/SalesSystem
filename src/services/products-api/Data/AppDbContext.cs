@@ -90,7 +90,7 @@ namespace products_api.Data
                 .IsUnique();
 
             // Camera
-            modelBuilder.Entity<Camera>()
+            modelBuilder.Entity<CameraType>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
@@ -144,7 +144,7 @@ namespace products_api.Data
         public DbSet<Chipset> Chipsets { get; set; }
         public DbSet<CardSlot> CardSlots { get; set; }
         public DbSet<DisplayTechnology> DisplayTechnologies { get; set; }
-        public DbSet<Camera> Cameras { get; set; }
+        public DbSet<CameraType> CameraTypes { get; set; }
         public DbSet<Fingerprint> Fingerprints { get; set; }
         public DbSet<Wifi> Wifis { get; set; }
         public DbSet<Bluetooth> Bluetooths { get; set; }

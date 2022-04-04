@@ -8,17 +8,17 @@ namespace products_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CamerasController : ControllerBase
+    public class CameraTypesController : ControllerBase
     {
-        private readonly ICameraService _cameraService;
+        private readonly ICameraTypeService _cameraService;
 
-        public CamerasController(ICameraService cameraService)
+        public CameraTypesController(ICameraTypeService cameraService)
         {
             _cameraService = cameraService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CameraDto>>>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<CameraTypeDto>>>> GetAll()
         {
             // Get response from service
             var response = await _cameraService.GetAll();
@@ -28,7 +28,7 @@ namespace products_api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<CameraDto>>> Get(Guid id)
+        public async Task<ActionResult<ServiceResponse<CameraTypeDto>>> Get(Guid id)
         {
             // Get response from service
             var response = await _cameraService.Get(id);
@@ -48,8 +48,8 @@ namespace products_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<CameraDto>>> Add(
-            [FromBody] CameraCreateDto dto)
+        public async Task<ActionResult<ServiceResponse<CameraTypeDto>>> Add(
+            [FromBody] CameraTypeCreateDto dto)
         {
             // Get response from service
             var response = await _cameraService.Add(dto);
@@ -59,8 +59,8 @@ namespace products_api.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<CameraDto>>> Update(
-            Guid id, [FromBody] CameraUpdateDto dto)
+        public async Task<ActionResult<ServiceResponse<CameraTypeDto>>> Update(
+            Guid id, [FromBody] CameraTypeUpdateDto dto)
         {
             // Get response from service
             var response = await _cameraService.Update(id, dto);

@@ -29,7 +29,7 @@ namespace products_api.Extensions
             services.AddScoped<IChipsetRepository, SqlServerChipsetRepository>();
             services.AddScoped<ICardSlotRepository, SqlServerCardSlotRepository>();
             services.AddScoped<IDisplayTechnologyRepository, SqlServerDisplayTechnologyRepository>();
-            services.AddScoped<ICameraRepository, SqlServerCameraRepository>();
+            services.AddScoped<ICameraTypeRepository, SqlServerCameraTypeRepository>();
             services.AddScoped<IFingerprintRepository, SqlServerFingerprintRepository>();
             services.AddScoped<IWifiRepository, SqlServerWifiRepository>();
             services.AddScoped<IBluetoothRepository, SqlServerBluetoothRepository>();
@@ -55,7 +55,7 @@ namespace products_api.Extensions
             services.AddScoped<IChipsetService, ChipsetService>();
             services.AddScoped<ICardSlotService, CardSlotService>();
             services.AddScoped<IDisplayTechnologyService, DisplayTechnologyService>();
-            services.AddScoped<ICameraService, CameraService>();
+            services.AddScoped<ICameraTypeService, CameraTypeService>();
             services.AddScoped<IFingerprintService, FingerprintService>();
             services.AddScoped<IWifiService, WifiService>();
             services.AddScoped<IBluetoothService, BluetoothService>();

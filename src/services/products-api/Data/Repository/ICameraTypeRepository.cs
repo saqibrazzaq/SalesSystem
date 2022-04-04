@@ -3,7 +3,7 @@ using products_api.Models;
 
 namespace products_api.Data.Repository
 {
-    public interface ICameraRepository : IRepository<Camera>
+    public interface ICameraTypeRepository : IRepository<CameraType>
     {
         
     }

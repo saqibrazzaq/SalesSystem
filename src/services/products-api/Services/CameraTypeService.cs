@@ -5,15 +5,15 @@ using products_api.Services.Interfaces;
 
 namespace products_api.Services
 {
-    public class CameraService : ICameraService
+    public class CameraTypeService : ICameraTypeService
     {
-        private readonly ICameraRepository _cameraRepo;
-        private readonly ILogger<CameraService> _logger;
+        private readonly ICameraTypeRepository _repo;
+        private readonly ILogger<CameraTypeService> _logger;
 
-        public CameraService(ICameraRepository cameraRepo, 
-            ILogger<CameraService> logger)
+        public CameraTypeService(ICameraTypeRepository repo, 
+            ILogger<CameraTypeService> logger)
         {
-            _cameraRepo = cameraRepo;
+            _repo = repo;
             _logger = logger;
         }
 
@@ -25,40 +25,40 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _cameraRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera count service failed.");
+                response = response.GetFailureResponse("CameraType count service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<CameraDto>> Add(CameraCreateDto dto)
+        public async Task<ServiceResponse<CameraTypeDto>> Add(CameraTypeCreateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<CameraDto>();
+            var response = new ServiceResponse<CameraTypeDto>();
 
             try
             {
                 // Create model from dto
-                var camera = new Camera { Name = dto.Name, Position = dto.Position };
+                var cameraType = new CameraType { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _cameraRepo.Add(camera);
-                _cameraRepo.Save();
+                _repo.Add(cameraType);
+                _repo.Save();
 
                 // Set data
-                response.Data = camera.AsDto();
+                response.Data = cameraType.AsDto();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera create service failed.");
+                response = response.GetFailureResponse("CameraType create service failed.");
             }
             
             return await Task.FromResult(response);
@@ -73,19 +73,19 @@ namespace products_api.Services
 
             try
             {
-                // Get camera
-                var camera = _cameraRepo.GetAll(
+                // Get CameraType
+                var cameraType = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
-                if (camera == null) 
+                if (cameraType == null) 
                 {
-                    response = response.GetFailureResponse("Camera not found.");
+                    response = response.GetFailureResponse("CameraType not found.");
                 }
                 else
                 {
-                    // Camera found, delete it
-                    _cameraRepo.Remove(camera);
-                    _cameraRepo.Save();
+                    // CameraType found, delete it
+                    _repo.Remove(cameraType);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -93,48 +93,48 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera delete service failed.");
+                response = response.GetFailureResponse("CameraType delete service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<CameraDto>> Get(Guid id)
+        public async Task<ServiceResponse<CameraTypeDto>> Get(Guid id)
         {
             // Create new response
-            var response = new ServiceResponse<CameraDto>();
+            var response = new ServiceResponse<CameraTypeDto>();
 
             try
             {
-                // Get all Camera
-                var camera = _cameraRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                // Get all CameraType
+                var cameraType = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
-                if (camera == null) response = response.GetFailureResponse("Camera not found");
-                else response.Data = camera.AsDto();
+                if (cameraType == null) response = response.GetFailureResponse("CameraType not found");
+                else response.Data = cameraType.AsDto();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera service failed.");
+                response = response.GetFailureResponse("CameraType service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<CameraDto>>> GetAll()
+        public async Task<ServiceResponse<List<CameraTypeDto>>> GetAll()
         {
             // Create new response
-            var response = new ServiceResponse<List<CameraDto>>();
+            var response = new ServiceResponse<List<CameraTypeDto>>();
 
             try
             {
-                // Get all Camera
-                var cameras = _cameraRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                // Get all CameraType
+                var cameraTypes = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
-                var cameraDtos = new List<CameraDto>();
-                foreach (var camera in cameras)
+                var cameraDtos = new List<CameraTypeDto>();
+                foreach (var camera in cameraTypes)
                 {
                     cameraDtos.Add(camera.AsDto());
                 }
@@ -144,44 +144,44 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera service failed.");
+                response = response.GetFailureResponse("CameraType service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<CameraDto>> Update(Guid id, CameraUpdateDto dto)
+        public async Task<ServiceResponse<CameraTypeDto>> Update(Guid id, CameraTypeUpdateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<CameraDto>();
+            var response = new ServiceResponse<CameraTypeDto>();
 
             try
             {
-                // Get Camera
-                var camera = _cameraRepo.GetAll(
+                // Get CameraType
+                var cameraType = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
-                if (camera == null)
+                if (cameraType == null)
                 {
-                    response = response.GetFailureResponse("Camera not found.");
+                    response = response.GetFailureResponse("CameraType not found.");
                 }
                 else
                 {
-                    // Camera found, update it
-                    camera.Name = dto.Name;
-                    camera.Position = dto.Position;
+                    // CameraType found, update it
+                    cameraType.Name = dto.Name;
+                    cameraType.Position = dto.Position;
                     
                     // Save in repository
-                    _cameraRepo.Update(camera);
-                    _cameraRepo.Save();
+                    _repo.Update(cameraType);
+                    _repo.Save();
                     // Set data
-                    response.Data = camera.AsDto();
+                    response.Data = cameraType.AsDto();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("Camera update service failed.");
+                response = response.GetFailureResponse("CameraType update service failed.");
             }
 
             return await Task.FromResult(response);

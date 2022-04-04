@@ -5,9 +5,9 @@ using products_api.Models;
 
 namespace products_api.Data.SQLServerRepository
 {
-    public class SqlServerCameraRepository : SqlServerRepository<Camera>, ICameraRepository
+    public class SqlServerCameraTypeRepository : SqlServerRepository<CameraType>, ICameraTypeRepository
     {
-        public SqlServerCameraRepository(AppDbContext db, IConfiguration configuration)
+        public SqlServerCameraTypeRepository(AppDbContext db, IConfiguration configuration)
             : base(db, configuration)
         {
             

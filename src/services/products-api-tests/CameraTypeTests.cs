@@ -8,7 +8,7 @@ using Xunit;
 
 namespace products_api_tests
 {
-    public class CameraTests
+    public class CameraTypeTests
     {
         
         [Fact]
@@ -16,7 +16,7 @@ namespace products_api_tests
         {
             // Initialize http client
             var client = new HttpClient();
-            var controllerName = "Cameras";
+            var controllerName = "CameraTypes";
             var url = Common.BaseUrl + $"{controllerName}/count";
 
             // Send count request
@@ -30,10 +30,10 @@ namespace products_api_tests
             var newName = Guid.NewGuid().ToString();
             var newPosition = 1;
             var addUrl = Common.BaseUrl + $"{controllerName}";
-            var createDto = new CameraCreateDto { Name = newName, Position = newPosition };
+            var createDto = new CameraTypeCreateDto { Name = newName, Position = newPosition };
             // Send add request
             var responseAdd = await client.PostAsJsonAsync(addUrl, createDto);
-            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<CameraDto>>();
+            var createdDto = await responseAdd.Content.ReadFromJsonAsync<ServiceResponse<CameraTypeDto>>();
             Assert.NotNull(responseAdd);
             Assert.NotNull(createdDto);
             Assert.NotNull(createdDto.Data);
@@ -45,9 +45,9 @@ namespace products_api_tests
             var updateUrl = Common.BaseUrl + $"{controllerName}?id=" + newId;
             var updatedName = createdDto.Data.Name + "-updated";
             var updatedPosition = createdDto.Data.Position + 3;
-            var updateDto = new CameraUpdateDto { Name = updatedName, Position = updatedPosition };
+            var updateDto = new CameraTypeUpdateDto { Name = updatedName, Position = updatedPosition };
             var responseUpdate = await client.PutAsJsonAsync(updateUrl, updateDto);
-            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<CameraDto>>();
+            var updatedDto = await responseUpdate.Content.ReadFromJsonAsync<ServiceResponse<CameraTypeDto>>();
             Assert.NotNull(updatedDto);
             Assert.NotNull(updatedDto.Data);
             Assert.Equal(updatedName, updatedDto.Data.Name);
