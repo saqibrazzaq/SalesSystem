@@ -10,5 +10,7 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<NetworkBandDto>> Update(Guid id, NetworkBandUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
         Task<ServiceResponse<int>> Count(Guid networkId);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
     }
 }

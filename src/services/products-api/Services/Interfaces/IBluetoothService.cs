@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<BluetoothDto>> Add(BluetoothCreateDto dto);
         Task<ServiceResponse<BluetoothDto>> Update(Guid id, BluetoothUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

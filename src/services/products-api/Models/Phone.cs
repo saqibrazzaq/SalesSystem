@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace products_api.Models
 {
-    [Table("Product")]
-    public class Product : BaseModel
+    [Table("Phone")]
+    public class Phone : BaseModel
     {
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -25,8 +25,8 @@ namespace products_api.Models
         public Guid? OSVersionId { get; set; }
         [ForeignKey("OSVersionId")]
         public virtual OSVersion? OSVersion { get; set; }
-        public int RAM_bytes { get; set; }
-        public int Storage_bytes { get; set; }
+        public long RAM_bytes { get; set; }
+        public long Storage_bytes { get; set; }
         public Guid? SDCardSlotId { get; set; }
         [ForeignKey("SDCardSlotId")]
         public virtual CardSlot? CardSlot { get; set; }
@@ -39,5 +39,8 @@ namespace products_api.Models
         public virtual GPU? GPU { get; set; }
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
+
+        // Related tables
+        public virtual IEnumerable<PhoneCamera> PhoneCameras { get; set; }
     }
 }

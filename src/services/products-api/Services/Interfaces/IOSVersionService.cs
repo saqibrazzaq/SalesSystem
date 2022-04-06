@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<OSVersionDto>> Add(OSVersionCreateDto dto);
         Task<ServiceResponse<OSVersionDto>> Update(Guid id, OSVersionUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

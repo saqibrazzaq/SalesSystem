@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class RemovableBatteryService : IRemovableBatteryService
     {
-        private readonly IRemovableBatteryRepository _removableBatteryRepo;
+        private readonly IRemovableBatteryRepository _repo;
         private readonly ILogger<RemovableBatteryService> _logger;
 
         public RemovableBatteryService(IRemovableBatteryRepository removableBatteryRepo, 
             ILogger<RemovableBatteryService> logger)
         {
-            _removableBatteryRepo = removableBatteryRepo;
+            _repo = removableBatteryRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _removableBatteryRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var removableBattery = new RemovableBattery { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _removableBatteryRepo.Add(removableBattery);
-                _removableBatteryRepo.Save();
+                _repo.Add(removableBattery);
+                _repo.Save();
 
                 // Set data
                 response.Data = removableBattery.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get RemovableBattery
-                var removableBattery = _removableBatteryRepo.GetAll(
+                var removableBattery = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (removableBattery == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // RemovableBattery found, delete it
-                    _removableBatteryRepo.Remove(removableBattery);
-                    _removableBatteryRepo.Save();
+                    _repo.Remove(removableBattery);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get RemovableBattery
-                var removableBattery = _removableBatteryRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var removableBattery = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all RemovableBattery
-                var removableBatteries = _removableBatteryRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var removableBatteries = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var removableBatteryDtos = new List<RemovableBatteryDto>();
                 foreach (var removableBattery in removableBatteries)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get RemovableBattery
-                var removableBattery = _removableBatteryRepo.GetAll(
+                var removableBattery = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (removableBattery == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     removableBattery.Position = dto.Position;
                     
                     // Save in repository
-                    _removableBatteryRepo.Update(removableBattery);
-                    _removableBatteryRepo.Save();
+                    _repo.Update(removableBattery);
+                    _repo.Save();
                     // Set data
                     response.Data = removableBattery.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("RemovableBattery update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

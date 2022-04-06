@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class AvailabilityService : IAvailabilityService
     {
-        private readonly IAvailabilityRepository _availabilityRepo;
+        private readonly IAvailabilityRepository _repo;
         private readonly ILogger<AvailabilityService> _logger;
 
         public AvailabilityService(IAvailabilityRepository availabilityRepo, 
             ILogger<AvailabilityService> logger)
         {
-            _availabilityRepo = availabilityRepo;
+            _repo = availabilityRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _availabilityRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var availability = new Availability { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _availabilityRepo.Add(availability);
-                _availabilityRepo.Save();
+                _repo.Add(availability);
+                _repo.Save();
 
                 // Set data
                 response.Data = availability.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get Availability
-                var availability = _availabilityRepo.GetAll(
+                var availability = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (availability == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // Availability found, delete it
-                    _availabilityRepo.Remove(availability);
-                    _availabilityRepo.Save();
+                    _repo.Remove(availability);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get Availability
-                var availability = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var availability = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all Availability
-                var availabilities = _availabilityRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var availabilities = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var availabilityDtos = new List<AvailabilityDto>();
                 foreach (var availability in availabilities)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get Availability
-                var availability = _availabilityRepo.GetAll(
+                var availability = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (availability == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     availability.Position = dto.Position;
                     
                     // Save in repository
-                    _availabilityRepo.Update(availability);
-                    _availabilityRepo.Save();
+                    _repo.Update(availability);
+                    _repo.Save();
                     // Set data
                     response.Data = availability.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Availability update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

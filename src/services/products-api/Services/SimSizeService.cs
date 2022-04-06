@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class SimSizeService : ISimSizeService
     {
-        private readonly ISimSizeRepository _simSizeRepo;
+        private readonly ISimSizeRepository _repo;
         private readonly ILogger<SimSizeService> _logger;
 
         public SimSizeService(ISimSizeRepository simSizeRepo, 
             ILogger<SimSizeService> logger)
         {
-            _simSizeRepo = simSizeRepo;
+            _repo = simSizeRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _simSizeRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var simSize = new SimSize { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _simSizeRepo.Add(simSize);
-                _simSizeRepo.Save();
+                _repo.Add(simSize);
+                _repo.Save();
 
                 // Set data
                 response.Data = simSize.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get SimSize
-                var brand = _simSizeRepo.GetAll(
+                var brand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (brand == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // SimSize found, delete it
-                    _simSizeRepo.Remove(brand);
-                    _simSizeRepo.Save();
+                    _repo.Remove(brand);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,7 +107,7 @@ namespace products_api.Services
             try
             {
                 // Get all SimSize
-                var simSize = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var simSize = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -131,7 +131,7 @@ namespace products_api.Services
             try
             {
                 // Get all SimSize
-                var simSizes = _simSizeRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var simSizes = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var simSizeDtos = new List<SimSizeDto>();
                 foreach (var simSize in simSizes)
@@ -158,7 +158,7 @@ namespace products_api.Services
             try
             {
                 // Get SimSize
-                var simSize = _simSizeRepo.GetAll(
+                var simSize = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (simSize == null)
@@ -172,8 +172,8 @@ namespace products_api.Services
                     simSize.Position = dto.Position;
                     
                     // Save in repository
-                    _simSizeRepo.Update(simSize);
-                    _simSizeRepo.Save();
+                    _repo.Update(simSize);
+                    _repo.Save();
                     // Set data
                     response.Data = simSize.AsDto();
                 }
@@ -182,6 +182,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("SimSize update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class CardSlotService : ICardSlotService
     {
-        private readonly ICardSlotRepository _cardSlotRepo;
+        private readonly ICardSlotRepository _repo;
         private readonly ILogger<CardSlotService> _logger;
 
         public CardSlotService(ICardSlotRepository cardSlotRepo, 
             ILogger<CardSlotService> logger)
         {
-            _cardSlotRepo = cardSlotRepo;
+            _repo = cardSlotRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _cardSlotRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var cardSlot = new CardSlot { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _cardSlotRepo.Add(cardSlot);
-                _cardSlotRepo.Save();
+                _repo.Add(cardSlot);
+                _repo.Save();
 
                 // Set data
                 response.Data = cardSlot.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get CardSlot
-                var cardSlot = _cardSlotRepo.GetAll(
+                var cardSlot = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (cardSlot == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // Chipset found, delete it
-                    _cardSlotRepo.Remove(cardSlot);
-                    _cardSlotRepo.Save();
+                    _repo.Remove(cardSlot);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get CardSlot
-                var cardSlot = _cardSlotRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var cardSlot = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all CardSlot
-                var cardSlots = _cardSlotRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var cardSlots = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var cardSlotDtos = new List<CardSlotDto>();
                 foreach (var cardSlot in cardSlots)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get CardSlot
-                var cardSlot = _cardSlotRepo.GetAll(
+                var cardSlot = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (cardSlot == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     cardSlot.Position = dto.Position;
                     
                     // Save in repository
-                    _cardSlotRepo.Update(cardSlot);
-                    _cardSlotRepo.Save();
+                    _repo.Update(cardSlot);
+                    _repo.Save();
                     // Set data
                     response.Data = cardSlot.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("CardSlot update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

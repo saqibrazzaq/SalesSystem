@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<FingerprintDto>> Add(FingerprintCreateDto dto);
         Task<ServiceResponse<FingerprintDto>> Update(Guid id, FingerprintUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

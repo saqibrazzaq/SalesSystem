@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<CameraTypeDto>> Add(CameraTypeCreateDto dto);
         Task<ServiceResponse<CameraTypeDto>> Update(Guid id, CameraTypeUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

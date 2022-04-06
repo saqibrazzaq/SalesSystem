@@ -7,7 +7,7 @@ namespace products_api.Services
 {
     public class NetworkBandService : INetworkBandService
     {
-        private readonly INetworkBandRepository _networkBandRepo;
+        private readonly INetworkBandRepository _repo;
         private readonly ILogger<NetworkBandService> _logger;
         private readonly INetworkService _networkService;
 
@@ -15,7 +15,7 @@ namespace products_api.Services
             ILogger<NetworkBandService> logger, 
             INetworkService networkService)
         {
-            _networkBandRepo = networkBandRepo;
+            _repo = networkBandRepo;
             _logger = logger;
             _networkService = networkService;
         }
@@ -28,7 +28,7 @@ namespace products_api.Services
             try
             {
                 // Get count for network id
-                var count = _networkBandRepo.Count(filter: x => x.NetworkId == networkId);
+                var count = _repo.Count(filter: x => x.NetworkId == networkId);
                 // Set data
                 response.Data = count;
             }
@@ -66,8 +66,8 @@ namespace products_api.Services
                     };
 
                     // Add in repository
-                    _networkBandRepo.Add(networkBand);
-                    _networkBandRepo.Save();
+                    _repo.Add(networkBand);
+                    _repo.Save();
 
                     // Set data
                     response.Data = networkBand.AsDto();
@@ -92,7 +92,7 @@ namespace products_api.Services
             try
             {
                 // Get Network Band
-                var networkBand = _networkBandRepo.GetAll(
+                var networkBand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (networkBand == null) 
@@ -102,8 +102,8 @@ namespace products_api.Services
                 else
                 {
                     // Network Band found, delete it
-                    _networkBandRepo.Remove(networkBand);
-                    _networkBandRepo.Save();
+                    _repo.Remove(networkBand);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -125,7 +125,7 @@ namespace products_api.Services
             try
             {
                 // Get all Network Bands
-                var networkBand = _networkBandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var networkBand = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -149,7 +149,7 @@ namespace products_api.Services
             try
             {
                 // Get all Network Band
-                var networkBands = _networkBandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var networkBands = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.NetworkId == networkId);
                 // Create Dtos
                 var networkBandDtos = new List<NetworkBandDto>();
@@ -179,7 +179,7 @@ namespace products_api.Services
             try
             {
                 // Get Network Band
-                var networkBand = _networkBandRepo.GetAll(
+                var networkBand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (networkBand == null)
@@ -193,8 +193,8 @@ namespace products_api.Services
                     networkBand.Position = dto.Position;
                     
                     // Save in repository
-                    _networkBandRepo.Update(networkBand);
-                    _networkBandRepo.Save();
+                    _repo.Update(networkBand);
+                    _repo.Save();
                     // Set data
                     response.Data = networkBand.AsDto();
                 }
@@ -203,6 +203,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Network Band update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

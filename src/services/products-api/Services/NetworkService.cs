@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class NetworkService : INetworkService
     {
-        private readonly INetworkRepository _networkRepo;
+        private readonly INetworkRepository _repo;
         private readonly ILogger<NetworkService> _logger;
 
         public NetworkService(INetworkRepository networkRepo, 
             ILogger<NetworkService> logger)
         {
-            _networkRepo = networkRepo;
+            _repo = networkRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _networkRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var network = new Network { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _networkRepo.Add(network);
-                _networkRepo.Save();
+                _repo.Add(network);
+                _repo.Save();
 
                 // Set data
                 response.Data = network.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get Network
-                var brand = _networkRepo.GetAll(
+                var brand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (brand == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // Network found, delete it
-                    _networkRepo.Remove(brand);
-                    _networkRepo.Save();
+                    _repo.Remove(brand);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,8 +107,32 @@ namespace products_api.Services
             try
             {
                 // Get Network
-                var network = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var network = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (network == null) response = response.GetFailureResponse("Network not found");
+                else response.Data = network.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Network service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<NetworkDto>> GetByName(string name)
+        {
+            // Create new response
+            var response = new ServiceResponse<NetworkDto>();
+
+            try
+            {
+                // Get Network
+                var network = _repo.GetAll()
+                    .Where(x => x.Name == name)
                     .FirstOrDefault();
                 // Check null
                 if (network == null) response = response.GetFailureResponse("Network not found");
@@ -131,7 +155,7 @@ namespace products_api.Services
             try
             {
                 // Get all Network
-                var networks = _networkRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var networks = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var networkDtos = new List<NetworkDto>();
                 foreach (var network in networks)
@@ -158,7 +182,7 @@ namespace products_api.Services
             try
             {
                 // Get Network
-                var network = _networkRepo.GetAll(
+                var network = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (network == null)
@@ -172,8 +196,8 @@ namespace products_api.Services
                     network.Position = dto.Position;
                     
                     // Save in repository
-                    _networkRepo.Update(network);
-                    _networkRepo.Save();
+                    _repo.Update(network);
+                    _repo.Save();
                     // Set data
                     response.Data = network.AsDto();
                 }
@@ -182,6 +206,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Network update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

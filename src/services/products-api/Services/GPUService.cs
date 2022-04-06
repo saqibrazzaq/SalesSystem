@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class GPUService : IGPUService
     {
-        private readonly IGPURepository _gpuRepo;
+        private readonly IGPURepository _repo;
         private readonly ILogger<GPUService> _logger;
 
         public GPUService(IGPURepository gpuRepo, 
             ILogger<GPUService> logger)
         {
-            _gpuRepo = gpuRepo;
+            _repo = gpuRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _gpuRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var gpu = new GPU { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _gpuRepo.Add(gpu);
-                _gpuRepo.Save();
+                _repo.Add(gpu);
+                _repo.Save();
 
                 // Set data
                 response.Data = gpu.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get GPU
-                var gpu = _gpuRepo.GetAll(
+                var gpu = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (gpu == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // GPU found, delete it
-                    _gpuRepo.Remove(gpu);
-                    _gpuRepo.Save();
+                    _repo.Remove(gpu);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get GPU
-                var gpu = _gpuRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var gpu = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all GPU
-                var gpus = _gpuRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var gpus = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var gpuDtos = new List<GPUDto>();
                 foreach (var gpu in gpus)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get GPU
-                var gpu = _gpuRepo.GetAll(
+                var gpu = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (gpu == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     gpu.Position = dto.Position;
                     
                     // Save in repository
-                    _gpuRepo.Update(gpu);
-                    _gpuRepo.Save();
+                    _repo.Update(gpu);
+                    _repo.Save();
                     // Set data
                     response.Data = gpu.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("GPU update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

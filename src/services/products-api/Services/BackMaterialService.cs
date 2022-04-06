@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class BackMaterialService : IBackMaterialService
     {
-        private readonly IBackMaterialRepository _backMaterialRepo;
+        private readonly IBackMaterialRepository _repo;
         private readonly ILogger<BackMaterialService> _logger;
 
         public BackMaterialService(IBackMaterialRepository backMaterialRepo, 
             ILogger<BackMaterialService> logger)
         {
-            _backMaterialRepo = backMaterialRepo;
+            _repo = backMaterialRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _backMaterialRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var backMaterial = new BackMaterial { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _backMaterialRepo.Add(backMaterial);
-                _backMaterialRepo.Save();
+                _repo.Add(backMaterial);
+                _repo.Save();
 
                 // Set data
                 response.Data = backMaterial.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get BackMaterial
-                var availability = _backMaterialRepo.GetAll(
+                var availability = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (availability == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // Availability found, delete it
-                    _backMaterialRepo.Remove(availability);
-                    _backMaterialRepo.Save();
+                    _repo.Remove(availability);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get BackMaterial
-                var availability = _backMaterialRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var availability = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all BackMaterial
-                var backMaterials = _backMaterialRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var backMaterials = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var backMaterialDtos = new List<BackMaterialDto>();
                 foreach (var backMaterial in backMaterials)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get BackMaterial
-                var backMaterial = _backMaterialRepo.GetAll(
+                var backMaterial = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (backMaterial == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     backMaterial.Position = dto.Position;
                     
                     // Save in repository
-                    _backMaterialRepo.Update(backMaterial);
-                    _backMaterialRepo.Save();
+                    _repo.Update(backMaterial);
+                    _repo.Save();
                     // Set data
                     response.Data = backMaterial.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("BackMaterial update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class DisplayTechnologyService : IDisplayTechnologyService
     {
-        private readonly IDisplayTechnologyRepository _displayTechnologyRepo;
+        private readonly IDisplayTechnologyRepository _repo;
         private readonly ILogger<DisplayTechnologyService> _logger;
 
         public DisplayTechnologyService(IDisplayTechnologyRepository displayTechnologyRepo, 
             ILogger<DisplayTechnologyService> logger)
         {
-            _displayTechnologyRepo = displayTechnologyRepo;
+            _repo = displayTechnologyRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _displayTechnologyRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var displayTechnology = new DisplayTechnology { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _displayTechnologyRepo.Add(displayTechnology);
-                _displayTechnologyRepo.Save();
+                _repo.Add(displayTechnology);
+                _repo.Save();
 
                 // Set data
                 response.Data = displayTechnology.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get DisplayTechnology
-                var displayTechnology = _displayTechnologyRepo.GetAll(
+                var displayTechnology = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (displayTechnology == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // DisplayTechnology found, delete it
-                    _displayTechnologyRepo.Remove(displayTechnology);
-                    _displayTechnologyRepo.Save();
+                    _repo.Remove(displayTechnology);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,7 +107,7 @@ namespace products_api.Services
             try
             {
                 // Get all DisplayTechnology
-                var displayTechnology = _displayTechnologyRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var displayTechnology = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
@@ -131,7 +131,7 @@ namespace products_api.Services
             try
             {
                 // Get all DisplayTechnology
-                var displayTechnologies = _displayTechnologyRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var displayTechnologies = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var displayTechnologyDtos = new List<DisplayTechnologyDto>();
                 foreach (var displayTechnology in displayTechnologies)
@@ -158,7 +158,7 @@ namespace products_api.Services
             try
             {
                 // Get DisplayTechnology
-                var displayTechnology = _displayTechnologyRepo.GetAll(
+                var displayTechnology = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (displayTechnology == null)
@@ -172,8 +172,8 @@ namespace products_api.Services
                     displayTechnology.Position = dto.Position;
                     
                     // Save in repository
-                    _displayTechnologyRepo.Update(displayTechnology);
-                    _displayTechnologyRepo.Save();
+                    _repo.Update(displayTechnology);
+                    _repo.Save();
                     // Set data
                     response.Data = displayTechnology.AsDto();
                 }
@@ -182,6 +182,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("DisplayTechnology update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

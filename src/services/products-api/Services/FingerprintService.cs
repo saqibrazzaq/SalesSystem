@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class FingerprintService : IFingerprintService
     {
-        private readonly IFingerprintRepository _fingerprintRepo;
+        private readonly IFingerprintRepository _repo;
         private readonly ILogger<FingerprintService> _logger;
 
         public FingerprintService(IFingerprintRepository fingerprintRepo, 
             ILogger<FingerprintService> logger)
         {
-            _fingerprintRepo = fingerprintRepo;
+            _repo = fingerprintRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _fingerprintRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var fingerprint = new Fingerprint { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _fingerprintRepo.Add(fingerprint);
-                _fingerprintRepo.Save();
+                _repo.Add(fingerprint);
+                _repo.Save();
 
                 // Set data
                 response.Data = fingerprint.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get Fingerprint
-                var fingerprint = _fingerprintRepo.GetAll(
+                var fingerprint = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (fingerprint == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // Fingerprint found, delete it
-                    _fingerprintRepo.Remove(fingerprint);
-                    _fingerprintRepo.Save();
+                    _repo.Remove(fingerprint);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,7 +107,7 @@ namespace products_api.Services
             try
             {
                 // Get all Fingerprint
-                var fingerprint = _fingerprintRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var fingerprint = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
@@ -131,7 +131,7 @@ namespace products_api.Services
             try
             {
                 // Get all Fingerprint
-                var fingerprints = _fingerprintRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var fingerprints = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var fingerprintDtos = new List<FingerprintDto>();
                 foreach (var fingerprint in fingerprints)
@@ -158,7 +158,7 @@ namespace products_api.Services
             try
             {
                 // Get Fingerprint
-                var fingerprint = _fingerprintRepo.GetAll(
+                var fingerprint = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (fingerprint == null)
@@ -172,8 +172,8 @@ namespace products_api.Services
                     fingerprint.Position = dto.Position;
                     
                     // Save in repository
-                    _fingerprintRepo.Update(fingerprint);
-                    _fingerprintRepo.Save();
+                    _repo.Update(fingerprint);
+                    _repo.Save();
                     // Set data
                     response.Data = fingerprint.AsDto();
                 }
@@ -182,6 +182,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Fingerprint update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

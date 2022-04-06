@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class FormFactorService : IFormFactorService
     {
-        private readonly IFormFactorRepository _formFactorRepo;
+        private readonly IFormFactorRepository _repo;
         private readonly ILogger<FormFactorService> _logger;
 
         public FormFactorService(IFormFactorRepository formFactorRepo, 
             ILogger<FormFactorService> logger)
         {
-            _formFactorRepo = formFactorRepo;
+            _repo = formFactorRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _formFactorRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var formFactor = new FormFactor { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _formFactorRepo.Add(formFactor);
-                _formFactorRepo.Save();
+                _repo.Add(formFactor);
+                _repo.Save();
 
                 // Set data
                 response.Data = formFactor.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get form factor
-                var formFactor = _formFactorRepo.GetAll(
+                var formFactor = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (formFactor == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // form factor found, delete it
-                    _formFactorRepo.Remove(formFactor);
-                    _formFactorRepo.Save();
+                    _repo.Remove(formFactor);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get all FormFactor
-                var formFactor = _formFactorRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var formFactor = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all FormFactor
-                var formFactors = _formFactorRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var formFactors = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var formFactorDtos = new List<FormFactorDto>();
                 foreach (var formFactor in formFactors)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get FormFactor
-                var formFactor = _formFactorRepo.GetAll(
+                var formFactor = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (formFactor == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     formFactor.Position = dto.Position;
                     
                     // Save in repository
-                    _formFactorRepo.Update(formFactor);
-                    _formFactorRepo.Save();
+                    _repo.Update(formFactor);
+                    _repo.Save();
                     // Set data
                     response.Data = formFactor.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("FormFactor update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

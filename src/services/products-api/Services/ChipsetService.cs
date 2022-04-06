@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class ChipsetService : IChipsetService
     {
-        private readonly IChipsetRepository _chipsetRepo;
+        private readonly IChipsetRepository _repo;
         private readonly ILogger<ChipsetService> _logger;
 
         public ChipsetService(IChipsetRepository chipsetRepo, 
             ILogger<ChipsetService> logger)
         {
-            _chipsetRepo = chipsetRepo;
+            _repo = chipsetRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _chipsetRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var chipset = new Chipset { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _chipsetRepo.Add(chipset);
-                _chipsetRepo.Save();
+                _repo.Add(chipset);
+                _repo.Save();
 
                 // Set data
                 response.Data = chipset.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get Availability
-                var chipset = _chipsetRepo.GetAll(
+                var chipset = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (chipset == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // Chipset found, delete it
-                    _chipsetRepo.Remove(chipset);
-                    _chipsetRepo.Save();
+                    _repo.Remove(chipset);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,7 +108,7 @@ namespace products_api.Services
             try
             {
                 // Get Chipset
-                var chipset = _chipsetRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var chipset = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -132,7 +132,7 @@ namespace products_api.Services
             try
             {
                 // Get all Chipset
-                var chipsets = _chipsetRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var chipsets = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var chipsetDtos = new List<ChipsetDto>();
                 foreach (var chipset in chipsets)
@@ -160,7 +160,7 @@ namespace products_api.Services
             try
             {
                 // Get Chipset
-                var chipset = _chipsetRepo.GetAll(
+                var chipset = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (chipset == null)
@@ -174,8 +174,8 @@ namespace products_api.Services
                     chipset.Position = dto.Position;
                     
                     // Save in repository
-                    _chipsetRepo.Update(chipset);
-                    _chipsetRepo.Save();
+                    _repo.Update(chipset);
+                    _repo.Save();
                     // Set data
                     response.Data = chipset.AsDto();
                 }
@@ -184,6 +184,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Chipset update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

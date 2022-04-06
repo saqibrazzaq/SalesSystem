@@ -546,6 +546,143 @@ namespace products_api.Migrations
                     b.ToTable("OSVersion");
                 });
 
+            modelBuilder.Entity("products_api.Models.Phone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AnnouncedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BatteryCapacity_mAh")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ChipsetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CpuCores")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CpuDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DisplaySize_in")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.Property<Guid?>("GPUId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Height_mm")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OSId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OSVersionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("RAM_bytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("SDCardSlotId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("Storage_bytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("Thickness_mm")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Weight_grams")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Width_mm")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChipsetId");
+
+                    b.HasIndex("GPUId");
+
+                    b.HasIndex("OSId");
+
+                    b.HasIndex("OSVersionId");
+
+                    b.HasIndex("SDCardSlotId");
+
+                    b.ToTable("Phone");
+                });
+
+            modelBuilder.Entity("products_api.Models.PhoneCamera", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CameraTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FNumber")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.Property<int>("FocalLength_mm")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("LensTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("OIS")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PhoneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("PixelSize_um")
+                        .HasColumnType("decimal(5,1)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Resolution_MP")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SensorSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CameraTypeId");
+
+                    b.HasIndex("LensTypeId");
+
+                    b.HasIndex("PhoneId");
+
+                    b.ToTable("PhoneCamera");
+                });
+
             modelBuilder.Entity("products_api.Models.RemovableBattery", b =>
                 {
                     b.Property<Guid>("Id")
@@ -690,7 +827,7 @@ namespace products_api.Migrations
             modelBuilder.Entity("products_api.Models.NetworkBand", b =>
                 {
                     b.HasOne("products_api.Models.Network", "Network")
-                        .WithMany("NetworkDetails")
+                        .WithMany("NetworkBands")
                         .HasForeignKey("NetworkId");
 
                     b.Navigation("Network");
@@ -707,14 +844,77 @@ namespace products_api.Migrations
                     b.Navigation("OS");
                 });
 
+            modelBuilder.Entity("products_api.Models.Phone", b =>
+                {
+                    b.HasOne("products_api.Models.Chipset", "Chipset")
+                        .WithMany()
+                        .HasForeignKey("ChipsetId");
+
+                    b.HasOne("products_api.Models.GPU", "GPU")
+                        .WithMany()
+                        .HasForeignKey("GPUId");
+
+                    b.HasOne("products_api.Models.OS", "OS")
+                        .WithMany()
+                        .HasForeignKey("OSId");
+
+                    b.HasOne("products_api.Models.OSVersion", "OSVersion")
+                        .WithMany()
+                        .HasForeignKey("OSVersionId");
+
+                    b.HasOne("products_api.Models.CardSlot", "CardSlot")
+                        .WithMany()
+                        .HasForeignKey("SDCardSlotId");
+
+                    b.Navigation("CardSlot");
+
+                    b.Navigation("Chipset");
+
+                    b.Navigation("GPU");
+
+                    b.Navigation("OS");
+
+                    b.Navigation("OSVersion");
+                });
+
+            modelBuilder.Entity("products_api.Models.PhoneCamera", b =>
+                {
+                    b.HasOne("products_api.Models.CameraType", "CameraType")
+                        .WithMany()
+                        .HasForeignKey("CameraTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("products_api.Models.LensType", "LensType")
+                        .WithMany()
+                        .HasForeignKey("LensTypeId");
+
+                    b.HasOne("products_api.Models.Phone", "Phone")
+                        .WithMany("PhoneCameras")
+                        .HasForeignKey("PhoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CameraType");
+
+                    b.Navigation("LensType");
+
+                    b.Navigation("Phone");
+                });
+
             modelBuilder.Entity("products_api.Models.Network", b =>
                 {
-                    b.Navigation("NetworkDetails");
+                    b.Navigation("NetworkBands");
                 });
 
             modelBuilder.Entity("products_api.Models.OS", b =>
                 {
                     b.Navigation("OSVersions");
+                });
+
+            modelBuilder.Entity("products_api.Models.Phone", b =>
+                {
+                    b.Navigation("PhoneCameras");
                 });
 #pragma warning restore 612, 618
         }

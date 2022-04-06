@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<SimMultipleDto>> Add(SimMultipleCreateDto dto);
         Task<ServiceResponse<SimMultipleDto>> Update(Guid id, SimMultipleUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

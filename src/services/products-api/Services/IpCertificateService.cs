@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class IpCertificateService : IIpCertificateService
     {
-        private readonly IIpCertificateRepository _ipCertificateRepo;
+        private readonly IIpCertificateRepository _repo;
         private readonly ILogger<IpCertificateService> _logger;
 
         public IpCertificateService(IIpCertificateRepository ipCertificateRepo, 
             ILogger<IpCertificateService> logger)
         {
-            _ipCertificateRepo = ipCertificateRepo;
+            _repo = ipCertificateRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _ipCertificateRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var ipCertificate = new IpCertificate { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _ipCertificateRepo.Add(ipCertificate);
-                _ipCertificateRepo.Save();
+                _repo.Add(ipCertificate);
+                _repo.Save();
 
                 // Set data
                 response.Data = ipCertificate.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get IpCertificate
-                var bodyIpCertificate = _ipCertificateRepo.GetAll(
+                var bodyIpCertificate = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bodyIpCertificate == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // IpCertificate found, delete it
-                    _ipCertificateRepo.Remove(bodyIpCertificate);
-                    _ipCertificateRepo.Save();
+                    _repo.Remove(bodyIpCertificate);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -109,7 +109,7 @@ namespace products_api.Services
             try
             {
                 // Get IpCertificate
-                var ipCertificate = _ipCertificateRepo.
+                var ipCertificate = _repo.
                     GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
@@ -137,7 +137,7 @@ namespace products_api.Services
             try
             {
                 // Get all IpCertificate
-                var ipCertificates = _ipCertificateRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var ipCertificates = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var ipCertificateDtos = new List<IpCertificateDto>();
                 foreach (var ipCertificate in ipCertificates)
@@ -165,7 +165,7 @@ namespace products_api.Services
             try
             {
                 // Get IpCertificate
-                var bodyIpCertificate = _ipCertificateRepo.GetAll(
+                var bodyIpCertificate = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bodyIpCertificate == null)
@@ -179,8 +179,8 @@ namespace products_api.Services
                     bodyIpCertificate.Position = dto.Position;
                     
                     // Save in repository
-                    _ipCertificateRepo.Update(bodyIpCertificate);
-                    _ipCertificateRepo.Save();
+                    _repo.Update(bodyIpCertificate);
+                    _repo.Save();
                     // Set data
                     response.Data = bodyIpCertificate.AsDto();
                 }
@@ -189,6 +189,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("IpCertificate update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

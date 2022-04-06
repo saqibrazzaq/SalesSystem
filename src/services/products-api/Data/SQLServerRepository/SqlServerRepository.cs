@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using products_api.Data.Repository;
 using System.Data.SqlClient;
@@ -81,6 +82,24 @@ namespace products_api.Data.SQLServerRepository
         public void Remove(T entity)
         {
             dbSet.Remove(entity);
+        }
+
+        public void RemoveRange(T[] entities)
+        {
+            dbSet.RemoveRange(entities);
+        }
+
+        public int DeleteAll()
+        {
+            // Get connection
+            using var connection = SqlConnection;
+
+            // Delete sql
+            string sql = $"DELETE from {typeof(T).Name}";
+
+            int deletedRows = connection.Execute(sql);
+
+            return deletedRows;
         }
 
         public void Save()

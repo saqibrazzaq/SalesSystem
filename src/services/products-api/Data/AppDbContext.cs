@@ -157,5 +157,7 @@ namespace products_api.Data
         public DbSet<Resolution> Resolutions { get; set; }
         public DbSet<GPU> GPUs { get; set; }
         public DbSet<LensType> LensTypes { get; set; }
+        public DbSet<PhoneCamera> PhoneCameras { get; set; }
+        public DbSet<Phone> Phones { get; set; }
     }
 }

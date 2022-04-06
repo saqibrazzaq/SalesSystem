@@ -12,6 +12,6 @@ namespace products_api.Models
         public int Position { get; set; } = DefaultValues.Position;
 
         // Detail table
-        public virtual IEnumerable<NetworkBand> NetworkDetails { get; set; }
+        public virtual IEnumerable<NetworkBand> NetworkBands { get; set; }
     }
 }

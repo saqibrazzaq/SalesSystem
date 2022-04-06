@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class BluetoothService : IBluetoothService
     {
-        private readonly IBluetoothRepository _bluetoothRepo;
+        private readonly IBluetoothRepository _repo;
         private readonly ILogger<BluetoothService> _logger;
 
         public BluetoothService(IBluetoothRepository bluetoothRepo, 
             ILogger<BluetoothService> logger)
         {
-            _bluetoothRepo = bluetoothRepo;
+            _repo = bluetoothRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _bluetoothRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var bluetooth = new Bluetooth { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _bluetoothRepo.Add(bluetooth);
-                _bluetoothRepo.Save();
+                _repo.Add(bluetooth);
+                _repo.Save();
 
                 // Set data
                 response.Data = bluetooth.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get Bluetooth
-                var bluetooth = _bluetoothRepo.GetAll(
+                var bluetooth = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bluetooth == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // Bluetooth found, delete it
-                    _bluetoothRepo.Remove(bluetooth);
-                    _bluetoothRepo.Save();
+                    _repo.Remove(bluetooth);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,7 +107,7 @@ namespace products_api.Services
             try
             {
                 // Get all Bluetooth
-                var wifi = _bluetoothRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var wifi = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
@@ -131,7 +131,7 @@ namespace products_api.Services
             try
             {
                 // Get all Bluetooth
-                var bluetooths = _bluetoothRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var bluetooths = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var bluetoothDtos = new List<BluetoothDto>();
                 foreach (var bluetooth in bluetooths)
@@ -158,7 +158,7 @@ namespace products_api.Services
             try
             {
                 // Get Bluetooth
-                var bluetooth = _bluetoothRepo.GetAll(
+                var bluetooth = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (bluetooth == null)
@@ -172,8 +172,8 @@ namespace products_api.Services
                     bluetooth.Position = dto.Position;
                     
                     // Save in repository
-                    _bluetoothRepo.Update(bluetooth);
-                    _bluetoothRepo.Save();
+                    _repo.Update(bluetooth);
+                    _repo.Save();
                     // Set data
                     response.Data = bluetooth.AsDto();
                 }
@@ -182,6 +182,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Bluetooth update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

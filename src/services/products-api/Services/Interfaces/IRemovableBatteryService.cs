@@ -9,6 +9,8 @@ namespace products_api.Services.Interfaces
         Task<ServiceResponse<RemovableBatteryDto>> Add(RemovableBatteryCreateDto dto);
         Task<ServiceResponse<RemovableBatteryDto>> Update(Guid id, RemovableBatteryUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
+        Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids);
+        Task<ServiceResponse<int>> DeleteAll();
         Task<ServiceResponse<int>> Count();
     }
 }

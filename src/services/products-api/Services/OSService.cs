@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class OSService : IOSService
     {
-        private readonly IOSRepository _osRepo;
+        private readonly IOSRepository _repo;
         private readonly ILogger<OSService> _logger;
 
         public OSService(IOSRepository osRepo, 
             ILogger<OSService> logger)
         {
-            _osRepo = osRepo;
+            _repo = osRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _osRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -50,8 +50,8 @@ namespace products_api.Services
                 var os = new OS { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _osRepo.Add(os);
-                _osRepo.Save();
+                _repo.Add(os);
+                _repo.Save();
 
                 // Set data
                 response.Data = os.AsDto();
@@ -75,7 +75,7 @@ namespace products_api.Services
             try
             {
                 // Get OS
-                var os = _osRepo.GetAll(
+                var os = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (os == null) 
@@ -85,8 +85,8 @@ namespace products_api.Services
                 else
                 {
                     // OS found, delete it
-                    _osRepo.Remove(os);
-                    _osRepo.Save();
+                    _repo.Remove(os);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -108,8 +108,32 @@ namespace products_api.Services
             try
             {
                 // Get OS
-                var os = _osRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var os = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
+                    .FirstOrDefault();
+                // Check null
+                if (os == null) response = response.GetFailureResponse("OS not found");
+                else response.Data = os.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("OS service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<OSDto>> GetByName(string name)
+        {
+            // Create new response
+            var response = new ServiceResponse<OSDto>();
+
+            try
+            {
+                // Get OS
+                var os = _repo.GetAll()
+                    .Where(x => x.Name == name)
                     .FirstOrDefault();
                 // Check null
                 if (os == null) response = response.GetFailureResponse("OS not found");
@@ -132,7 +156,7 @@ namespace products_api.Services
             try
             {
                 // Get all OS
-                var oses = _osRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var oses = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var osDtos = new List<OSDto>();
                 foreach (var os in oses)
@@ -160,7 +184,7 @@ namespace products_api.Services
             try
             {
                 // Get OS
-                var os = _osRepo.GetAll(
+                var os = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (os == null)
@@ -174,8 +198,8 @@ namespace products_api.Services
                     os.Position = dto.Position;
                     
                     // Save in repository
-                    _osRepo.Update(os);
-                    _osRepo.Save();
+                    _repo.Update(os);
+                    _repo.Save();
                     // Set data
                     response.Data = os.AsDto();
                 }
@@ -184,6 +208,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("OS update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

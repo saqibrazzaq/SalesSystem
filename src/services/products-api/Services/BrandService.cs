@@ -7,13 +7,13 @@ namespace products_api.Services
 {
     public class BrandService : IBrandService
     {
-        private readonly IBrandRepository _brandRepo;
+        private readonly IBrandRepository _repo;
         private readonly ILogger<BrandService> _logger;
 
         public BrandService(IBrandRepository brandRepo, 
             ILogger<BrandService> logger)
         {
-            _brandRepo = brandRepo;
+            _repo = brandRepo;
             _logger = logger;
         }
 
@@ -25,7 +25,7 @@ namespace products_api.Services
             try
             {
                 // Get count
-                var count = _brandRepo.Count();
+                var count = _repo.Count();
                 // Set data
                 response.Data = count;
             }
@@ -49,8 +49,8 @@ namespace products_api.Services
                 var brand = new Brand { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
-                _brandRepo.Add(brand);
-                _brandRepo.Save();
+                _repo.Add(brand);
+                _repo.Save();
 
                 // Set data
                 response.Data = brand.AsDto();
@@ -74,7 +74,7 @@ namespace products_api.Services
             try
             {
                 // Get brand
-                var brand = _brandRepo.GetAll(
+                var brand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (brand == null) 
@@ -84,8 +84,8 @@ namespace products_api.Services
                 else
                 {
                     // Brand found, delete it
-                    _brandRepo.Remove(brand);
-                    _brandRepo.Save();
+                    _repo.Remove(brand);
+                    _repo.Save();
                     // Set data
                     response.Data = true;
                 }
@@ -107,7 +107,7 @@ namespace products_api.Services
             try
             {
                 // Get all brands
-                var brand = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var brand = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check not found
@@ -131,7 +131,7 @@ namespace products_api.Services
             try
             {
                 // Get all brands
-                var brands = _brandRepo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
+                var brands = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
                 var brandDtos = new List<BrandDto>();
                 foreach (var brand in brands)
@@ -158,7 +158,7 @@ namespace products_api.Services
             try
             {
                 // Get brand
-                var brand = _brandRepo.GetAll(
+                var brand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
                 if (brand == null)
@@ -172,8 +172,8 @@ namespace products_api.Services
                     brand.Position = dto.Position;
                     
                     // Save in repository
-                    _brandRepo.Update(brand);
-                    _brandRepo.Save();
+                    _repo.Update(brand);
+                    _repo.Save();
                     // Set data
                     response.Data = brand.AsDto();
                 }
@@ -182,6 +182,49 @@ namespace products_api.Services
             {
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Brand update service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRange(List<Guid> ids)
+        {
+            // Create new response
+            var response = new ServiceResponse<bool>();
+
+            try
+            {
+                // Get all entities by id in the list
+                var entities = _repo.GetAll(
+                    filter: x => ids.Contains(x.Id)
+                    ).ToArray();
+                _repo.RemoveRange(entities);
+
+                // Set data
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
+
+        public async Task<ServiceResponse<int>> DeleteAll()
+        {
+            // Create new response
+            var response = new ServiceResponse<int>();
+
+            try
+            {
+                response.Data = _repo.DeleteAll();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("Remove service failed.");
             }
 
             return await Task.FromResult(response);

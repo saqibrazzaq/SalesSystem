@@ -18,7 +18,7 @@ namespace products_api.Data.SQLServerRepository
         {
             var query = GetAll(
                 filter: x => x.Name == name,
-                include: i => i.Include(x => x.NetworkDetails)
+                include: i => i.Include(x => x.NetworkBands)
                 ).FirstOrDefault();
             if (query == null) return null;
 
