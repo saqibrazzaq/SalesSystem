@@ -6,6 +6,7 @@ namespace products_api.Services.Interfaces
     {
         Task<ServiceResponse<List<LensTypeDto>>> GetAll();
         Task<ServiceResponse<LensTypeDto>> Get(Guid id);
+        Task<ServiceResponse<LensTypeDto>> GetByName(string name);
         Task<ServiceResponse<LensTypeDto>> Add(LensTypeCreateDto dto);
         Task<ServiceResponse<LensTypeDto>> Update(Guid id, LensTypeUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);

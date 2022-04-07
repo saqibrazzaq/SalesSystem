@@ -231,5 +231,29 @@ namespace products_api.Services
 
             return await Task.FromResult(response);
         }
+
+        public async Task<ServiceResponse<CardSlotDto>> GetByName(string name)
+        {
+            // Create new response
+            var response = new ServiceResponse<CardSlotDto>();
+
+            try
+            {
+                // Get CardSlot
+                var entity = _repo.GetAll()
+                    .Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+                // Check null
+                if (entity == null) response = response.GetFailureResponse("CardSlot not found");
+                else response.Data = entity.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("CardSlot service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
     }
 }

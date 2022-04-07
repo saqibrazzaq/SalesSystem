@@ -239,5 +239,29 @@ namespace products_api.Services
 
             return await Task.FromResult(response);
         }
+
+        public async Task<ServiceResponse<OSVersionDto>> GetByName(string name)
+        {
+            // Create new response
+            var response = new ServiceResponse<OSVersionDto>();
+
+            try
+            {
+                // Get OSVersionDto
+                var os = _repo.GetAll()
+                    .Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+                // Check null
+                if (os == null) response = response.GetFailureResponse("OSVersionDto not found");
+                else response.Data = os.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("OSVersionDto service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
     }
 }

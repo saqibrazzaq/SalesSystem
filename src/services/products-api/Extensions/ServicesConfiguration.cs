@@ -38,6 +38,7 @@ namespace products_api.Extensions
             services.AddScoped<IGPURepository, SqlServerGPURepository>();
             services.AddScoped<ILensTypeRepository, SqlServerLensTypeRepository>();
             services.AddScoped<IPhoneCameraRepository, SqlServerPhoneCameraRepository>();
+            services.AddScoped<IPhoneNetworkBandRepository, SqlServerPhoneNetworkBandRepository>();
             services.AddScoped<IPhoneRepository, SqlServerPhoneRepository>();
             
             // Add Services
@@ -66,7 +67,6 @@ namespace products_api.Extensions
             services.AddScoped<IResolutionService, ResolutionService>();
             services.AddScoped<IGPUService, GPUService>();
             services.AddScoped<ILensTypeService, LensTypeService>();
-            services.AddScoped<IPhoneCameraService, PhoneCameraService>();
             services.AddScoped<IPhoneService, PhoneService>();
         }
     }

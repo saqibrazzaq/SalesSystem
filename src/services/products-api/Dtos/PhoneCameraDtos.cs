@@ -42,7 +42,6 @@ namespace products_api.Dtos
     public class PhoneCameraCreateDto
     {
         public Guid CameraTypeId { get; set; }
-        public Guid PhoneId { get; set; }
         public int Position { get; set; }
         public int Resolution_MP { get; set; }
         public decimal FNumber { get; set; }
@@ -50,7 +49,7 @@ namespace products_api.Dtos
         public string SensorSize { get; set; } = string.Empty;
         public decimal PixelSize_um { get; set; }
         public bool OIS { get; set; }
-        public Guid LensTypeId { get; set; }
+        public Guid? LensTypeId { get; set; }
     }
 
     public class PhoneCameraUpdateDto
@@ -62,6 +61,7 @@ namespace products_api.Dtos
         public string SensorSize { get; set; } = string.Empty;
         public decimal PixelSize_um { get; set; }
         public bool OIS { get; set; }
+        public Guid CameraTypeId { get; set; }
         public Guid LensTypeId { get; set; }
     }
 }

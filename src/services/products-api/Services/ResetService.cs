@@ -35,6 +35,7 @@ namespace products_api.Services
         private readonly string resolutionFile = "default-resolution.json";
         private readonly string gpuFile = "default-gpu.json";
         private readonly string lensTypeFile = "default-lens-types.json";
+        private readonly string phoneFile = "default-phone.json";
 
         public string DataFolder
         {
@@ -68,32 +69,35 @@ namespace products_api.Services
         private readonly IResolutionService resolutionService;
         private readonly IGPUService gpuService;
         private readonly ILensTypeService lensTypeService;
+        private readonly IPhoneService phoneService;
+        //private readonly iphonenet
 
         public ResetService(ILogger<ResetService> logger,
-            ICategoryService categoryService, 
-            IBrandService brandService, 
-            IAvailabilityService availabilityService, 
-            INetworkBandService networkBandService, 
-            INetworkService networkService, 
-            ISimSizeService simSizeService, 
-            ISimMultipleService simMultipleService, 
-            IFormFactorService formFactorService, 
-            IIpCertificateService ipCertificateService, 
-            IBackMaterialService backMaterialService, 
-            IFrameMaterialService frameMaterialService, 
-            IOSVersionService osVersionService, 
-            IOSService osService, 
-            IChipsetService chipsetService, 
-            ICardSlotService cardSlotService, 
+            ICategoryService categoryService,
+            IBrandService brandService,
+            IAvailabilityService availabilityService,
+            INetworkBandService networkBandService,
+            INetworkService networkService,
+            ISimSizeService simSizeService,
+            ISimMultipleService simMultipleService,
+            IFormFactorService formFactorService,
+            IIpCertificateService ipCertificateService,
+            IBackMaterialService backMaterialService,
+            IFrameMaterialService frameMaterialService,
+            IOSVersionService osVersionService,
+            IOSService osService,
+            IChipsetService chipsetService,
+            ICardSlotService cardSlotService,
             IDisplayTechnologyService displayTechnologyService,
-            ICameraTypeService cameraTypeService, 
-            IFingerprintService fingerprintService, 
-            IWifiService wifiService, 
-            IBluetoothService bluetoothService, 
+            ICameraTypeService cameraTypeService,
+            IFingerprintService fingerprintService,
+            IWifiService wifiService,
+            IBluetoothService bluetoothService,
             IRemovableBatteryService removableBatteryService,
-            IResolutionService resolutionService, 
-            IGPUService gpuService, 
-            ILensTypeService lensTypeService)
+            IResolutionService resolutionService,
+            IGPUService gpuService,
+            ILensTypeService lensTypeService, 
+            IPhoneService phoneService)
         {
             _logger = logger;
             this.categoryService = categoryService;
@@ -120,6 +124,7 @@ namespace products_api.Services
             this.resolutionService = resolutionService;
             this.gpuService = gpuService;
             this.lensTypeService = lensTypeService;
+            this.phoneService = phoneService;
         }
 
         public async Task<ServiceResponse<string>> ResetData()
@@ -181,8 +186,217 @@ namespace products_api.Services
             message += await SeedResolution();
             message += await SeedGPU();
             message += await SeedLensType();
+            message += await SeedPhone();
 
             return message;
+        }
+
+        private async Task<string> SeedPhone()
+        {
+            string entityName = " phone. ";
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, phoneFile));
+            IEnumerable<PhoneSeedModel>? entities = JsonSerializer
+                .Deserialize<IEnumerable<PhoneSeedModel>>(jsonData);
+
+            if (entities == null) return $"0 {entityName}";
+
+            foreach (var seedModel in entities)
+            {
+                // Convert seed model to create dto
+                var createDto = await ConvertPhoneSeedModelToDto(seedModel);
+                // Add phone
+                var createRes = await phoneService.Add(createDto);
+                // If phone is added, add other details
+                if (createRes.Success == true)
+                {
+                    await AddPhoneCameras(createRes.Data.Id, seedModel.PhoneCameras);
+                }
+            }
+
+            return entities.Count() + entityName;
+        }
+
+        private async Task AddPhoneCameras(Guid id, List<PhoneSeedModel.PhoneCameraSeedModel>? phoneCameras)
+        {
+            // Read all cameras in the seed model
+            foreach (var cameraSeedModel in phoneCameras)
+            {
+                // Create phone camera dto from seed model
+                var dto = new PhoneCameraCreateDto
+                {
+                    FNumber = cameraSeedModel.FNumber,
+                    FocalLength_mm = cameraSeedModel.FocalLength_mm,
+                    OIS = cameraSeedModel.OIS,
+                    PixelSize_um = cameraSeedModel.PixelSize_um,
+                    Resolution_MP = cameraSeedModel.Resolution_MP,
+                    Position = cameraSeedModel.Position,
+                    SensorSize = cameraSeedModel.SensorSize
+                };
+                // Find camera type
+                var cameraTypeId = await CreateOrFindCameraType(cameraSeedModel.CameraTypeName);
+                dto.LensTypeId = await CreateOrFindLensType(cameraSeedModel.LensTypeName);
+                // Only add, if camera type is found
+                if (cameraTypeId != null)
+                {
+                    dto.CameraTypeId = cameraTypeId ?? default;
+                    await phoneService.AddCamera(id, dto);
+                }
+                
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindLensType(string lensTypeName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(lensTypeName)) return null;
+
+            // Find entity
+            var entity = await lensTypeService.GetByName(lensTypeName);
+            // found, return id
+            if (entity.Success == true) return entity.Data.Id;
+            else
+            {
+                // Create new entity
+                entity = await lensTypeService.Add(new LensTypeCreateDto { Name = lensTypeName });
+                if (entity.Success == true) return entity.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindCameraType(string cameraTypeName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(cameraTypeName)) return null;
+
+            // Find entity
+            var entity = await cameraTypeService.GetByName(cameraTypeName);
+            // found, return id
+            if (entity.Success == true) return entity.Data.Id;
+            else
+            {
+                // Create new entity
+                entity = await cameraTypeService.Add(new CameraTypeCreateDto { Name = cameraTypeName });
+                if (entity.Success == true) return entity.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<PhoneCreateDto> ConvertPhoneSeedModelToDto(PhoneSeedModel c)
+        {
+            // Copy simple values
+            var createDto = new PhoneCreateDto
+            {
+                Name = c.Name,
+                BatteryCapacity_mAh = c.BatteryCapacity_mAh,
+                CpuCores = c.CpuCores,
+                CpuDetails = c.CpuDetails,
+                DisplaySize_in = c.DisplaySize_in,
+                Height_mm = c.Height_mm,
+                RAM_bytes = c.RAM_bytes,
+                Storage_bytes = c.Storage_bytes,
+                Thickness_mm = c.Thickness_mm,
+                Weight_grams = c.Weight_grams,
+                Width_mm = c.Width_mm
+            };
+
+            // Get IDs from string values for foreign keys
+            createDto.OSId = await CreateOrFindOS(c.OSName);
+            createDto.OSVersionId = await CreateOrFindOSVersion(c.OSVersionName);
+            createDto.SDCardSlotId = await CreateOrFindSDCardSlot(c.SDCardSlotName);
+            createDto.ChipsetId = await CreateOrFindChipset(c.ChipsetName);
+            createDto.GPUId = await CreateOrFindGPU(c.GPUName);
+
+            return createDto;
+        }
+
+        private async Task<Guid?> CreateOrFindGPU(string gPUName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(gPUName)) return null;
+
+            // Find entity
+            var entity = await gpuService.GetByName(gPUName);
+            // found, return id
+            if (entity.Success == true) return entity.Data.Id;
+            else
+            {
+                // Create new entity
+                entity = await gpuService.Add(new GPUCreateDto { Name = gPUName });
+                if (entity.Success == true) return entity.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindChipset(string chipsetName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(chipsetName)) return null;
+
+            // Find entity
+            var entity = await chipsetService.GetByName(chipsetName);
+            // found, return id
+            if (entity.Success == true) return entity.Data.Id;
+            else
+            {
+                // Create new entity
+                entity = await chipsetService.Add(new ChipsetCreateDto { Name = chipsetName });
+                if (entity.Success == true) return entity.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindSDCardSlot(string sDCardSlotName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(sDCardSlotName)) return null;
+
+            // Find OS
+            var os = await cardSlotService.GetByName(sDCardSlotName);
+            // OS found, return id
+            if (os.Success == true) return os.Data.Id;
+            else
+            {
+                // Create new OS
+                os = await cardSlotService.Add(new CardSlotCreateDto { Name = sDCardSlotName });
+                if (os.Success == true) return os.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindOSVersion(string oSVersionName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(oSVersionName)) return null;
+
+            // Find OS
+            var os = await osVersionService.GetByName(oSVersionName);
+            // OS found, return id
+            if (os.Success == true) return os.Data.Id;
+            else
+            {
+                // Create new OS
+                os = await osVersionService.Add(new OSVersionCreateDto { Name = oSVersionName });
+                if (os.Success == true) return os.Data.Id;
+                else return null;
+            }
+        }
+
+        private async Task<Guid?> CreateOrFindOS(string oSName)
+        {
+            // Check for empty
+            if (string.IsNullOrWhiteSpace(oSName)) return null;
+
+            // Find OS
+            var os = await osService.GetByName(oSName);
+            // OS found, return id
+            if (os.Success == true) return os.Data.Id;
+            else
+            {
+                // Create new OS
+                os = await osService.Add(new OSCreateDto { Name = oSName });
+                if (os.Success == true) return os.Data.Id;
+                else return null;
+            }
         }
 
         private async Task<string> SeedLensType()
@@ -645,7 +859,10 @@ namespace products_api.Services
         {
             string message = "Deleting all data... ";
 
-            var del = await categoryService.DeleteAll();
+            var del = await phoneService.DeleteAll();
+            message += del.Data + " phone. ";
+
+            del = await categoryService.DeleteAll();
             message += del.Data + " category. ";
 
             del = await brandService.DeleteAll();
@@ -717,6 +934,9 @@ namespace products_api.Services
             del = await lensTypeService.DeleteAll();
             message += del.Data + " lensType. ";
 
+            del = await phoneService.DeleteAll();
+            message += del.Data + " phone. ";
+            
             message += "Delete complete. ";
 
             return message;

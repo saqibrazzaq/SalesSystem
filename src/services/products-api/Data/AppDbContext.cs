@@ -159,5 +159,6 @@ namespace products_api.Data
         public DbSet<LensType> LensTypes { get; set; }
         public DbSet<PhoneCamera> PhoneCameras { get; set; }
         public DbSet<Phone> Phones { get; set; }
+        public DbSet<PhoneNetworkBand> PhoneNetworkBands { get; set; }
     }
 }

@@ -231,5 +231,29 @@ namespace products_api.Services
 
             return await Task.FromResult(response);
         }
+
+        public async Task<ServiceResponse<GPUDto>> GetByName(string name)
+        {
+            // Create new response
+            var response = new ServiceResponse<GPUDto>();
+
+            try
+            {
+                // Get entity
+                var entity = _repo.GetAll()
+                    .Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+                // Check null
+                if (entity == null) response = response.GetFailureResponse("GPU not found");
+                else response.Data = entity.AsDto();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response = response.GetFailureResponse("GPU service failed.");
+            }
+
+            return await Task.FromResult(response);
+        }
     }
 }

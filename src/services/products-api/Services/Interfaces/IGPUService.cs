@@ -6,6 +6,7 @@ namespace products_api.Services.Interfaces
     {
         Task<ServiceResponse<List<GPUDto>>> GetAll();
         Task<ServiceResponse<GPUDto>> Get(Guid id);
+        Task<ServiceResponse<GPUDto>> GetByName(string name);
         Task<ServiceResponse<GPUDto>> Add(GPUCreateDto dto);
         Task<ServiceResponse<GPUDto>> Update(Guid id, GPUUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);

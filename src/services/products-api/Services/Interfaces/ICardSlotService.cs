@@ -6,6 +6,7 @@ namespace products_api.Services.Interfaces
     {
         Task<ServiceResponse<List<CardSlotDto>>> GetAll();
         Task<ServiceResponse<CardSlotDto>> Get(Guid id);
+        Task<ServiceResponse<CardSlotDto>> GetByName(string name);
         Task<ServiceResponse<CardSlotDto>> Add(CardSlotCreateDto dto);
         Task<ServiceResponse<CardSlotDto>> Update(Guid id, CardSlotUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);

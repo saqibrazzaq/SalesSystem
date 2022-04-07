@@ -6,6 +6,7 @@ namespace products_api.Services.Interfaces
     {
         Task<ServiceResponse<List<ChipsetDto>>> GetAll();
         Task<ServiceResponse<ChipsetDto>> Get(Guid id);
+        Task<ServiceResponse<ChipsetDto>> GetByName(string name);
         Task<ServiceResponse<ChipsetDto>> Add(ChipsetCreateDto dto);
         Task<ServiceResponse<ChipsetDto>> Update(Guid id, ChipsetUpdateDto dto);
         Task<ServiceResponse<bool>> Remove(Guid id);
