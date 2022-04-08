@@ -14,6 +14,8 @@
     "BatteryCapacity_mAh": 3700,
     "ChipsetName": "Exynos 2100",
     "GPUName": "Xclipse 920",
+    "AnnouncedDate": "2022-02-09",
+    "ReleaseDate": "2022-02-25",
     "CpuCores": 8,
     "CpuDetails": "Octa-core (1x3.00 GHz Cortex-X2 & 3x2.40 GHz Cortex-A710 & 4x1.70 GHz Cortex-A510)",
     "PhoneNetworks": [

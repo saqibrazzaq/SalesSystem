@@ -88,6 +88,8 @@ namespace products_api.Dtos
         public decimal Width_mm { get; set; }
         public decimal Thickness_mm { get; set; }
         public decimal DisplaySize_in { get; set; }
+        public DateTime AnnouncedDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
         public string OSName { get; set; } = string.Empty;
         public string OSVersionName { get; set; } = string.Empty;
         public long RAM_bytes { get; set; }

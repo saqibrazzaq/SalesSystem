@@ -296,7 +296,9 @@ namespace products_api.Services
                 Storage_bytes = c.Storage_bytes,
                 Thickness_mm = c.Thickness_mm,
                 Weight_grams = c.Weight_grams,
-                Width_mm = c.Width_mm
+                Width_mm = c.Width_mm,
+                AnnouncedDate = c.AnnouncedDate,
+                ReleaseDate = c.ReleaseDate
             };
 
             // Get IDs from string values for foreign keys
