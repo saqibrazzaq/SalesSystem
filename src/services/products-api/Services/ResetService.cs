@@ -303,7 +303,7 @@ namespace products_api.Services
 
             // Get IDs from string values for foreign keys
             createDto.OSId = await CreateOrFindOS(c.OSName);
-            createDto.OSVersionId = await CreateOrFindOSVersion(c.OSVersionName);
+            createDto.OSVersionId = await CreateOrFindOSVersion(c.OSVersionName, createDto.OSId ?? default);
             createDto.SDCardSlotId = await CreateOrFindSDCardSlot(c.SDCardSlotName);
             createDto.ChipsetId = await CreateOrFindChipset(c.ChipsetName);
             createDto.GPUId = await CreateOrFindGPU(c.GPUName);
@@ -365,7 +365,7 @@ namespace products_api.Services
             }
         }
 
-        private async Task<Guid?> CreateOrFindOSVersion(string oSVersionName)
+        private async Task<Guid?> CreateOrFindOSVersion(string oSVersionName, Guid osId)
         {
             // Check for empty
             if (string.IsNullOrWhiteSpace(oSVersionName)) return null;
@@ -377,7 +377,7 @@ namespace products_api.Services
             else
             {
                 // Create new OS
-                os = await osVersionService.Add(new OSVersionCreateDto { Name = oSVersionName });
+                os = await osVersionService.Add(new OSVersionCreateDto { Name = oSVersionName, OsId = osId });
                 if (os.Success == true) return os.Data.Id;
                 else return null;
             }

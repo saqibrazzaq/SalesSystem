@@ -113,5 +113,89 @@
         "LensTypeName": "wide"
       }
     ]
+  },
+  {
+    "Name": "IPhone SE 2022",
+    "Weight_grams": 144,
+    "Height_mm": 138.4,
+    "Width_mm": 67.3,
+    "Thickness_mm": 7.3,
+    "DisplaySize_in": 4.7,
+    "OSName": "iOS",
+    "OSVersionName": "iOS 15.4",
+    "RAM_bytes": 4000000000,
+    "Storage_bytes": 128000000000,
+    "BatteryCapacity_mAh": 2018,
+    "ChipsetName": "Apple A15 Bionic (5nm)",
+    "GPUName": "Apple GPU",
+    "AnnouncedDate": "2022-03-08",
+    "ReleaseDate": "2022-03-18",
+    "CpuCores": 6,
+    "CpuDetails": "Hexa-core (2xX.XX GHz Avalanche + 4xX.XX GHz Blizzard)",
+    "PhoneNetworks": [
+      {
+        "NetworkName": "2G",
+        "NetworkBands": [
+          "GSM 850",
+          "GSM 900",
+          "GSM 1800",
+          "GSM 1900",
+          "CDMA 800",
+          "CDMA 1900"
+        ]
+      },
+      {
+        "NetworkName": "3G",
+        "NetworkBands": [ "HSDPA 850", "HSDPA 900", "HSDPA 1700(AWS)", "HSDPA 1900", "HSDPA 2100" ]
+      },
+      {
+        "NetworkName": "4G",
+        "NetworkBands": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "7",
+          "8",
+          "12",
+          "13",
+          "17",
+          "18",
+          "19",
+          "20",
+          "25",
+          "26",
+          "28",
+          "32",
+          "38",
+          "39",
+          "40",
+          "41",
+          "66"
+        ]
+      },
+      {
+        "NetworkName": "5G",
+        "NetworkBands": [ "1", "2", "3", "5", "7", "8", "12", "20", "25", "28", "38", "40", "41", "66", "75", "77", "78" ]
+      }
+    ],
+    "PhoneCameras": [
+      {
+        "CameraTypeName": "Main Camera",
+        "Position": 1,
+        "Resolution_MP": 12,
+        "FNumber": 1.8,
+        "SensorSize": "1/1.56\"",
+        "OIS": true,
+        "LensTypeName": "wide"
+      },
+      {
+        "CameraTypeName": "Selfie Camera",
+        "Position": 1,
+        "Resolution_MP": 7,
+        "FNumber": 2.2
+      }
+    ]
   }
 ]
