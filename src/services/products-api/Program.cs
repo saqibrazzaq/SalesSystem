@@ -18,6 +18,12 @@ builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(
 // Add custom services
 builder.Services.AddCustomServices();
 
+//services cors
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins(new string[] { "http://localhost:3000" }).AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +32,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseRouting();
+
+app.UseCors("corsapp");
 
 app.UseHttpsRedirection();
 
