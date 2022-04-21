@@ -1,5 +1,6 @@
 ﻿using products_api.Data.Repository;
 using products_api.Dtos;
+using products_api.Misc;
 using products_api.Models;
 using products_api.Services.Interfaces;
 using System.Text.Json;
@@ -11,6 +12,7 @@ namespace products_api.Services
         private readonly ILogger<ResetService> _logger;
 
         private readonly string _dataFolderName = "SeedData";
+        private readonly string _folder_WwwrootImages = "wwwroot/images";
         private readonly string categoriesFile = "default-categories.json";
         private readonly string brandsFile = "default-brands.json";
         private readonly string availabilityFile = "default-availability.json";
@@ -42,6 +44,14 @@ namespace products_api.Services
             get
             {
                 return System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), _dataFolderName);
+            }
+        }
+
+        public string ImagesFolder 
+        { 
+            get
+            {
+                return Path.Combine(Directory.GetCurrentDirectory(), _folder_WwwrootImages);
             }
         }
 
@@ -188,7 +198,21 @@ namespace products_api.Services
             message += await SeedLensType();
             message += await SeedPhone();
 
+            // Copy default images
+            message += CopyDefaultImages();
+
             return message;
+        }
+
+        private string CopyDefaultImages()
+        {
+            // Create wwwroot/images folder
+            if (Directory.Exists(ImagesFolder) == false)
+                Directory.CreateDirectory(ImagesFolder);
+
+            FileUtils.CopyDirectory(Path.Combine(DataFolder, "images"), ImagesFolder, true);
+            
+            return "Copied default images. ";
         }
 
         private async Task<string> SeedPhone()
@@ -298,7 +322,8 @@ namespace products_api.Services
                 Weight_grams = c.Weight_grams,
                 Width_mm = c.Width_mm,
                 AnnouncedDate = c.AnnouncedDate,
-                ReleaseDate = c.ReleaseDate
+                ReleaseDate = c.ReleaseDate,
+                ImageUrl = c.ImageUrl
             };
 
             // Get IDs from string values for foreign keys
@@ -938,10 +963,20 @@ namespace products_api.Services
 
             del = await phoneService.DeleteAll();
             message += del.Data + " phone. ";
+
+            message += DeleteAllImages();
             
             message += "Delete complete. ";
 
             return message;
+        }
+
+        private string DeleteAllImages()
+        {
+            // Delete wwwroot/images folder
+            if (Directory.Exists(ImagesFolder)) Directory.Delete(ImagesFolder, true);
+
+            return "Images folder deleted. ";
         }
     }
 }

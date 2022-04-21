@@ -24,7 +24,8 @@ namespace products_api.Dtos
                 Storage_bytes = c.Storage_bytes,
                 Thickness_mm = c.Thickness_mm,
                 Weight_grams = c.Weight_grams,
-                Width_mm = c.Width_mm
+                Width_mm = c.Width_mm,
+                ImageUrl = c.ImageUrl
             };
         }
     }
@@ -53,6 +54,7 @@ namespace products_api.Dtos
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
         public string GpuName { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
 
     }
 
@@ -77,6 +79,7 @@ namespace products_api.Dtos
         public Guid? GPUId { get; set; }
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
     }
 
     // Phone Seed Model
@@ -100,6 +103,7 @@ namespace products_api.Dtos
         public string GPUName { get; set; } = string.Empty;
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
         public List<PhoneNetworksSeedModel>? PhoneNetworks { get; set; }
         public List<PhoneCameraSeedModel>? PhoneCameras { get; set; }
         public class PhoneNetworksSeedModel

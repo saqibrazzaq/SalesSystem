@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using products_api.Misc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace products_api.Models
@@ -39,6 +40,7 @@ namespace products_api.Models
         public virtual GPU? GPU { get; set; }
         public int CpuCores { get; set; }
         public string CpuDetails { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = DefaultValues.PhoneImage;
 
         // Related tables
         public virtual IEnumerable<PhoneCamera> PhoneCameras { get; set; }

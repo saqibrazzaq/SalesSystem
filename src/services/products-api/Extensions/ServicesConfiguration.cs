@@ -2,6 +2,7 @@
 using products_api.Data;
 using products_api.Data.Repository;
 using products_api.Data.SQLServerRepository;
+using products_api.Misc;
 using products_api.Services;
 using products_api.Services.Interfaces;
 
@@ -68,6 +69,7 @@ namespace products_api.Extensions
             services.AddScoped<IGPUService, GPUService>();
             services.AddScoped<ILensTypeService, LensTypeService>();
             services.AddScoped<IPhoneService, PhoneService>();
+            services.AddScoped<HttpUtil>();
         }
     }
 }

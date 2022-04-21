@@ -18,6 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(
 // Add custom services
 builder.Services.AddCustomServices();
 
+// Add http context
+builder.Services.AddHttpContextAccessor();
+
 //services cors
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
@@ -32,6 +35,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Static files
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseRouting();
 

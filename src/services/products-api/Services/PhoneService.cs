@@ -1,5 +1,6 @@
 ﻿using products_api.Data.Repository;
 using products_api.Dtos;
+using products_api.Misc;
 using products_api.Models;
 using products_api.Services.Interfaces;
 
@@ -11,16 +12,19 @@ namespace products_api.Services
         private readonly IPhoneNetworkBandRepository _phoneNetworkBandRepository;
         private readonly IPhoneCameraRepository _phoneCameraRepository;
         private readonly ILogger<PhoneService> _logger;
+        private readonly HttpUtil _httpUtil;
 
         public PhoneService(IPhoneRepository phoneRepo,
-            ILogger<PhoneService> logger, 
-            IPhoneCameraRepository cameraRepository, 
-            IPhoneNetworkBandRepository bandRepository)
+            ILogger<PhoneService> logger,
+            IPhoneCameraRepository cameraRepository,
+            IPhoneNetworkBandRepository bandRepository, 
+            HttpUtil httpUtil)
         {
             _repo = phoneRepo;
             _logger = logger;
             _phoneCameraRepository = cameraRepository;
             _phoneNetworkBandRepository = bandRepository;
+            _httpUtil = httpUtil;
         }
 
         public async Task<ServiceResponse<int>> Count()
@@ -73,6 +77,7 @@ namespace products_api.Services
                     SDCardSlotId = dto.SDCardSlotId,
                     Storage_bytes = dto.Storage_bytes,
                     Thickness_mm = dto.Thickness_mm,
+                    ImageUrl = dto.ImageUrl,
                 };
 
                 // Add in repository
@@ -139,7 +144,11 @@ namespace products_api.Services
                     .FirstOrDefault();
                 // Check null
                 if (phone == null) response = response.GetFailureResponse("Phone not found");
-                else response.Data = phone.AsDto();
+                else
+                {
+                    response.Data = phone.AsDto();
+                    response.Data.ImageUrl = _httpUtil.GetBaseUrl_PhoneImages() + response.Data.ImageUrl;
+                }
             }
             catch (Exception ex)
             {
@@ -163,7 +172,10 @@ namespace products_api.Services
                 var phoneDtos = new List<PhoneDto>();
                 foreach (var phone in phones)
                 {
-                    phoneDtos.Add(phone.AsDto());
+                    // Add base url to image
+                    var dto = phone.AsDto();
+                    dto.ImageUrl = _httpUtil.GetBaseUrl_PhoneImages() + dto.ImageUrl;
+                    phoneDtos.Add(dto);
                 }
                 // Set data
                 response.Data = phoneDtos;

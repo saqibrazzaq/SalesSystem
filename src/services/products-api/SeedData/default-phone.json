@@ -17,6 +17,7 @@
     "AnnouncedDate": "2022-02-09",
     "ReleaseDate": "2022-02-25",
     "CpuCores": 8,
+    "ImageUrl": "samsung-galaxy-s22-5g.jpg",
     "CpuDetails": "Octa-core (1x3.00 GHz Cortex-X2 & 3x2.40 GHz Cortex-A710 & 4x1.70 GHz Cortex-A510)",
     "PhoneNetworks": [
       {
@@ -131,6 +132,7 @@
     "AnnouncedDate": "2022-03-08",
     "ReleaseDate": "2022-03-18",
     "CpuCores": 6,
+    "ImageUrl": "apple-iphone-se-2022.jpg",
     "CpuDetails": "Hexa-core (2xX.XX GHz Avalanche + 4xX.XX GHz Blizzard)",
     "PhoneNetworks": [
       {
