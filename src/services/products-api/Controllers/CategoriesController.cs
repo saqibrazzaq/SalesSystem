@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using products_api.Dtos;
 using products_api.Misc;
 using products_api.Services;
+using products_api.Services.Interfaces;
 
 namespace products_api.Controllers
 {
@@ -10,27 +11,18 @@ namespace products_api.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(CategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<CategorySearchResult>>> Index(
-            string? text = null,
-            int? page = 1,
-            int? pageSize = DefaultValues.PageSize,
-            string? sortBy = "position",
-            string? sortDirection = "asc")
+        public async Task<ActionResult<ServiceResponse<List<CategoryDto>>>> Index()
         {
             // Get response from repository
-            var response = await _categoryService.SearchCategories(text: text,
-                page: page,
-                pageSize: pageSize,
-                sortBy: sortBy,
-                sortDirection: sortDirection);
+            var response = await _categoryService.GetAll();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
