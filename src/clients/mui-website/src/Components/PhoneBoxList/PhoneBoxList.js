@@ -17,7 +17,7 @@ function PhoneBoxList() {
     Api.get("/phones").then((res) => {
       // Read response
       if (res && res.status === 200 && res.data && res.data.success) {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setItems(res.data.data);
         setLoading(false);
       }

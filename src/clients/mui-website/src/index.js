@@ -6,6 +6,9 @@ import Products from "./Pages/Products/Products";
 import Pricing from "./Pages/Pricing/Pricing";
 import Blog from "./Pages/Blog/Blog";
 import PhoneDetail from "./Components/PhoneDetail/PhoneDetail";
+import Admin from "./Pages/Admin/Admin";
+import General from "./Pages/Admin/PhoneProperties/General/General";
+import Network from "./Pages/Admin/PhoneProperties/Network/Network";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -17,6 +20,14 @@ root.render(
         <Route path="products" element={<Products />} />
         <Route path="pricing" element={<Pricing />} />
         <Route path="blog" element={<Blog />} />
+        <Route path="admin" element={<Admin />}>
+          <Route path="general" element={<General />}>
+
+          </Route>
+          <Route path="network" element={<Network />}>
+            
+          </Route>
+        </Route>
       </Route>
     </Routes>
   </BrowserRouter>

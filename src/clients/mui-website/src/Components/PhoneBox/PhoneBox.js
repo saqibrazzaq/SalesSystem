@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function PhoneBox(props) {
   const { id, name, imageUrl } = props.phone;
-  console.log(props);
+  // console.log(props);
   return (
     <Grid item xs={4} md={3}>
       <Card sx={{ maxWidth: 150 }}>

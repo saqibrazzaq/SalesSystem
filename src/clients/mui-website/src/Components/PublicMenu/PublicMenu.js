@@ -14,8 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Products", "Pricing", "Blog", "Admin"];
+const settings = ["Admin", "Account", "Dashboard", "Logout"];
 
 function PublicMenu() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,12 +44,17 @@ function PublicMenu() {
           <Typography
             variant="h6"
             noWrap
-            component={Link} to="/"
+            component={Link}
+            to="/"
             color="inherit"
-            sx={{ textDecoration: "none", mr: 2, display: { xs: "none", md: "flex" } }}
+            sx={{
+              textDecoration: "none",
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+            }}
           >
             <PhoneAndroidIcon></PhoneAndroidIcon>
-              Phone Store
+            Phone Store
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -113,7 +118,7 @@ function PublicMenu() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 component={Link}
-                    to={"/" + page}
+                to={"/" + page}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
@@ -145,7 +150,14 @@ function PublicMenu() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography
+                    component={Link}
+                    to={"/" + setting}
+                    color="inherit"
+                    sx={{ textDecoration: "none", width: "100%" }}
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
