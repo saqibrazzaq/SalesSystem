@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PhoneBox from "../PhoneBox/PhoneBox";
-import Api from "../../Api/Api";
+import * as PhoneService from '../../Services/PhoneService';
 
 function PhoneBoxList() {
   // Loading true
@@ -14,7 +14,7 @@ function PhoneBoxList() {
     // Loading
     setLoading(true);
     // Get phones
-    Api.get("/phones").then((res) => {
+    PhoneService.getAllPhones().then((res) => {
       // Read response
       if (res && res.status === 200 && res.data && res.data.success) {
         // console.log(res.data.data);

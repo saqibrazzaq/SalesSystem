@@ -7,7 +7,7 @@ function App() {
   return (
     <Container>
       <PublicMenu />
-      <Box sx={{margin: 2}}>
+      <Box sx={{mt: 1}}>
         <Outlet />
       </Box>
     </Container>
