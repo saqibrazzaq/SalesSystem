@@ -1,23 +1,25 @@
 import Api from "../Api/Api";
 
+const url = "/brands";
+
 export function getAllBrands() {
-  return Api.get('/brands')
+  return Api.get(url)
 }
 
-export function addBrand(brand) {
-  return Api.post("/brands", brand);
+export function addBrand(data) {
+  return Api.post(url, data);
 }
 
-export function editBrand(brand) {
-  return Api.put("/brands", brand, {
+export function editBrand(data) {
+  return Api.put(url, data, {
     params: {
-      id: brand.id
+      id: data.id
     }
   });
 }
 
 export function deleteBrand(id) {
-  return Api.delete("/brands", {
+  return Api.delete(url, {
     params: {
       id: id
     }
@@ -25,5 +27,5 @@ export function deleteBrand(id) {
 }
 
 export function getBrand(id) {
-  return Api.get(`/brands/${id}`);
+  return Api.get(`${url}/${id}`);
 }

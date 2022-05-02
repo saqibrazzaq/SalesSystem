@@ -7,36 +7,18 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import Api from "../../../../../Api/Api";
+import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link } from "react-router-dom";
-import * as BrandService from '../../../../../Services/BrandService'
+import React, { useEffect, useState } from "react";
+import * as AvailabilityService from '../../../../../Services/AvailabilityService'
 
-function BrandList() {
-  // Loading true
+function AvailabilityList() {
+  // Loading
   const [loading, setLoading] = useState(true);
-  // Empty list
+  // Items list
   const [items, setItems] = useState([]);
 
-  // Get items
-  useEffect(() => {
-    // Loading
-    setLoading(true);
-    // Get items
-    
-    BrandService.getAllBrands().then((res) => {
-      // Read api response
-      if (res && res.status === 200 && res.data.success) {
-        // console.log(res.data.data);
-        setItems(res.data.data);
-        setLoading(false);
-      }
-    });
-  }, []);
-
-  // create list from api response
   const itemList = items.map((item) => {
     return (
       <ListItem
@@ -46,13 +28,14 @@ function BrandList() {
           <Box>
             <IconButton
               component={Link}
-              to={`/admin/general/brand-edit/${item.id}`}
+              to={`/admin/general/availability-edit/${item.id}`}
             >
               <EditIcon />
             </IconButton>
             <IconButton
-            component={Link}
-            to={`/admin/general/brand-delete/${item.id}`}>
+              component={Link}
+              to={`/admin/general/availability-delete/${item.id}`}
+            >
               <DeleteIcon color="error" />
             </IconButton>
           </Box>
@@ -65,6 +48,17 @@ function BrandList() {
     );
   });
 
+  useEffect(() => {
+    // Get items
+    AvailabilityService.getAllAvailabilities().then(res => {
+      // Read api response
+      if (res && res.status === 200 && res.data.data) {
+        setItems(res.data.data);
+        setLoading(false);
+      }
+    })
+  }, []);
+
   return (
     <>
       {loading && <Typography>Loading...</Typography>}
@@ -74,4 +68,4 @@ function BrandList() {
   );
 }
 
-export default BrandList;
+export default AvailabilityList;

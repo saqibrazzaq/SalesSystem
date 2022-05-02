@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
-import * as BrandService from "../../../../../Services/BrandService";
+import * as AvailabilityService from "../../../../../Services/AvailabilityService";
 import { Box } from "@mui/system";
 
 // Formik validation schema
@@ -14,64 +14,61 @@ const validationSchema = Yup.object({
   position: Yup.number(),
 });
 
-function BrandEdit() {
-  // Get id from url param
-  let { id } = useParams();
+function AvailabilityEdit() {
+  // Get id
+  const { id } = useParams();
   const navigate = useNavigate();
-  // Display error messages
   const [error, setError] = useState("");
-  // Edit or add new button
-  const btnAddUpdate = id ? "Edit Brand" : "Add New Brand";
-  const mainUrl = "/admin/general/brand";
-  let brand = {
+  // Button text
+  const btnAddUpdate = id ? "Edit Availability" : "Add New Availability";
+  let availability = {
     id: "",
     name: "",
     position: 1,
   };
+  const mainUrl = "/admin/general/availability";
 
-  // Initialize Formik
+  // Initialize form
   const formik = useFormik({
-    initialValues: brand,
+    initialValues: availability,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (values.id) {
-        editBrand(values);
+        editAvailability(values);
       } else {
-        addBrand(values);
+        addAvailability(values);
       }
     },
   });
 
-  function editBrand(values) {
-    BrandService.editBrand(values)
+  function addAvailability(values) {
+    AvailabilityService.addAvailability(values)
       .then((res) => {
-        // console.log(res);
         navigate(mainUrl);
       })
-      .catch((err) => setError("Error creating new Brand"));
+      .catch((err) => setError("Error creating new Availability"));
   }
 
-  function addBrand(values) {
-    BrandService.addBrand(values)
+  function editAvailability(values) {
+    AvailabilityService.editAvailability(values)
       .then((res) => {
-        // console.log(res);
         navigate(mainUrl);
       })
-      .catch((err) => setError("Error creating new Brand"));
+      .catch((err) => setError("Cannot edit availability"));
   }
 
-  // Load brand
   useEffect(() => {
+    // Get availability
     if (id) {
-      BrandService.getBrand(id).then((res) => {
+      AvailabilityService.getAvailability(id).then((res) => {
         // console.log(res);
-        if (res && res.status === 200 && res.data && res.data.success) {
-          // console.log(res.data.data);
+        if (res && res.status === 200 && res.data.success) {
           formik.setValues(res.data.data);
         }
       });
     }
   }, []);
+
   return (
     <>
       <Typography variant="h6">{btnAddUpdate}</Typography>
@@ -131,4 +128,4 @@ function BrandEdit() {
   );
 }
 
-export default BrandEdit;
+export default AvailabilityEdit;

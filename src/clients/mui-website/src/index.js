@@ -17,6 +17,8 @@ import G4 from "./Pages/Admin/PhoneProperties/Network/4G/4G";
 import G5 from "./Pages/Admin/PhoneProperties/Network/5G/5G";
 import BrandEdit from "./Pages/Admin/PhoneProperties/General/Brand/BrandEdit";
 import BrandDelete from "./Pages/Admin/PhoneProperties/General/Brand/BrandDelete";
+import AvailabilityEdit from "./Pages/Admin/PhoneProperties/General/Availability/AvailabilityEdit";
+import AvailabilityDelete from "./Pages/Admin/PhoneProperties/General/Availability/AvailabilityDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -35,6 +37,9 @@ root.render(
             <Route path="brand-edit" element={<BrandEdit />} />
             <Route path="brand-delete/:id" element={<BrandDelete />} />
             <Route path="availability" element={<AvailabilityHome />} />
+            <Route path="availability-edit" element={<AvailabilityEdit />} />
+            <Route path="availability-edit/:id" element={<AvailabilityEdit />} />
+            <Route path="availability-delete/:id" element={<AvailabilityDelete />} />
           </Route>
           <Route path="network" element={<Network />}>
             <Route path="2g" element={<G2 />} />
