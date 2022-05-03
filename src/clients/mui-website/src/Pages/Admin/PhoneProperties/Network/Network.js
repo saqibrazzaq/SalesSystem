@@ -3,10 +3,8 @@ import { Button, ButtonGroup, Typography } from "@mui/material";
 import React from 'react'
 
 const data = [
-  { label: "2G", url: "/admin/network/2g" },
-  { label: "3G", url: "/admin/network/3g" },
-  { label: "4G", url: "/admin/network/4g" },
-  { label: "5G", url: "/admin/network/5g" },
+  { label: "Network", url: "/admin/network/network" },
+  { label: "Band", url: "/admin/network/band" },
 ];
 
 function Network() {
