@@ -12,7 +12,8 @@ namespace products_api.Dtos
                 Id = c.Id, 
                 Name = c.Name,
                 Position = c.Position,
-                NetworkId = c.NetworkId
+                NetworkId = c.NetworkId,
+                NetworkName = (c.Network != null) ? c.Network.Name : ""
             };
         }
     }

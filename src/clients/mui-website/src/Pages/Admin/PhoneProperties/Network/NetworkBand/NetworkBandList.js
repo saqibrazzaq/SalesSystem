@@ -6,6 +6,8 @@ import {
   ListItemText,
   Typography,
   Alert,
+  Grid,
+  Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,7 +36,7 @@ function NetworkBandList() {
           <Box>
             <IconButton
               component={Link}
-              to={`/admin/network/band/edit/${item.id}`}
+              to={`/admin/network/band/edit/${item.id}?networkId=${networkId}`}
             >
               <EditIcon />
             </IconButton>
@@ -91,7 +93,23 @@ function NetworkBandList() {
 
   return (
     <>
+    <Grid container>
+      <Grid item xs={6}>
       <Typography variant="h6">{network.name} Bands</Typography>
+      </Grid>
+      <Grid item xs={6}>
+      <Box display="flex" justifyContent="flex-end">
+            <Button
+              variant="contained"
+              component={Link}
+              to={`/admin/network/band/edit?networkId=${networkId}`}
+            >
+              Add New {network.name} Band
+            </Button>
+          </Box>
+      </Grid>
+    </Grid>
+      
 
       {error && (
         <Alert sx={{ mt: 2, mb: 2 }} severity="error">

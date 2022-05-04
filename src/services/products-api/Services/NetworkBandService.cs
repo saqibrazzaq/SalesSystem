@@ -1,4 +1,5 @@
-﻿using products_api.Data.Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using products_api.Data.Repository;
 using products_api.Dtos;
 using products_api.Models;
 using products_api.Services.Interfaces;
@@ -12,7 +13,7 @@ namespace products_api.Services
         private readonly INetworkService _networkService;
 
         public NetworkBandService(INetworkBandRepository networkBandRepo,
-            ILogger<NetworkBandService> logger, 
+            ILogger<NetworkBandService> logger,
             INetworkService networkService)
         {
             _repo = networkBandRepo;
@@ -78,7 +79,7 @@ namespace products_api.Services
                 _logger.LogError(ex.Message);
                 response = response.GetFailureResponse("Network Band create service failed.");
             }
-            
+
             return await Task.FromResult(response);
         }
 
@@ -95,7 +96,7 @@ namespace products_api.Services
                 var networkBand = _repo.GetAll(
                     filter: x => x.Id == id
                     ).FirstOrDefault();
-                if (networkBand == null) 
+                if (networkBand == null)
                 {
                     response = response.GetFailureResponse("Network Band not found.");
                 }
@@ -125,7 +126,9 @@ namespace products_api.Services
             try
             {
                 // Get all Network Bands
-                var networkBand = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name))
+                var networkBand = _repo.GetAll(
+                    include: i => i.Include(x => x.Network),
+                    orderBy: o => o.OrderBy(x => x.Name))
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
@@ -157,9 +160,7 @@ namespace products_api.Services
                 {
                     networkBandDtos.Add(networkBand.AsDto());
                 }
-                // Check for not found
-                if (networkBandDtos.Count == 0) response = response.GetFailureResponse("Network not found.");
-                else response.Data = networkBandDtos;
+                response.Data = networkBandDtos;
             }
             catch (Exception ex)
             {
@@ -191,7 +192,7 @@ namespace products_api.Services
                     // Network Band found, update it
                     networkBand.Name = dto.Name;
                     networkBand.Position = dto.Position;
-                    
+
                     // Save in repository
                     _repo.Update(networkBand);
                     _repo.Save();

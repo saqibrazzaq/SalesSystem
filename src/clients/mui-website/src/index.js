@@ -20,6 +20,8 @@ import NetworkBandHome from "./Pages/Admin/PhoneProperties/Network/NetworkBand/N
 import NetworkEdit from "./Pages/Admin/PhoneProperties/Network/Network/NetworkEdit";
 import NetworkDelete from "./Pages/Admin/PhoneProperties/Network/Network/NetworkDelete";
 import NetworkBandList from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandList";
+import NetworkBandEdit from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandEdit";
+import NetworkBandDelete from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -49,6 +51,9 @@ root.render(
             <Route path="network-delete/:id" element={<NetworkDelete />} />
             <Route path="band" element={<NetworkBandHome />} >
               <Route path="list/:networkId" element={<NetworkBandList />} />
+              <Route path="edit" element={<NetworkBandEdit />} />
+              <Route path="edit/:id" element={<NetworkBandEdit />} />
+              <Route path="delete/:id" element={<NetworkBandDelete />} />
             </Route>
           </Route>
         </Route>
