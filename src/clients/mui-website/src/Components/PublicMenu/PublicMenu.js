@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 
 const pages = ["Products", "Pricing", "Blog", "Admin"];
@@ -35,6 +35,10 @@ function PublicMenu() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  let activeStyle = {
+    textDecoration: "underline",
   };
 
   return (
@@ -90,7 +94,7 @@ function PublicMenu() {
                 <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography
                     color="inherit"
-                    component={Link}
+                    component={NavLink}
                     to={"/" + page}
                     textAlign="center"
                     sx={{ textDecoration: "none" }}
@@ -117,9 +121,10 @@ function PublicMenu() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                component={Link}
+                component={NavLink}
                 to={"/" + page}
                 sx={{ my: 2, color: "white", display: "block" }}
+                style={({ isActive }) => (isActive ? activeStyle : undefined)}
               >
                 {page}
               </Button>

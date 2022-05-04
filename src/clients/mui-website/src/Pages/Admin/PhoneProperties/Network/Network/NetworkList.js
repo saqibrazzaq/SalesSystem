@@ -28,13 +28,13 @@ function NetworkList() {
           <Box>
             <IconButton
               component={Link}
-              to={`/admin/network/network-edit/${item.id}`}
+              to={`/admin/network/network/edit/${item.id}`}
             >
               <EditIcon />
             </IconButton>
             <IconButton
               component={Link}
-              to={`/admin/network/network-delete/${item.id}`}
+              to={`/admin/network/network/delete/${item.id}`}
             >
               <DeleteIcon color="error" />
             </IconButton>

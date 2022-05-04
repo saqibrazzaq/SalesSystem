@@ -16,7 +16,7 @@ function BrandHome() {
           <Box display="flex" justifyContent="flex-end">
             <Button
               component={Link}
-              to="/admin/general/brand-edit"
+              to="/admin/general/brand/edit"
               variant="contained"
             >
               Add New Brand

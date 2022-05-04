@@ -46,13 +46,13 @@ function BrandList() {
           <Box>
             <IconButton
               component={Link}
-              to={`/admin/general/brand-edit/${item.id}`}
+              to={`/admin/general/brand/edit/${item.id}`}
             >
               <EditIcon />
             </IconButton>
             <IconButton
             component={Link}
-            to={`/admin/general/brand-delete/${item.id}`}>
+            to={`/admin/general/brand/delete/${item.id}`}>
               <DeleteIcon color="error" />
             </IconButton>
           </Box>

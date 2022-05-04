@@ -28,13 +28,13 @@ function AvailabilityList() {
           <Box>
             <IconButton
               component={Link}
-              to={`/admin/general/availability-edit/${item.id}`}
+              to={`/admin/general/availability/edit/${item.id}`}
             >
               <EditIcon />
             </IconButton>
             <IconButton
               component={Link}
-              to={`/admin/general/availability-delete/${item.id}`}
+              to={`/admin/general/availability/delete/${item.id}`}
             >
               <DeleteIcon color="error" />
             </IconButton>

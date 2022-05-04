@@ -1,6 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { Link, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 
 const data = [
@@ -9,12 +9,20 @@ const data = [
 ];
 
 function General() {
+  let activeStyle = {
+    textDecoration: "underline",
+  };
   return (
     <>
       <Typography variant="h4">General Settings</Typography>
       <ButtonGroup variant="text" aria-label="text button group" sx={{ mb: 2 }}>
         {data.map((item) => (
-          <Button component={Link} to={item.url} key={item.url}>
+          <Button
+            component={NavLink}
+            to={item.url}
+            key={item.url}
+            style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          >
             {item.label}
           </Button>
         ))}

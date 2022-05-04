@@ -13,7 +13,7 @@ function AvailabilityHome() {
         </Grid>
         <Grid item xs={6}>
           <Box display="flex" justifyContent="flex-end">
-            <Button variant="contained" component={Link} to="/admin/general/availability-edit">
+            <Button variant="contained" component={Link} to="/admin/general/availability/edit">
               Add New Availability
             </Button>
           </Box>

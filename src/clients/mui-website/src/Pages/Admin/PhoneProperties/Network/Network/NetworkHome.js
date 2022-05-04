@@ -16,7 +16,7 @@ function NetworkHome() {
             <Button
               variant="contained"
               component={Link}
-              to="/admin/network/network-edit"
+              to="/admin/network/network/edit"
             >
               Add New Network
             </Button>

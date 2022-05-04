@@ -35,21 +35,29 @@ root.render(
         <Route path="blog" element={<Blog />} />
         <Route path="admin" element={<Admin />}>
           <Route path="general" element={<General />}>
-            <Route path="brand" element={<BrandHome />} />
-            <Route path="brand-edit/:id" element={<BrandEdit />} />
-            <Route path="brand-edit" element={<BrandEdit />} />
-            <Route path="brand-delete/:id" element={<BrandDelete />} />
-            <Route path="availability" element={<AvailabilityHome />} />
-            <Route path="availability-edit" element={<AvailabilityEdit />} />
-            <Route path="availability-edit/:id" element={<AvailabilityEdit />} />
-            <Route path="availability-delete/:id" element={<AvailabilityDelete />} />
+            <Route path="brand">
+              <Route index element={<BrandHome />} />
+              <Route path="edit/:id" element={<BrandEdit />} />
+              <Route path="edit" element={<BrandEdit />} />
+              <Route path="delete/:id" element={<BrandDelete />} />
+            </Route>
+
+            <Route path="availability">
+              <Route index element={<AvailabilityHome />} />
+              <Route path="edit" element={<AvailabilityEdit />} />
+              <Route path="edit/:id" element={<AvailabilityEdit />} />
+              <Route path="delete/:id" element={<AvailabilityDelete />} />
+            </Route>
           </Route>
           <Route path="network" element={<Network />}>
-            <Route path="network" element={<NetworkHome />} />
-            <Route path="network-edit" element={<NetworkEdit />} />
-            <Route path="network-edit/:id" element={<NetworkEdit />} />
-            <Route path="network-delete/:id" element={<NetworkDelete />} />
-            <Route path="band" element={<NetworkBandHome />} >
+            <Route path="network">
+              <Route index element={<NetworkHome />} />
+              <Route path="edit" element={<NetworkEdit />} />
+              <Route path="edit/:id" element={<NetworkEdit />} />
+              <Route path="delete/:id" element={<NetworkDelete />} />
+            </Route>
+
+            <Route path="band" element={<NetworkBandHome />}>
               <Route path="list/:networkId" element={<NetworkBandList />} />
               <Route path="edit" element={<NetworkBandEdit />} />
               <Route path="edit/:id" element={<NetworkBandEdit />} />
