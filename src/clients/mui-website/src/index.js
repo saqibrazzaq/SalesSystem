@@ -22,6 +22,11 @@ import NetworkDelete from "./Pages/Admin/PhoneProperties/Network/Network/Network
 import NetworkBandList from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandList";
 import NetworkBandEdit from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandEdit";
 import NetworkBandDelete from "./Pages/Admin/PhoneProperties/Network/NetworkBand/NetworkBandDelete";
+import Sim from "./Pages/Admin/PhoneProperties/Sim/Sim";
+import SimMultipleHome from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleHome";
+import SimSizeHome from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeHome";
+import SimMultipleEdit from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleEdit";
+import SimMultipleDelete from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -62,6 +67,18 @@ root.render(
               <Route path="edit" element={<NetworkBandEdit />} />
               <Route path="edit/:id" element={<NetworkBandEdit />} />
               <Route path="delete/:id" element={<NetworkBandDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="sim" element={<Sim />}>
+            <Route path="multiple">
+              <Route index element={<SimMultipleHome />} />
+              <Route path="edit" element={<SimMultipleEdit />} />
+              <Route path="edit/:id" element={<SimMultipleEdit />} />
+              <Route path="delete/:id" element={<SimMultipleDelete />} />
+            </Route>
+            <Route path="size">
+              <Route index element={<SimSizeHome />} />
             </Route>
           </Route>
         </Route>
