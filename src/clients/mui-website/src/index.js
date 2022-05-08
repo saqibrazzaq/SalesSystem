@@ -29,6 +29,19 @@ import SimMultipleEdit from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMulti
 import SimMultipleDelete from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleDelete";
 import SimSizeEdit from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeEdit";
 import SimSizeDelete from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeDelete";
+import Body from "./Pages/Admin/PhoneProperties/Body/Body";
+import BackMaterialHome from "./Pages/Admin/PhoneProperties/Body/BackMaterial/BackMaterialHome";
+import FormFactorHome from "./Pages/Admin/PhoneProperties/Body/FormFactor/FormFactorHome";
+import FrameMaterialHome from "./Pages/Admin/PhoneProperties/Body/FrameMaterial/FrameMaterialHome";
+import IpCertificateHome from "./Pages/Admin/PhoneProperties/Body/IpCertificate/IpCertificateHome";
+import BackMaterialEdit from "./Pages/Admin/PhoneProperties/Body/BackMaterial/BackMaterialEdit";
+import FormFactorEdit from "./Pages/Admin/PhoneProperties/Body/FormFactor/FormFactorEdit";
+import FrameMaterialEdit from "./Pages/Admin/PhoneProperties/Body/FrameMaterial/FrameMaterialEdit";
+import IpCertificateEdit from "./Pages/Admin/PhoneProperties/Body/IpCertificate/IpCertificateEdit";
+import BackMaterialDelete from "./Pages/Admin/PhoneProperties/Body/BackMaterial/BackMaterialDelete";
+import FormFactorDelete from "./Pages/Admin/PhoneProperties/Body/FormFactor/FormFactorDelete";
+import FrameMaterialDelete from "./Pages/Admin/PhoneProperties/Body/FrameMaterial/FrameMaterialDelete";
+import IpCertificateDelete from "./Pages/Admin/PhoneProperties/Body/IpCertificate/IpCertificateDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -84,6 +97,36 @@ root.render(
               <Route path="edit" element={<SimSizeEdit />} />
               <Route path="edit/:id" element={<SimSizeEdit />} />
               <Route path="delete/:id" element={<SimSizeDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="body" element={<Body />} >
+            <Route path="back-material">
+              <Route index element={<BackMaterialHome />} />
+              <Route path="edit" element={<BackMaterialEdit />} />
+              <Route path="edit/:id" element={<BackMaterialEdit />} />
+              <Route path="delete/:id" element={<BackMaterialDelete />} />
+            </Route>
+
+            <Route path="form-factor">
+              <Route index element={<FormFactorHome />} />
+              <Route path="edit" element={<FormFactorEdit />} />
+              <Route path="edit/:id" element={<FormFactorEdit />} />
+              <Route path="delete/:id" element={<FormFactorDelete />} />
+            </Route>
+
+            <Route path="frame-material">
+              <Route index element={<FrameMaterialHome />} />
+              <Route path="edit" element={<FrameMaterialEdit />} />
+              <Route path="edit/:id" element={<FrameMaterialEdit />} />
+              <Route path="delete/:id" element={<FrameMaterialDelete />} />
+            </Route>
+
+            <Route path="ip-certificate">
+              <Route index element={<IpCertificateHome />} />
+              <Route path="edit" element={<IpCertificateEdit />} />
+              <Route path="edit/:id" element={<IpCertificateEdit />} />
+              <Route path="delete/:id" element={<IpCertificateDelete />} />
             </Route>
           </Route>
         </Route>
