@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
-import * as SimMultipleService from "../../../../../Services/SimMultipleService";
+import * as SimSizeService from "../../../../../Services/SimSizeService";
 import { Box } from "@mui/system";
 
 // Formik validation schema
@@ -19,55 +19,55 @@ const validationSchema = Yup.object({
   position: Yup.number(),
 });
 
-function SimMultipleEdit() {
+function SimSizeEdit() {
   // Get id
   const { id } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
   // Button text
-  const updateText = id ? "Edit Sim Multiple" : "Add New Sim Multiple";
+  const updateText = id ? "Edit Sim Size" : "Add New Sim Size";
 
-  let simMultiple = {
+  let simSize = {
     id: "",
     name: "",
     position: 1,
   };
-  const mainUrl = "/admin/sim/multiple";
+  const mainUrl = "/admin/sim/size";
 
   // Initialize form
   const formik = useFormik({
-    initialValues: simMultiple,
+    initialValues: simSize,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (values.id) {
-        editSimMultiple(values);
+        editSimSize(values);
       } else {
-        addSimMultiple(values);
+        addSimSize(values);
       }
     },
   });
 
-  function addSimMultiple(values) {
-    SimMultipleService.addSimMultiple(values)
+  function addSimSize(values) {
+    SimSizeService.addSimSize(values)
       .then((res) => {
         navigate(mainUrl);
       })
-      .catch((err) => setError("Error creating Sim Multiple"));
+      .catch((err) => setError("Error creating Sim Size"));
   }
 
-  function editSimMultiple(values) {
-    SimMultipleService.editSimMultiple(values)
+  function editSimSize(values) {
+    SimSizeService.editSimSize(values)
       .then((res) => {
         navigate(mainUrl);
       })
-      .catch((err) => setError("Cannot edit Sim Multiple"));
+      .catch((err) => setError("Cannot edit Sim Size"));
   }
 
   useEffect(() => {
-    // Get sim multiple
+    // Get sim size
     if (id) {
-      SimMultipleService.getSimMultiple(id).then((res) => {
+      SimSizeService.getSimSize(id).then((res) => {
         // console.log(res);
         if (res.status === 200 && res.data.success) {
           formik.setValues(res.data.data);
@@ -135,4 +135,4 @@ function SimMultipleEdit() {
   );
 }
 
-export default SimMultipleEdit;
+export default SimSizeEdit;

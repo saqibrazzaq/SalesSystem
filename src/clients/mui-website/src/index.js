@@ -27,6 +27,8 @@ import SimMultipleHome from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMulti
 import SimSizeHome from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeHome";
 import SimMultipleEdit from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleEdit";
 import SimMultipleDelete from "./Pages/Admin/PhoneProperties/Sim/Multiple/SimMultipleDelete";
+import SimSizeEdit from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeEdit";
+import SimSizeDelete from "./Pages/Admin/PhoneProperties/Sim/Size/SimSizeDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -79,6 +81,9 @@ root.render(
             </Route>
             <Route path="size">
               <Route index element={<SimSizeHome />} />
+              <Route path="edit" element={<SimSizeEdit />} />
+              <Route path="edit/:id" element={<SimSizeEdit />} />
+              <Route path="delete/:id" element={<SimSizeDelete />} />
             </Route>
           </Route>
         </Route>
