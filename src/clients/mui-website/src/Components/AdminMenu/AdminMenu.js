@@ -14,17 +14,19 @@ import ArrowRight from "@mui/icons-material/ArrowRight";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import Home from "@mui/icons-material/Home";
 import Settings from "@mui/icons-material/Settings";
-import People from "@mui/icons-material/People";
-import PermMedia from "@mui/icons-material/PermMedia";
-import Dns from "@mui/icons-material/Dns";
-import Public from "@mui/icons-material/Public";
+import SettingsIcon from '@mui/icons-material/Settings';
+import SimCardIcon from '@mui/icons-material/SimCard';
+import Apple from '@mui/icons-material/Apple';
+import SignalWifi2BarIcon from '@mui/icons-material/SignalWifi2Bar';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import { Link, NavLink } from "react-router-dom";
 
 const data = [
-  { icon: <People />, label: "General" },
-  { icon: <Dns />, label: "Network" },
-  { icon: <PermMedia />, label: "SIM" },
-  { icon: <Public />, label: "Body" },
+  { icon: <SettingsIcon />, label: "General" },
+  { icon: <SignalWifi2BarIcon />, label: "Network" },
+  { icon: <SimCardIcon />, label: "SIM" },
+  { icon: <PhoneIphoneIcon />, label: "Body" },
+  { icon: <Apple />, label: "Platform" },
 ];
 
 const FireNav = styled(List)({

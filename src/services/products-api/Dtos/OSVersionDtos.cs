@@ -12,7 +12,8 @@ namespace products_api.Dtos
                 Id = c.Id, 
                 Name = c.Name,
                 Position = c.Position,
-                OSId = c.OSId
+                OSId = c.OSId,
+                OsName = (c.OS != null) ? c.OS.Name : ""
             };
         }
     }
@@ -24,6 +25,7 @@ namespace products_api.Dtos
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
         public Guid OSId { get; set; }
+        public string OsName { get; set; }
     }
 
     // Category OSVersion Dto

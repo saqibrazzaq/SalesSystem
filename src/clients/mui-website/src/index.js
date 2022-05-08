@@ -42,6 +42,17 @@ import BackMaterialDelete from "./Pages/Admin/PhoneProperties/Body/BackMaterial/
 import FormFactorDelete from "./Pages/Admin/PhoneProperties/Body/FormFactor/FormFactorDelete";
 import FrameMaterialDelete from "./Pages/Admin/PhoneProperties/Body/FrameMaterial/FrameMaterialDelete";
 import IpCertificateDelete from "./Pages/Admin/PhoneProperties/Body/IpCertificate/IpCertificateDelete";
+import Platform from "./Pages/Admin/PhoneProperties/Platform/Platform";
+import OsHome from "./Pages/Admin/PhoneProperties/Platform/Os/OsHome";
+import OsVersionHome from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionHome";
+import ChipsetHome from "./Pages/Admin/PhoneProperties/Platform/Chipset/ChipsetHome";
+import ChipsetEdit from "./Pages/Admin/PhoneProperties/Platform/Chipset/ChipsetEdit";
+import OsEdit from "./Pages/Admin/PhoneProperties/Platform/Os/OsEdit";
+import ChipsetDelete from "./Pages/Admin/PhoneProperties/Platform/Chipset/ChipsetDelete";
+import OsDelete from "./Pages/Admin/PhoneProperties/Platform/Os/OsDelete";
+import OsVersionList from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionList";
+import OsVersionEdit from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionEdit";
+import OsVersionDelete from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -127,6 +138,29 @@ root.render(
               <Route path="edit" element={<IpCertificateEdit />} />
               <Route path="edit/:id" element={<IpCertificateEdit />} />
               <Route path="delete/:id" element={<IpCertificateDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="platform" element={<Platform />}>
+            <Route path="os">
+              <Route index element={<OsHome />} />
+              <Route path="edit" element={<OsEdit />} />
+              <Route path="edit/:id" element={<OsEdit />} />
+              <Route path="delete/:id" element={<OsDelete />} />
+            </Route>
+
+            <Route path="os-version" element={<OsVersionHome />}>
+              <Route path="list/:osId" element={<OsVersionList />} />
+              <Route path="edit" element={<OsVersionEdit />} />
+              <Route path="edit/:id" element={<OsVersionEdit />} />
+              <Route path="delete/:id" element={<OsVersionDelete />} />
+            </Route>
+
+            <Route path="chipset">
+              <Route index element={<ChipsetHome />} />
+              <Route path="edit" element={<ChipsetEdit />} />
+              <Route path="edit/:id" element={<ChipsetEdit />} />
+              <Route path="delete/:id" element={<ChipsetDelete />} />
             </Route>
           </Route>
         </Route>
