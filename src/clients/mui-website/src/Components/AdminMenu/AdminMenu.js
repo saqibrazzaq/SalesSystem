@@ -21,16 +21,18 @@ import TvIcon from '@mui/icons-material/Tv';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import SignalWifi2BarIcon from '@mui/icons-material/SignalWifi2Bar';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import SignalCellular3BarIcon from '@mui/icons-material/SignalCellular3Bar';
 import { Link, NavLink } from "react-router-dom";
 
 const data = [
   { icon: <SettingsIcon />, label: "General" },
-  { icon: <SignalWifi2BarIcon />, label: "Network" },
+  { icon: <SignalCellular3BarIcon />, label: "Network" },
   { icon: <SimCardIcon />, label: "SIM" },
   { icon: <PhoneIphoneIcon />, label: "Body" },
   { icon: <Apple />, label: "Platform" },
   { icon: <TvIcon />, label: "Display" },
   { icon: <PhotoCameraIcon />, label: "Camera" },
+  { icon: <SignalWifi2BarIcon />, label: "Connectivity" },
 ];
 
 const FireNav = styled(List)({

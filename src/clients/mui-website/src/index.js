@@ -61,6 +61,13 @@ import CameraTypeHome from "./Pages/Admin/PhoneProperties/Camera/Type/CameraType
 import Camera from "./Pages/Admin/PhoneProperties/Camera/Camera";
 import CameraTypeEdit from "./Pages/Admin/PhoneProperties/Camera/Type/CameraTypeEdit";
 import CameraTypeDelete from "./Pages/Admin/PhoneProperties/Camera/Type/CameraTypeDelete";
+import Connectivity from "./Pages/Admin/PhoneProperties/Connectivity/Connectivity";
+import WifiHome from "./Pages/Admin/PhoneProperties/Connectivity/Wifi/WifiHome";
+import BluetoothHome from "./Pages/Admin/PhoneProperties/Connectivity/Bluetooth/BluetoothHome";
+import WifiEdit from "./Pages/Admin/PhoneProperties/Connectivity/Wifi/WifiEdit";
+import WifiDelete from "./Pages/Admin/PhoneProperties/Connectivity/Wifi/WifiDelete";
+import BluetoothEdit from "./Pages/Admin/PhoneProperties/Connectivity/Bluetooth/BluetoothEdit";
+import BluetoothDelete from "./Pages/Admin/PhoneProperties/Connectivity/Bluetooth/BluetoothDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -187,6 +194,22 @@ root.render(
               <Route path="edit" element={<CameraTypeEdit />} />
               <Route path="edit/:id" element={<CameraTypeEdit />} />
               <Route path="delete/:id" element={<CameraTypeDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="connectivity" element={<Connectivity />}>
+            <Route path="wifi">
+              <Route index element={<WifiHome />} />
+              <Route path="edit" element={<WifiEdit />} />
+              <Route path="edit/:id" element={<WifiEdit />} />
+              <Route path="delete/:id" element={<WifiDelete />} />
+            </Route>
+
+            <Route path="bluetooth">
+              <Route index element={<BluetoothHome />} />
+              <Route path="edit" element={<BluetoothEdit />} />
+              <Route path="edit/:id" element={<BluetoothEdit />} />
+              <Route path="delete/:id" element={<BluetoothDelete />} />
             </Route>
           </Route>
         </Route>
