@@ -53,6 +53,10 @@ import OsDelete from "./Pages/Admin/PhoneProperties/Platform/Os/OsDelete";
 import OsVersionList from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionList";
 import OsVersionEdit from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionEdit";
 import OsVersionDelete from "./Pages/Admin/PhoneProperties/Platform/OsVersion/OsVersionDelete";
+import Display from "./Pages/Admin/PhoneProperties/Display/Display";
+import DisplayTechnologyHome from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyHome";
+import DisplayTechnologyEdit from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyEdit";
+import DisplayTechnologyDelete from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -111,7 +115,7 @@ root.render(
             </Route>
           </Route>
 
-          <Route path="body" element={<Body />} >
+          <Route path="body" element={<Body />}>
             <Route path="back-material">
               <Route index element={<BackMaterialHome />} />
               <Route path="edit" element={<BackMaterialEdit />} />
@@ -161,6 +165,15 @@ root.render(
               <Route path="edit" element={<ChipsetEdit />} />
               <Route path="edit/:id" element={<ChipsetEdit />} />
               <Route path="delete/:id" element={<ChipsetDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="display" element={<Display />}>
+            <Route path="technology">
+              <Route index element={<DisplayTechnologyHome />} />
+              <Route path="edit" element={<DisplayTechnologyEdit />} />
+              <Route path="edit/:id" element={<DisplayTechnologyEdit />} />
+              <Route path="delete/:id" element={<DisplayTechnologyDelete />} />
             </Route>
           </Route>
         </Route>

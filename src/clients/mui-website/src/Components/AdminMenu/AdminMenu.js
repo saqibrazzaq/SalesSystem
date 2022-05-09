@@ -17,6 +17,7 @@ import Settings from "@mui/icons-material/Settings";
 import SettingsIcon from '@mui/icons-material/Settings';
 import SimCardIcon from '@mui/icons-material/SimCard';
 import Apple from '@mui/icons-material/Apple';
+import TvIcon from '@mui/icons-material/Tv';
 import SignalWifi2BarIcon from '@mui/icons-material/SignalWifi2Bar';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import { Link, NavLink } from "react-router-dom";
@@ -27,6 +28,7 @@ const data = [
   { icon: <SimCardIcon />, label: "SIM" },
   { icon: <PhoneIphoneIcon />, label: "Body" },
   { icon: <Apple />, label: "Platform" },
+  { icon: <TvIcon />, label: "Display" },
 ];
 
 const FireNav = styled(List)({
