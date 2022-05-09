@@ -57,6 +57,10 @@ import Display from "./Pages/Admin/PhoneProperties/Display/Display";
 import DisplayTechnologyHome from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyHome";
 import DisplayTechnologyEdit from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyEdit";
 import DisplayTechnologyDelete from "./Pages/Admin/PhoneProperties/Display/Technology/DisplayTechnologyDelete";
+import CameraTypeHome from "./Pages/Admin/PhoneProperties/Camera/Type/CameraTypeHome";
+import Camera from "./Pages/Admin/PhoneProperties/Camera/Camera";
+import CameraTypeEdit from "./Pages/Admin/PhoneProperties/Camera/Type/CameraTypeEdit";
+import CameraTypeDelete from "./Pages/Admin/PhoneProperties/Camera/Type/CameraTypeDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -174,6 +178,15 @@ root.render(
               <Route path="edit" element={<DisplayTechnologyEdit />} />
               <Route path="edit/:id" element={<DisplayTechnologyEdit />} />
               <Route path="delete/:id" element={<DisplayTechnologyDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="camera" element={<Camera />}>
+            <Route path="type">
+              <Route index element={<CameraTypeHome />} />
+              <Route path="edit" element={<CameraTypeEdit />} />
+              <Route path="edit/:id" element={<CameraTypeEdit />} />
+              <Route path="delete/:id" element={<CameraTypeDelete />} />
             </Route>
           </Route>
         </Route>
