@@ -33,7 +33,7 @@ namespace products_api.Services
         private readonly string fingerprintFile = "default-fingerprint.json";
         private readonly string wifiFile = "default-wifi.json";
         private readonly string bluetoothFile = "default-bluetooth.json";
-        private readonly string removableBatteryFile = "default-removable-battery.json";
+        private readonly string batteryTypeFile = "default-battery-type.json";
         private readonly string resolutionFile = "default-resolution.json";
         private readonly string gpuFile = "default-gpu.json";
         private readonly string lensTypeFile = "default-lens-types.json";
@@ -75,7 +75,7 @@ namespace products_api.Services
         private readonly IFingerprintService fingerprintService;
         private readonly IWifiService wifiService;
         private readonly IBluetoothService bluetoothService;
-        private readonly IRemovableBatteryService removableBatteryService;
+        private readonly IBatteryTypeService batteryTypeService;
         private readonly IResolutionService resolutionService;
         private readonly IGPUService gpuService;
         private readonly ILensTypeService lensTypeService;
@@ -103,7 +103,7 @@ namespace products_api.Services
             IFingerprintService fingerprintService,
             IWifiService wifiService,
             IBluetoothService bluetoothService,
-            IRemovableBatteryService removableBatteryService,
+            IBatteryTypeService batteryTypeService,
             IResolutionService resolutionService,
             IGPUService gpuService,
             ILensTypeService lensTypeService, 
@@ -130,7 +130,7 @@ namespace products_api.Services
             this.fingerprintService = fingerprintService;
             this.wifiService = wifiService;
             this.bluetoothService = bluetoothService;
-            this.removableBatteryService = removableBatteryService;
+            this.batteryTypeService = batteryTypeService;
             this.resolutionService = resolutionService;
             this.gpuService = gpuService;
             this.lensTypeService = lensTypeService;
@@ -479,19 +479,19 @@ namespace products_api.Services
 
         private async Task<string> SeedRemovableBattery()
         {
-            string entityName = " removableBattery. ";
-            string jsonData = File.ReadAllText(Path.Combine(DataFolder, removableBatteryFile));
-            IEnumerable<RemovableBatteryCreateDto>? defaultRemovableBatteries = JsonSerializer
-                .Deserialize<IEnumerable<RemovableBatteryCreateDto>>(jsonData);
+            string entityName = " BatteryType. ";
+            string jsonData = File.ReadAllText(Path.Combine(DataFolder, batteryTypeFile));
+            IEnumerable<BatteryTypeCreateDto>? defaultbatteryTypes = JsonSerializer
+                .Deserialize<IEnumerable<BatteryTypeCreateDto>>(jsonData);
 
-            if (defaultRemovableBatteries == null) return $"0 {entityName}";
+            if (defaultbatteryTypes == null) return $"0 {entityName}";
 
-            foreach (var removableBattery in defaultRemovableBatteries)
+            foreach (var batteryType in defaultbatteryTypes)
             {
-                await removableBatteryService.Add(removableBattery);
+                await batteryTypeService.Add(batteryType);
             }
 
-            return defaultRemovableBatteries.Count() + entityName;
+            return defaultbatteryTypes.Count() + entityName;
         }
 
         private async Task<string> SeedBluetooth()
@@ -949,8 +949,8 @@ namespace products_api.Services
             del = await bluetoothService.DeleteAll();
             message += del.Data + " bluetooth. ";
 
-            del = await removableBatteryService.DeleteAll();
-            message += del.Data + " removableBattery. ";
+            del = await batteryTypeService.DeleteAll();
+            message += del.Data + " BatteryType. ";
 
             del = await resolutionService.DeleteAll();
             message += del.Data + " resolution. ";

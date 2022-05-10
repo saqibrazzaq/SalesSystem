@@ -68,6 +68,10 @@ import WifiEdit from "./Pages/Admin/PhoneProperties/Connectivity/Wifi/WifiEdit";
 import WifiDelete from "./Pages/Admin/PhoneProperties/Connectivity/Wifi/WifiDelete";
 import BluetoothEdit from "./Pages/Admin/PhoneProperties/Connectivity/Bluetooth/BluetoothEdit";
 import BluetoothDelete from "./Pages/Admin/PhoneProperties/Connectivity/Bluetooth/BluetoothDelete";
+import Battery from "./Pages/Admin/PhoneProperties/Battery/Battery";
+import BatteryTypeHome from "./Pages/Admin/PhoneProperties/Battery/Type/BatteryTypeHome";
+import BatteryTypeEdit from "./Pages/Admin/PhoneProperties/Battery/Type/BatteryTypeEdit";
+import BatteryTypeDelete from "./Pages/Admin/PhoneProperties/Battery/Type/BatteryTypeDelete";
 const container = document.getElementById("app");
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -210,6 +214,15 @@ root.render(
               <Route path="edit" element={<BluetoothEdit />} />
               <Route path="edit/:id" element={<BluetoothEdit />} />
               <Route path="delete/:id" element={<BluetoothDelete />} />
+            </Route>
+          </Route>
+
+          <Route path="battery" element={<Battery />}>
+            <Route path="type">
+              <Route index element={<BatteryTypeHome />} />
+              <Route path="edit" element={<BatteryTypeEdit />} />
+              <Route path="edit/:id" element={<BatteryTypeEdit />} />
+              <Route path="delete/:id" element={<BatteryTypeDelete />} />
             </Route>
           </Route>
         </Route>

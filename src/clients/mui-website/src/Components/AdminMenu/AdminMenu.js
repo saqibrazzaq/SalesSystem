@@ -23,6 +23,7 @@ import SignalWifi2BarIcon from '@mui/icons-material/SignalWifi2Bar';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import SignalCellular3BarIcon from '@mui/icons-material/SignalCellular3Bar';
 import { Link, NavLink } from "react-router-dom";
+import Battery5BarIcon from '@mui/icons-material/Battery5Bar';
 
 const data = [
   { icon: <SettingsIcon />, label: "General" },
@@ -33,6 +34,7 @@ const data = [
   { icon: <TvIcon />, label: "Display" },
   { icon: <PhotoCameraIcon />, label: "Camera" },
   { icon: <SignalWifi2BarIcon />, label: "Connectivity" },
+  { icon: <Battery5BarIcon />, label: "Battery" },
 ];
 
 const FireNav = styled(List)({

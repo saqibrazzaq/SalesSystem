@@ -34,7 +34,7 @@ namespace products_api.Extensions
             services.AddScoped<IFingerprintRepository, SqlServerFingerprintRepository>();
             services.AddScoped<IWifiRepository, SqlServerWifiRepository>();
             services.AddScoped<IBluetoothRepository, SqlServerBluetoothRepository>();
-            services.AddScoped<IRemovableBatteryRepository, SqlServerRemovableBatteryRepository>();
+            services.AddScoped<IBatteryTypeRepository, SqlServerBatteryTypeRepository>();
             services.AddScoped<IResolutionRepository, SqlServerResolutionRepository>();
             services.AddScoped<IGPURepository, SqlServerGPURepository>();
             services.AddScoped<ILensTypeRepository, SqlServerLensTypeRepository>();
@@ -64,7 +64,7 @@ namespace products_api.Extensions
             services.AddScoped<IFingerprintService, FingerprintService>();
             services.AddScoped<IWifiService, WifiService>();
             services.AddScoped<IBluetoothService, BluetoothService>();
-            services.AddScoped<IRemovableBatteryService, RemovableBatteryService>();
+            services.AddScoped<IBatteryTypeService, BatteryTypeService>();
             services.AddScoped<IResolutionService, ResolutionService>();
             services.AddScoped<IGPUService, GPUService>();
             services.AddScoped<ILensTypeService, LensTypeService>();

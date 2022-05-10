@@ -5,15 +5,15 @@ using products_api.Services.Interfaces;
 
 namespace products_api.Services
 {
-    public class RemovableBatteryService : IRemovableBatteryService
+    public class BatteryTypeService : IBatteryTypeService
     {
-        private readonly IRemovableBatteryRepository _repo;
-        private readonly ILogger<RemovableBatteryService> _logger;
+        private readonly IBatteryTypeRepository _repo;
+        private readonly ILogger<BatteryTypeService> _logger;
 
-        public RemovableBatteryService(IRemovableBatteryRepository removableBatteryRepo, 
-            ILogger<RemovableBatteryService> logger)
+        public BatteryTypeService(IBatteryTypeRepository batteryTypeRepo, 
+            ILogger<BatteryTypeService> logger)
         {
-            _repo = removableBatteryRepo;
+            _repo = batteryTypeRepo;
             _logger = logger;
         }
 
@@ -32,22 +32,22 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery count service failed.");
+                response = response.GetFailureResponse("BatteryType count service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<RemovableBatteryDto>> Add(
-            RemovableBatteryCreateDto dto)
+        public async Task<ServiceResponse<BatteryTypeDto>> Add(
+            BatteryTypeCreateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<RemovableBatteryDto>();
+            var response = new ServiceResponse<BatteryTypeDto>();
 
             try
             {
                 // Create model from dto
-                var removableBattery = new RemovableBattery { Name = dto.Name, Position = dto.Position };
+                var removableBattery = new BatteryType { Name = dto.Name, Position = dto.Position };
 
                 // Add in repository
                 _repo.Add(removableBattery);
@@ -59,7 +59,7 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery create service failed.");
+                response = response.GetFailureResponse("BatteryType create service failed.");
             }
             
             return await Task.FromResult(response);
@@ -80,7 +80,7 @@ namespace products_api.Services
                     ).FirstOrDefault();
                 if (removableBattery == null) 
                 {
-                    response = response.GetFailureResponse("RemovableBattery not found.");
+                    response = response.GetFailureResponse("BatteryType not found.");
                 }
                 else
                 {
@@ -94,16 +94,16 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery delete service failed.");
+                response = response.GetFailureResponse("BatteryType delete service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<RemovableBatteryDto>> Get(Guid id)
+        public async Task<ServiceResponse<BatteryTypeDto>> Get(Guid id)
         {
             // Create new response
-            var response = new ServiceResponse<RemovableBatteryDto>();
+            var response = new ServiceResponse<BatteryTypeDto>();
 
             try
             {
@@ -112,29 +112,29 @@ namespace products_api.Services
                     .Where(x => x.Id == id)
                     .FirstOrDefault();
                 // Check null
-                if (removableBattery == null) response = response.GetFailureResponse("RemovableBattery not found");
+                if (removableBattery == null) response = response.GetFailureResponse("BatteryType not found");
                 else response.Data = removableBattery.AsDto();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery service failed.");
+                response = response.GetFailureResponse("BatteryType service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<List<RemovableBatteryDto>>> GetAll()
+        public async Task<ServiceResponse<List<BatteryTypeDto>>> GetAll()
         {
             // Create new response
-            var response = new ServiceResponse<List<RemovableBatteryDto>>();
+            var response = new ServiceResponse<List<BatteryTypeDto>>();
 
             try
             {
                 // Get all RemovableBattery
                 var removableBatteries = _repo.GetAll(orderBy: o => o.OrderBy(x => x.Name));
                 // Create Dtos
-                var removableBatteryDtos = new List<RemovableBatteryDto>();
+                var removableBatteryDtos = new List<BatteryTypeDto>();
                 foreach (var removableBattery in removableBatteries)
                 {
                     removableBatteryDtos.Add(removableBattery.AsDto());
@@ -145,17 +145,17 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery service failed.");
+                response = response.GetFailureResponse("BatteryType service failed.");
             }
 
             return await Task.FromResult(response);
         }
 
-        public async Task<ServiceResponse<RemovableBatteryDto>> Update(
-            Guid id, RemovableBatteryUpdateDto dto)
+        public async Task<ServiceResponse<BatteryTypeDto>> Update(
+            Guid id, BatteryTypeUpdateDto dto)
         {
             // Create new response
-            var response = new ServiceResponse<RemovableBatteryDto>();
+            var response = new ServiceResponse<BatteryTypeDto>();
 
             try
             {
@@ -165,7 +165,7 @@ namespace products_api.Services
                     ).FirstOrDefault();
                 if (removableBattery == null)
                 {
-                    response = response.GetFailureResponse("RemovableBattery not found.");
+                    response = response.GetFailureResponse("BatteryType not found.");
                 }
                 else
                 {
@@ -183,7 +183,7 @@ namespace products_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                response = response.GetFailureResponse("RemovableBattery update service failed.");
+                response = response.GetFailureResponse("BatteryType update service failed.");
             }
 
             return await Task.FromResult(response);

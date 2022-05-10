@@ -2,12 +2,12 @@
 
 namespace products_api.Dtos
 {
-    public static class RemovableBatteryExtensions
+    public static class BatteryTypeExtensions
     {
-        // Convert RemovableBattery Model to Dto
-        public static RemovableBatteryDto AsDto(this RemovableBattery c)
+        // Convert BatteryType Model to Dto
+        public static BatteryTypeDto AsDto(this BatteryType c)
         {
-            return new RemovableBatteryDto
+            return new BatteryTypeDto
             { 
                 Id = c.Id, 
                 Name = c.Name,
@@ -16,22 +16,22 @@ namespace products_api.Dtos
         }
     }
 
-    // RemovableBattery Dto
-    public class RemovableBatteryDto
+    // BatteryType Dto
+    public class BatteryTypeDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    // RemovableBattery Dto
-    public class RemovableBatteryCreateDto
+    // BatteryType Dto
+    public class BatteryTypeCreateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }
     }
 
-    public class RemovableBatteryUpdateDto
+    public class BatteryTypeUpdateDto
     {
         public string Name { get; set; } = string.Empty;
         public int Position { get; set; }

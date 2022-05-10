@@ -5,10 +5,10 @@ using products_api.Models;
 
 namespace products_api.Data.SQLServerRepository
 {
-    public class SqlServerRemovableBatteryRepository : 
-        SqlServerRepository<RemovableBattery>, IRemovableBatteryRepository
+    public class SqlServerBatteryTypeRepository : 
+        SqlServerRepository<BatteryType>, IBatteryTypeRepository
     {
-        public SqlServerRemovableBatteryRepository(AppDbContext db, IConfiguration configuration)
+        public SqlServerBatteryTypeRepository(AppDbContext db, IConfiguration configuration)
             : base(db, configuration)
         {
             

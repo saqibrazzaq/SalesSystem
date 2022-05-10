@@ -56,7 +56,7 @@ namespace products_api.Data.SQLServerRepository
         private readonly IFingerprintRepository _fingerprintRepo;
         private readonly IWifiRepository _wifiRepo;
         private readonly IBluetoothRepository _bluetoothRepo;
-        private readonly IRemovableBatteryRepository _removableBatteryRepo;
+        private readonly IBatteryTypeRepository _removableBatteryRepo;
         private readonly IResolutionRepository _resolutionRepo;
         private readonly IGPURepository _gpuRepo;
         private readonly ILensTypeRepository _lensTypeRepo;
@@ -84,7 +84,7 @@ namespace products_api.Data.SQLServerRepository
             IFingerprintRepository fingerprintRepo,
             IWifiRepository wifiRepo,
             IBluetoothRepository bluetoothRepo,
-            IRemovableBatteryRepository removableBatteryRepo,
+            IBatteryTypeRepository removableBatteryRepo,
             IResolutionRepository resolutionRepo,
             IGPURepository gpuRepo, 
             ILensTypeRepository lensTypeRepo)
@@ -541,8 +541,8 @@ namespace products_api.Data.SQLServerRepository
         private string SeedRemovableBattery()
         {
             string jsonData = File.ReadAllText(Path.Combine(DataFolder, removableBatteryFile));
-            IEnumerable<RemovableBattery>? defaultRemovableBatteries = JsonSerializer
-                .Deserialize<IEnumerable<RemovableBattery>>(jsonData);
+            IEnumerable<BatteryType>? defaultRemovableBatteries = JsonSerializer
+                .Deserialize<IEnumerable<BatteryType>>(jsonData);
 
             if (defaultRemovableBatteries == null) return "0 RemovableBattery Added. ";
 

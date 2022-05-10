@@ -3,7 +3,7 @@ using products_api.Models;
 
 namespace products_api.Data.Repository
 {
-    public interface IRemovableBatteryRepository : IRepository<RemovableBattery>
+    public interface IBatteryTypeRepository : IRepository<BatteryType>
     {
         
     }

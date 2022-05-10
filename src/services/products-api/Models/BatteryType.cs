@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace products_api.Models
 {
-    [Table("RemovableBattery")]
-    public class RemovableBattery : BaseModel
+    [Table("BatteryType")]
+    public class BatteryType : BaseModel
     {
         [Required]
         public string Name { get; set; } = string.Empty;

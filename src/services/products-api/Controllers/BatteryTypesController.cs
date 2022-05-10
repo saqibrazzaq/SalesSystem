@@ -8,30 +8,30 @@ namespace products_api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class RemovableBatteriesController : ControllerBase
+    public class BatteryTypesController : ControllerBase
     {
-        private readonly IRemovableBatteryService _removableBatteryService;
+        private readonly IBatteryTypeService _batteryTypesService;
 
-        public RemovableBatteriesController(IRemovableBatteryService removableBatteryService)
+        public BatteryTypesController(IBatteryTypeService batteryTypeService)
         {
-            _removableBatteryService = removableBatteryService;
+            _batteryTypesService = batteryTypeService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<RemovableBatteryDto>>>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<BatteryTypeDto>>>> GetAll()
         {
             // Get response from service
-            var response = await _removableBatteryService.GetAll();
+            var response = await _batteryTypesService.GetAll();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<RemovableBatteryDto>>> Get(Guid id)
+        public async Task<ActionResult<ServiceResponse<BatteryTypeDto>>> Get(Guid id)
         {
             // Get response from service
-            var response = await _removableBatteryService.Get(id);
+            var response = await _batteryTypesService.Get(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -41,29 +41,29 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<int>>> Count()
         {
             // Get response from service
-            var response = await _removableBatteryService.Count();
+            var response = await _batteryTypesService.Count();
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<RemovableBatteryDto>>> Add(
-            [FromBody] RemovableBatteryCreateDto dto)
+        public async Task<ActionResult<ServiceResponse<BatteryTypeDto>>> Add(
+            [FromBody] BatteryTypeCreateDto dto)
         {
             // Get response from service
-            var response = await _removableBatteryService.Add(dto);
+            var response = await _batteryTypesService.Add(dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<RemovableBatteryDto>>> Update(
-            Guid id, [FromBody] RemovableBatteryUpdateDto dto)
+        public async Task<ActionResult<ServiceResponse<BatteryTypeDto>>> Update(
+            Guid id, [FromBody] BatteryTypeUpdateDto dto)
         {
             // Get response from service
-            var response = await _removableBatteryService.Update(id, dto);
+            var response = await _batteryTypesService.Update(id, dto);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);
@@ -73,7 +73,7 @@ namespace products_api.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> Remove(Guid id)
         {
             // Get response from service
-            var response = await _removableBatteryService.Remove(id);
+            var response = await _batteryTypesService.Remove(id);
 
             // Send response
             return response.Success ? Ok(response) : BadRequest(response);

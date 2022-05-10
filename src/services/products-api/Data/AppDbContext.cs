@@ -110,7 +110,7 @@ namespace products_api.Data
                 .IsUnique();
 
             // RemovableBattery
-            modelBuilder.Entity<RemovableBattery>()
+            modelBuilder.Entity<BatteryType>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
 
@@ -153,7 +153,7 @@ namespace products_api.Data
         public DbSet<Fingerprint> Fingerprints { get; set; }
         public DbSet<Wifi> Wifis { get; set; }
         public DbSet<Bluetooth> Bluetooths { get; set; }
-        public DbSet<RemovableBattery> RemovableBatteries { get; set; }
+        public DbSet<BatteryType> BatteryTypes { get; set; }
         public DbSet<Resolution> Resolutions { get; set; }
         public DbSet<GPU> GPUs { get; set; }
         public DbSet<LensType> LensTypes { get; set; }
